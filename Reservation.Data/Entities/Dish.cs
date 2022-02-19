@@ -1,0 +1,25 @@
+﻿using Reservation.Data.Enumerations;
+
+namespace Reservation.Data.Entities
+{
+    public class Dish
+    {
+        public long Id { get; set; }
+
+        public string Name { get; set; }
+
+        public bool IsAvailable { get; set; }
+
+        public string Description { get; set; }
+
+        public string ImageUrl { get; set; }
+
+        public decimal Price { get; set; }
+
+        public DishesType DishType { get; set; }
+
+        public long ServiceMemberId { get; set; }
+
+        public ServiceMember ServiceMember { get; set; }
+    }
+}
