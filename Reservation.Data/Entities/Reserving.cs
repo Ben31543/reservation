@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Reservation.Data.Entities
 {
-    public class Reservation
+    public class Reserving
     {
         public long Id { get; set; }
 
