@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Reservation.Data.Entities
+namespace Reservation.Models.Member
 {
-    public class Member
+    public class MemberEditModel
     {
         public long Id { get; set; }
 
@@ -19,11 +19,5 @@ namespace Reservation.Data.Entities
         public string Phone { get; set; }
 
         public string Email { get; set; }
-
-        public string PasswordHash { get; set; }
-
-        public long? BankCardId { get; set; }
-
-        public BankCard BankCard { get; set; }
     }
 }

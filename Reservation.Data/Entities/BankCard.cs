@@ -22,9 +22,11 @@ namespace Reservation.Data.Entities
 
         public long BankId { get; set; }
 
-        public long MemberId { get; set; }
+        public long? MemberId { get; set; }
 
-        public bool IsActive { get; set; }
+        public string CVV { get; set; }
+
+        public bool IsAttached { get; set; }
 
         public Bank Bank { get; set; }
 
