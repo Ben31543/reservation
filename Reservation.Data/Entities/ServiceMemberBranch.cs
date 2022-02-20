@@ -27,5 +27,7 @@ namespace Reservation.Data.Entities
         public string TablesSchema { get; set; }
 
         public ServiceMember ServiceMember { get; set; }
+
+        public string Yesiminch { get; set; }
     }
 }
