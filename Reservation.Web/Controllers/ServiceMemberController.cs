@@ -59,7 +59,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> VerifyServiceMember(MemberSignInModel model)
+        public async Task<IActionResult> VerifyServiceMember(SignInModel model)
         {
             RequestResult result = new RequestResult();
 
@@ -80,7 +80,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword([FromBody] MemberResetPasswordModel model)
+        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetModel model)
         {
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)

@@ -17,9 +17,9 @@ namespace Reservation.Service.Interfaces
 
         Task<RequestResult> UpdateServiceMemberInfoAsync(ServiceMemberEditModel model);
 
-        Task<RequestResult> VerifyServiceMemberAsync(MemberSignInModel model);
+        Task<RequestResult> VerifyServiceMemberAsync(SignInModel model);
 
-        Task<RequestResult> ResetPasswordAsync(MemberResetPasswordModel model);
+        Task<RequestResult> ResetPasswordAsync(PasswordResetModel model);
 
         Task<ServiceMember> GetServiceMemberByIdAsync(long id);
 

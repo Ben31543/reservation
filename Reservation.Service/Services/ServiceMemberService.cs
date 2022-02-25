@@ -57,7 +57,7 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> ResetPasswordAsync(MemberResetPasswordModel model)
+        public async Task<RequestResult> ResetPasswordAsync(PasswordResetModel model)
         {
             RequestResult result = new RequestResult();
             var serviceMember = await _db.ServiceMembers.SingleOrDefaultAsync(i => i.Email == model.LogIn);
@@ -116,7 +116,7 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> VerifyServiceMemberAsync(MemberSignInModel model)
+        public async Task<RequestResult> VerifyServiceMemberAsync(SignInModel model)
         {
             RequestResult result = new RequestResult();
 

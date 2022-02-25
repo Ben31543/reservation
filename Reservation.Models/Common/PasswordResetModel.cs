@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Reservation.Models.Member
+namespace Reservation.Models.Common
 {
-    public class MemberResetPasswordModel
+    public class PasswordResetModel
     {
         public long Id { get; set; }
 
@@ -17,7 +17,7 @@ namespace Reservation.Models.Member
         [Required(ErrorMessage = "FieldIsRequired")]
         [MinLength(8), MaxLength(12)]
         public string NewPassword { get; set; }
-        
+
         [Required(ErrorMessage = "FieldIsRequired")]
         [Compare(nameof(NewPassword))]
         public string ConfirmNewPassword { get; set; }

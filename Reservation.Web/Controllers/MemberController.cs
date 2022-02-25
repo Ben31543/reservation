@@ -66,7 +66,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword([FromBody] MemberResetPasswordModel model)
+        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetModel model)
         {
             var result = new RequestResult();
             if (!ModelState.IsValid)
@@ -80,7 +80,7 @@ namespace Reservation.Web.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> VerifyMember([FromBody]MemberSignInModel model)
+        public async Task<IActionResult> VerifyMember([FromBody]SignInModel model)
         {
             var result = new RequestResult();
             if (!ModelState.IsValid)

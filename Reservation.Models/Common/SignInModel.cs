@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Reservation.Models.Member
+namespace Reservation.Models.Common
 {
-    public class MemberSignInModel
+    public class SignInModel
     {
         [Required]
         public string LogIn { get; set; }

@@ -53,7 +53,7 @@ namespace Reservation.Service.Services
             return await _db.Members.FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        public async Task<RequestResult> ResetPasswordAsync(MemberResetPasswordModel member)
+        public async Task<RequestResult> ResetPasswordAsync(PasswordResetModel member)
         {
             var result = new RequestResult();
             var existingMember = await GetMemberByIdAsync(member.Id);
@@ -118,7 +118,7 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> VerifyMemberAsync(MemberSignInModel member)
+        public async Task<RequestResult> VerifyMemberAsync(SignInModel member)
         {
             var result = new RequestResult();
             var existingMember = await _db.Members.FirstOrDefaultAsync(i =>
