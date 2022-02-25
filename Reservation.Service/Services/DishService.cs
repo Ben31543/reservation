@@ -20,10 +20,12 @@ namespace Reservation.Service.Services
         {
             _db = db;
         }
+
         public async Task<Dish> GetDishById(long id)
         {
             return await _db.Dishes.FirstOrDefaultAsync(i => i.Id == id);
         }
+
         public async Task<RequestResult> AddNewDishAsync(DishModel dish)
         {
             RequestResult result = new RequestResult();
@@ -66,6 +68,7 @@ namespace Reservation.Service.Services
             try
             {
                 _db.Dishes.Remove(getDish);
+                await _db.SaveChangesAsync();
                 result.Succeeded = true;
             }
             catch (Exception e)
@@ -110,8 +113,7 @@ namespace Reservation.Service.Services
 
         public async Task<List<Dish>> GetAllDishAsync(long serviceMemberId)
         {
-            var dishes = await _db.Dishes.Where(i => i.ServiceMemberId == serviceMemberId).ToListAsync();
-            return dishes;
+            return await _db.Dishes.Where(i => i.ServiceMemberId == serviceMemberId).ToListAsync();
         }
     }
 }
