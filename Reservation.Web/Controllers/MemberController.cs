@@ -104,22 +104,22 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result = await _bankCard.AttachCardToMemberAsync(model);
+            result = await _member.AddBankCardAsync(model);
             return Json(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> DetachCardFromMember(long? cardId)
+        public async Task<IActionResult> DetachCardFromMember([FromQuery] long? memberId, [FromQuery]long? cardId)
         {
             var result = new RequestResult();
 
-            if (!cardId.HasValue)
+            if (!cardId.HasValue || !memberId.HasValue)
             {
                 result.Message = "WrongIncomingParameters";
                 return Json(result);
             }
 
-            result = await _bankCard.DetachCardFromMemberAsync(cardId.Value);
+            result = await _member.DetachBankCardAsync(memberId.Value, cardId.Value);
             return Json(result);
         }
     }

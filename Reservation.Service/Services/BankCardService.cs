@@ -13,12 +13,10 @@ namespace Reservation.Service.Services
 {
     public class BankCardService : IBankCardService
     {
-        private readonly IMemberService _member;
         private readonly ApplicationContext _db;
-        public BankCardService(ApplicationContext db, IMemberService member)
+        public BankCardService(ApplicationContext db)
         {
             _db = db;
-            _member = member;
         }
 
         public async Task<RequestResult> AttachCardToMemberAsync(AttachCardToMemberModel model)
@@ -41,16 +39,8 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            var member = await _member.GetMemberByIdAsync(model.MemberId);
-            if (member == null)
-            {
-                result.Message = "MemberNotFound";
-                return result;
-            }
-
-            member.BankCardId = bankCard.Id;
             bankCard.IsAttached = true;
-            bankCard.MemberId = member.Id;
+            bankCard.MemberId = model.MemberId;
 
             try
             {
@@ -61,7 +51,7 @@ namespace Reservation.Service.Services
             {
                 result.Message = e.Message;
             }
-
+            result.Value = bankCard.Id;
             return result;
         }
 
@@ -69,9 +59,7 @@ namespace Reservation.Service.Services
         {
             var result = new RequestResult();
 
-            var card = await _db.BankCards
-                .Include(i => i.Member)
-                .FirstOrDefaultAsync(i => i.Id == bankCardId);
+            var card = await _db.BankCards.FirstOrDefaultAsync(i => i.Id == bankCardId);
 
             if (card == null)
             {
@@ -79,14 +67,6 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            var member = await _member.GetMemberByIdAsync(card.Member.Id);
-            if (member == null)
-            {
-                result.Message = "MemberNotFound";
-                return result;
-            }
-
-            member.BankCardId = null;
             card.MemberId = null;
             card.IsAttached = false;
 
