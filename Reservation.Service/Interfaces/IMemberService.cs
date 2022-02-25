@@ -1,4 +1,5 @@
 ﻿using Reservation.Data.Entities;
+using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
 using System;
@@ -20,5 +21,9 @@ namespace Reservation.Service.Interfaces
         Task<RequestResult> ResetPasswordAsync(MemberResetPasswordModel member);
 
         Task<Member> GetMemberByIdAsync(long id);
+
+        Task<RequestResult> AddBankCardAsync(AttachCardToMemberModel model);
+
+        Task<RequestResult> DetachBankCardAsync(long memberId, long bankCardId);
     }
 }

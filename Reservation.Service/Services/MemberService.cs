@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reservation.Data;
 using Reservation.Data.Entities;
+using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
 using Reservation.Service.Helpers;
@@ -13,9 +14,11 @@ namespace Reservation.Service.Services
     public class MemberService : IMemberService
     {
         private readonly ApplicationContext _db;
-        public MemberService(ApplicationContext db)
+        private readonly IBankCardService _bankCard;
+        public MemberService(ApplicationContext db, IBankCardService bankCard)
         {
             _db = db;
+            _bankCard = bankCard;
         }
         public async Task<RequestResult> AddNewMemberAsync(MemberRegistrationModel member)
         {
@@ -132,6 +135,51 @@ namespace Reservation.Service.Services
             result.Succeeded = true;
             result.Value = existingMember;
             return result;
+        }
+
+        public async Task<RequestResult> AddBankCardAsync(AttachCardToMemberModel model)
+        {
+            RequestResult result = new RequestResult();
+            var member = await GetMemberByIdAsync(model.MemberId);
+            if (member == null)
+            {
+                result.Message = "MemberDoesNotExist";
+                return result;
+            }
+
+            var addResult = await _bankCard.AttachCardToMemberAsync(model);
+            if (!addResult.Succeeded)
+            {
+                return addResult;
+            }
+
+            try
+            {
+                member.BankCardId = (long)addResult.Value;
+                await _db.SaveChangesAsync();
+                result.Succeeded = true;
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                return result;
+            }
+
+            return result;
+        }
+
+        public async Task<RequestResult> DetachBankCardAsync(long memberId, long bankCardId)
+        {
+            var result = new RequestResult();
+            var member = await GetMemberByIdAsync(memberId);
+            if (member == null)
+            {
+                result.Message = "MemberDoesNotExist";
+                return result;
+            }
+
+            var detachResult = await _bankCard.DetachCardFromMemberAsync(bankCardId);
+            return detachResult;
         }
     }
 }
