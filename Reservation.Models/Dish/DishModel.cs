@@ -25,6 +25,8 @@ namespace Reservation.Models.Dish
 
         [Required(ErrorMessage = "FieldIsRequired")]
         public DishesType DishType { get; set; }
-
+       
+        [Required(ErrorMessage = "FieldIsRequired")]
+        public long ServiceMemberId { get; set; }
     }
 }

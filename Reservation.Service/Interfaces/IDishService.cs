@@ -1,5 +1,6 @@
 ﻿using Reservation.Data.Entities;
 using Reservation.Models.Common;
+using Reservation.Models.Criterias;
 using Reservation.Models.Dish;
 using System;
 using System.Collections.Generic;
@@ -20,5 +21,7 @@ namespace Reservation.Service.Interfaces
         Task<List<Dish>> GetAllDishAsync(long serviceMemberId);
 
         Task<Dish> GetDishById(long id);
+
+        Task<List<Dish>> GetDishesAsync(DishCriteria criteria,long serviceMemberId); 
     }
 }

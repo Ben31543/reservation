@@ -2,6 +2,7 @@
 using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.Common;
+using Reservation.Models.Criterias;
 using Reservation.Models.Dish;
 using Reservation.Service.Interfaces;
 using System;
@@ -37,19 +38,23 @@ namespace Reservation.Service.Services
                 Description = dish.Description,
                 IsAvailable = dish.IsAvailable,
                 DishType = dish.DishType,
-                Price = dish.Price
+                Price = dish.Price,
+                ServiceMemberId = dish.ServiceMemberId
             };
+
+            await _db.Dishes.AddAsync(newDish);
 
             try
             {
-                await _db.Dishes.AddAsync(newDish);
                 await _db.SaveChangesAsync();
                 result.Succeeded = true;
             }
             catch (Exception e)
             {
                 result.Message = e.Message;
+                return result;
             }
+
             result.Value = newDish;
             return result;
         }
@@ -65,15 +70,16 @@ namespace Reservation.Service.Services
                 return result;
             }
 
+            _db.Dishes.Remove(getDish);
             try
             {
-                _db.Dishes.Remove(getDish);
                 await _db.SaveChangesAsync();
                 result.Succeeded = true;
             }
             catch (Exception e)
             {
                 result.Message = e.Message;
+                return result;
             }
             return result;
         }
@@ -114,6 +120,41 @@ namespace Reservation.Service.Services
         public async Task<List<Dish>> GetAllDishAsync(long serviceMemberId)
         {
             return await _db.Dishes.Where(i => i.ServiceMemberId == serviceMemberId).ToListAsync();
+        }
+
+        public async Task<List<Dish>> GetDishesAsync(DishCriteria criteria, long serviceMemberId)
+        {
+            var dishes = _db.Dishes
+                .Where(i => i.ServiceMemberId == serviceMemberId)
+                .AsNoTracking()
+                .AsQueryable();
+
+            if (criteria.DishType.HasValue)
+            {
+                dishes = dishes.Where(i => i.DishType == criteria.DishType);
+            }
+
+            if (criteria.PriceMin.HasValue)
+            {
+                dishes = dishes.Where(i => i.Price >= criteria.PriceMin);
+            }
+
+            if (criteria.PriceMax.HasValue)
+            {
+                dishes = dishes.Where(i => i.Price <= criteria.PriceMax);
+            }
+
+            if (criteria.IsAvailable.HasValue)
+            {
+                dishes = dishes.Where(i => i.IsAvailable == criteria.IsAvailable);
+            }
+
+            if (!string.IsNullOrWhiteSpace(criteria.SearchText))
+            {
+                dishes = dishes.Where(i => i.Name.Contains(criteria.SearchText,StringComparison.OrdinalIgnoreCase));
+            }
+
+            return await dishes.ToListAsync();
         }
     }
 }
