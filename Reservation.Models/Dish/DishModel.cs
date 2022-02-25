@@ -24,7 +24,7 @@ namespace Reservation.Models.Dish
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "FieldIsRequired")]
-        public DishesType DishType { get; set; }
+        public DishTypes DishType { get; set; }
        
         [Required(ErrorMessage = "FieldIsRequired")]
         public long ServiceMemberId { get; set; }

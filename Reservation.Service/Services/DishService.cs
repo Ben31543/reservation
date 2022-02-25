@@ -37,7 +37,7 @@ namespace Reservation.Service.Services
                 ImageUrl = dish.ImageUrl,
                 Description = dish.Description,
                 IsAvailable = dish.IsAvailable,
-                DishType = dish.DishType,
+                TypeId = (byte)dish.DishType,
                 Price = dish.Price,
                 ServiceMemberId = dish.ServiceMemberId
             };
@@ -84,24 +84,24 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> EditDishAsync(DishModel dish)
+        public async Task<RequestResult> EditDishAsync(DishModel model)
         {
             RequestResult result = new RequestResult();
 
-            var getDish = await GetDishById(dish.Id);
-            if (getDish == null)
+            var dish = await GetDishById(model.Id);
+            if (dish == null)
             {
                 result.Message = "DishNotFound";
-                result.Value = dish.Id;
+                result.Value = model.Id;
                 return result;
             }
 
-            getDish.Name = dish.Name;
-            getDish.Price = dish.Price;
-            getDish.Description = dish.Description;
-            getDish.ImageUrl = dish.ImageUrl;
-            getDish.IsAvailable = dish.IsAvailable;
-            getDish.DishType = dish.DishType;
+            dish.Name = model.Name;
+            dish.Price = model.Price;
+            dish.Description = model.Description;
+            dish.ImageUrl = model.ImageUrl;
+            dish.IsAvailable = model.IsAvailable;
+            dish.TypeId = (byte)model.DishType;
 
             try
             {
@@ -113,7 +113,7 @@ namespace Reservation.Service.Services
                 result.Message = e.Message;
                 return result;
             }
-            result.Value = dish;
+            result.Value = model;
             return result;
         }
 
@@ -131,7 +131,7 @@ namespace Reservation.Service.Services
 
             if (criteria.DishType.HasValue)
             {
-                dishes = dishes.Where(i => i.DishType == criteria.DishType);
+                dishes = dishes.Where(i => i.TypeId == (byte)criteria.DishType);
             }
 
             if (criteria.PriceMin.HasValue)

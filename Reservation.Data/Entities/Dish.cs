@@ -16,7 +16,7 @@ namespace Reservation.Data.Entities
 
         public decimal Price { get; set; }
 
-        public DishesType DishType { get; set; }
+        public byte TypeId { get; set; }
 
         public long ServiceMemberId { get; set; }
 

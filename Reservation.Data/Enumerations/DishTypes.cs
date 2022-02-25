@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Reservation.Data.Enumerations
 {
-    public enum DishesType
+    public enum DishTypes
     {
         Soup,
         Salad,

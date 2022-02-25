@@ -15,7 +15,7 @@ namespace Reservation.Models.Criterias
 
         public decimal? PriceMax { get; set; }
 
-        public DishesType? DishType { get; set; }
+        public DishTypes? DishType { get; set; }
 
         public bool? IsAvailable { get; set; }
     }
