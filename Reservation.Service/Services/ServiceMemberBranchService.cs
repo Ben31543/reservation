@@ -39,7 +39,7 @@ namespace Reservation.Service.Services
                 WorkDays = JsonConvert.SerializeObject(model.WorkDays)
             };
 
-            await _db.ServiceMemberBranch.AddAsync(branch);
+            await _db.ServiceMemberBranches.AddAsync(branch);
             try
             {
                 await _db.SaveChangesAsync();
@@ -58,14 +58,14 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> DeleteBranchAsync(long branchId)
         {
             RequestResult result = new RequestResult();
-            var branch = await _db.ServiceMemberBranch.FirstOrDefaultAsync(i => i.Id == branchId);
+            var branch = await _db.ServiceMemberBranches.FirstOrDefaultAsync(i => i.Id == branchId);
             if (branch == null)
             {
                 result.Message = "BranchDoesNotExist";
                 return result;
             }
 
-            _db.ServiceMemberBranch.Remove(branch);
+            _db.ServiceMemberBranches.Remove(branch);
             try
             {
                 await _db.SaveChangesAsync();
@@ -116,12 +116,12 @@ namespace Reservation.Service.Services
 
         public async Task<ServiceMemberBranch> GetBranchByIdAsync(long branchId)
         {
-            return await _db.ServiceMemberBranch.FirstOrDefaultAsync(i => i.Id == branchId);
+            return await _db.ServiceMemberBranches.FirstOrDefaultAsync(i => i.Id == branchId);
         }
 
         public async Task<List<ServiceMemberBranch>> GetBranchesAsync(long serviceMemberId)
         {
-            return await _db.ServiceMemberBranch.Where(i => i.ServiceMemberId == serviceMemberId).ToListAsync();
+            return await _db.ServiceMemberBranches.Where(i => i.ServiceMemberId == serviceMemberId).ToListAsync();
         }
     }
 }
