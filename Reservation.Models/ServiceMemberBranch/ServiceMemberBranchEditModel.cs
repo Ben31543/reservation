@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Reservation.Data.Entities
+namespace Reservation.Models.ServiceMemberBranch
 {
-    public class ServiceMemberBranch
+    public class ServiceMemberBranchEditModel
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         public string Name { get; set; }
 
@@ -24,10 +24,8 @@ namespace Reservation.Data.Entities
 
         public string WorkDays { get; set; }
 
-        public string TablesSchema { get; set; }
+        public bool? IsActive { get; set; }
 
-        public bool IsActive { get; set; }
-
-        public ServiceMember ServiceMember { get; set; }
+        public Dictionary<string,byte> TablesSchema { get; set; }
     }
 }
