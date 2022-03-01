@@ -1,12 +1,7 @@
 ﻿using Reservation.Data.Entities;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
-using Reservation.Models.Member;
 using Reservation.Models.ServiceMember;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Interfaces
@@ -19,7 +14,7 @@ namespace Reservation.Service.Interfaces
 
         Task<RequestResult> VerifyServiceMemberAsync(SignInModel model);
 
-        Task<RequestResult> ResetPasswordAsync(PasswordResetModel model);
+        Task<RequestResult> ResetPasswordAsync(ResetPasswordModel model);
 
         Task<ServiceMember> GetServiceMemberByIdAsync(long id);
 

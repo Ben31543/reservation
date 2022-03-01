@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Reservation.Data.Entities
 {
-    public class BankCard
+	public class BankCard
     {
         public long Id { get; set; }
 
@@ -17,8 +13,6 @@ namespace Reservation.Data.Entities
         public string Owner { get; set; }
 
         public decimal? CurrentBalance { get; set; }
-
-        public byte CardTypeId { get; set; }
 
         public long BankId { get; set; }
 

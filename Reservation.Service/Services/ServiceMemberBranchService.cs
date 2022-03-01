@@ -4,11 +4,11 @@ using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMemberBranch;
+using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Services
@@ -61,7 +61,7 @@ namespace Reservation.Service.Services
             var branch = await _db.ServiceMemberBranches.FirstOrDefaultAsync(i => i.Id == branchId);
             if (branch == null)
             {
-                result.Message = "BranchDoesNotExist";
+                result.Message = ErrorMessages.BranchNotFound;
                 return result;
             }
 
@@ -86,7 +86,7 @@ namespace Reservation.Service.Services
             var branch = await GetBranchByIdAsync(model.Id.Value);
             if (branch == null)
             {
-                result.Message = "BranchDoesNotExist";
+                result.Message = ErrorMessages.BranchNotFound;
                 return result;
             }
 

@@ -5,7 +5,7 @@ namespace Reservation.Models.Dish
 {
     public class DishModel
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         [Required(ErrorMessage = "FieldIsRequired")]
         [StringLength(20)]

@@ -2,11 +2,9 @@
 using Reservation.Data;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
+using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Services
@@ -29,13 +27,13 @@ namespace Reservation.Service.Services
              && i.Owner == model.Owner);
             if (bankCard == null)
             {
-                result.Message = "CardDoesNotExist";
+                result.Message = ErrorMessages.BankCardDoesNotExist;
                 return result;
             }
 
             if (!IsValidCard(bankCard.ValidThru))
             {
-                result.Message = "CardHasExpired";
+                result.Message = ErrorMessages.BankCardExpired;
                 return result;
             }
 
@@ -51,6 +49,7 @@ namespace Reservation.Service.Services
             {
                 result.Message = e.Message;
             }
+
             result.Value = bankCard.Id;
             return result;
         }
@@ -63,7 +62,7 @@ namespace Reservation.Service.Services
 
             if (card == null)
             {
-                result.Message = "CardDoesNotExist";
+                result.Message = ErrorMessages.BankCardDoesNotExist;
                 return result;
             }
 

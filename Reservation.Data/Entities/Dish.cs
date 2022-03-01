@@ -1,6 +1,4 @@
-﻿using Reservation.Data.Enumerations;
-
-namespace Reservation.Data.Entities
+﻿namespace Reservation.Data.Entities
 {
     public class Dish
     {

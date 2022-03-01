@@ -3,14 +3,10 @@ using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
-using Reservation.Models.Member;
 using Reservation.Models.ServiceMember;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Services
@@ -57,13 +53,13 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> ResetPasswordAsync(PasswordResetModel model)
+        public async Task<RequestResult> ResetPasswordAsync(ResetPasswordModel model)
         {
             RequestResult result = new RequestResult();
-            var serviceMember = await _db.ServiceMembers.SingleOrDefaultAsync(i => i.Email == model.LogIn);
+            var serviceMember = await _db.ServiceMembers.SingleOrDefaultAsync(i => i.Email == model.Login);
             if (serviceMember == null)
             {
-                result.Message = "ServiceMemberNotFound";
+                result.Message = ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
 
@@ -88,7 +84,7 @@ namespace Reservation.Service.Services
             var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == model.Id);
             if (serviceMember == null)
             {
-                result.Message = "ServiceMemberDoesNotExist";
+                result.Message = ErrorMessages.ServiceMemberDoesNotExist;
                 result.Value = model.Id;
                 return result;
             }
@@ -124,7 +120,7 @@ namespace Reservation.Service.Services
                 .FirstOrDefaultAsync(i => i.Email == model.LogIn && i.PasswordHash == model.Password.ToHashedPassword());
             if (serviceMember == null)
             {
-                result.Message = "WrongEmailOrPassword";
+                result.Message = ErrorMessages.WrongCredientials;
                 result.Value = model;
                 return result;
             }
@@ -139,7 +135,7 @@ namespace Reservation.Service.Services
             var serviceMember = await GetServiceMemberByIdAsync(model.ServiceMemberId.Value);
             if (serviceMember == null)
             {
-                result.Message = "ServiceMemberDoesNotExist";
+                result.Message = ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
 
@@ -169,14 +165,14 @@ namespace Reservation.Service.Services
             var serviceMember = await GetServiceMemberByIdAsync(serviceMemberId);
             if (serviceMember == null)
             {
-                result.Message = "ServiceMemberDoesNotExist";
+                result.Message = ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
 
             var bankAccount = await _bankAccService.GetBankAccountInfoAsync(bankAccountId);
             if (bankAccount == null)
             {
-                result.Message = "BankAccountIsNotAttachedToServiceMember";
+                result.Message = ErrorMessages.BankAccountNotAttachedToServiceMember;
                 return result;
             }
 

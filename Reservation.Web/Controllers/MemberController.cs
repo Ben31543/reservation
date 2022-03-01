@@ -2,10 +2,8 @@
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
+using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reservation.Web.Controllers
@@ -27,7 +25,7 @@ namespace Reservation.Web.Controllers
             var result = new RequestResult();
             if(!ModelState.IsValid)
             {
-                result.Message = "WrongIncomingParameter";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -42,7 +40,7 @@ namespace Reservation.Web.Controllers
 
             if (!id.HasValue)
             {
-                result.Message = "WrongIncomingParameter";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -57,7 +55,7 @@ namespace Reservation.Web.Controllers
             var result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = "WrongIncomingParameter";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -66,12 +64,12 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetModel model)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
             var result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = "WrongIncomingParameter";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -85,7 +83,7 @@ namespace Reservation.Web.Controllers
             var result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = "WrongIncomingParameter";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -100,7 +98,7 @@ namespace Reservation.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                result.Message = "WrongIncomingParameters";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -115,7 +113,7 @@ namespace Reservation.Web.Controllers
 
             if (!cardId.HasValue || !memberId.HasValue)
             {
-                result.Message = "WrongIncomingParameters";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 

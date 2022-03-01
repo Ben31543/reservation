@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMemberBranch;
+using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reservation.Web.Controllers
@@ -23,7 +21,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (branchId == null)
             {
-                result.Message = "WrongIncomingParameter";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -38,7 +36,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (serviceMemberId == null)
             {
-                result.Message = "WrongIncomingParameter";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -53,7 +51,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = "WrongIncomingParameter";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -81,7 +79,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (branchId == null)
             {
-                result.Message = "WrongIncomingParameter";
+                result.Message = ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Reservation.Models.ServiceMemberBranch
 {
@@ -22,7 +19,7 @@ namespace Reservation.Models.ServiceMemberBranch
 
         public TimeSpan CloseTime { get; set; }
 
-        public string WorkDays { get; set; }
+        public Dictionary<DayOfWeek, bool> WorkDays { get; set; }
 
         public bool? IsActive { get; set; }
 

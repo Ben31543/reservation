@@ -3,11 +3,8 @@ using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
+using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Services
@@ -27,7 +24,7 @@ namespace Reservation.Service.Services
             var bankAccount = await _db.BankAccounts.FirstOrDefaultAsync(i => i.AccountNumber == model.AccountNumber);
             if (bankAccount == null)
             {
-                result.Message = "SuchBankAccountDoesNotExist";
+                result.Message = ErrorMessages.BankAccountDoesNotExist;
                 return result;
             }
 
@@ -41,10 +38,10 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> DetachServiceMemberFromBankAccountAsync(long accountId)
         {
             RequestResult result = new RequestResult();
-            var bankAccount = await _db.BankAccounts.FirstOrDefaultAsync(i => i.Id == accountId);
+            var bankAccount = await GetBankAccountInfoAsync(accountId);
             if (bankAccount == null)
             {
-                result.Message = "SuchBankAccountDoesNotExist";
+                result.Message = ErrorMessages.BankAccountDoesNotExist;
                 return result;
             }
 

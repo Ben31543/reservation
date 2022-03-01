@@ -4,11 +4,11 @@ using Reservation.Data.Entities;
 using Reservation.Models.Common;
 using Reservation.Models.Criterias;
 using Reservation.Models.Dish;
+using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Services
@@ -66,7 +66,7 @@ namespace Reservation.Service.Services
             var getDish = await _db.Dishes.FirstOrDefaultAsync(i => i.Id == id);
             if (getDish == null)
             {
-                result.Message = "DishNotFound";
+                result.Message = ErrorMessages.DishDoesNotExist;
                 return result;
             }
 
@@ -88,10 +88,10 @@ namespace Reservation.Service.Services
         {
             RequestResult result = new RequestResult();
 
-            var dish = await GetDishById(model.Id);
+            var dish = await GetDishById(model.Id.Value);
             if (dish == null)
             {
-                result.Message = "DishNotFound";
+                result.Message = ErrorMessages.DishDoesNotExist;
                 result.Value = model.Id;
                 return result;
             }
@@ -128,6 +128,11 @@ namespace Reservation.Service.Services
                 .Where(i => i.ServiceMemberId == serviceMemberId)
                 .AsNoTracking()
                 .AsQueryable();
+
+			if (!dishes.Any())
+			{
+                return new List<Dish>();
+			}
 
             if (criteria.DishType.HasValue)
             {

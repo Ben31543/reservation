@@ -53,20 +53,20 @@ namespace Reservation.Service.Services
             return await _db.Members.FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        public async Task<RequestResult> ResetPasswordAsync(PasswordResetModel member)
+        public async Task<RequestResult> ResetPasswordAsync(ResetPasswordModel member)
         {
             var result = new RequestResult();
             var existingMember = await GetMemberByIdAsync(member.Id);
             if (existingMember == null)
             {
-                result.Message = "MemberNotFound";
+                result.Message = ErrorMessages.MemberDoesNotExist;
                 result.Value = member.Id;
                 return result;
             }
 
-            if (existingMember.Email != member.LogIn || existingMember.Phone != member.LogIn)
+            if (existingMember.Email != member.Login || existingMember.Phone != member.Login)
             {
-                result.Message = "WrongMember";
+                result.Message = ErrorMessages.WrongCredientials;
                 result.Value = member.Id;
                 return result;
             }
@@ -93,7 +93,7 @@ namespace Reservation.Service.Services
             var existingMember = await GetMemberByIdAsync(member.Id);
             if (existingMember == null)
             {
-                result.Message = "MemberNotFound";
+                result.Message = ErrorMessages.MemberDoesNotExist;
                 result.Value = member.Id;
                 return result;
             }
@@ -127,7 +127,7 @@ namespace Reservation.Service.Services
 
             if (existingMember == null)
             {
-                result.Message = "MemberNotFound";
+                result.Message = ErrorMessages.MemberDoesNotExist;
                 result.Value = member;
                 return result;
             }
@@ -143,7 +143,7 @@ namespace Reservation.Service.Services
             var member = await GetMemberByIdAsync(model.MemberId);
             if (member == null)
             {
-                result.Message = "MemberDoesNotExist";
+                result.Message = ErrorMessages.MemberDoesNotExist;
                 return result;
             }
 
@@ -174,7 +174,7 @@ namespace Reservation.Service.Services
             var member = await GetMemberByIdAsync(memberId);
             if (member == null)
             {
-                result.Message = "MemberDoesNotExist";
+                result.Message = ErrorMessages.MemberDoesNotExist;
                 return result;
             }
 

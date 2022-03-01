@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Reservation.Models.Common
 {
-    public class PasswordResetModel
+    public class ResetPasswordModel
     {
         public long Id { get; set; }
 
         [Required]
-        public string LogIn { get; set; }
+        public string Login { get; set; }
 
         [Required(ErrorMessage = "FieldIsRequired")]
         [MinLength(8), MaxLength(12)]

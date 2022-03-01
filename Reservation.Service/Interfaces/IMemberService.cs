@@ -2,10 +2,6 @@
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Interfaces
@@ -18,7 +14,7 @@ namespace Reservation.Service.Interfaces
 
         Task<RequestResult> VerifyMemberAsync(SignInModel member);
 
-        Task<RequestResult> ResetPasswordAsync(PasswordResetModel member);
+        Task<RequestResult> ResetPasswordAsync(ResetPasswordModel member);
 
         Task<Member> GetMemberByIdAsync(long id);
 
