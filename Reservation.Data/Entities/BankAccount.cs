@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Reservation.Data.Entities
 {
 	public class BankAccount
     {
+        [Key]
         public long Id { get; set; }
 
         public string AccountNumber { get; set; }
@@ -11,8 +13,6 @@ namespace Reservation.Data.Entities
         public decimal? Balance { get; set; }
 
         public long BankId { get; set; }
-
-        public long ServiceMemberId { get; set; }
 
         public DateTime CreationDate { get; set; }
 

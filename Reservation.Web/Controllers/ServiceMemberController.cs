@@ -56,7 +56,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> VerifyServiceMember(SignInModel model)
+        public async Task<IActionResult> VerifyServiceMember([FromBody]SignInModel model)
         {
             RequestResult result = new RequestResult();
 

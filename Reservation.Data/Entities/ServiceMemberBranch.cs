@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Reservation.Data.Entities
 {
     public class ServiceMemberBranch
     {
+        [Key]
         public long Id { get; set; }
 
         public string Name { get; set; }

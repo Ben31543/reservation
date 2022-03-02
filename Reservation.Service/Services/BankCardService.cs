@@ -22,7 +22,8 @@ namespace Reservation.Service.Services
             var result = new RequestResult();
 
             var bankCard = await _db.BankCards.FirstOrDefaultAsync(i => i.Number == model.CardNumber
-             && i.ValidThru == model.ValidThru
+             && i.ValidThru.Year == model.ValidThru.Year
+             && i.ValidThru.Month == model.ValidThru.Month
              && i.CVV == model.CVV
              && i.Owner == model.Owner);
             if (bankCard == null)
@@ -38,7 +39,6 @@ namespace Reservation.Service.Services
             }
 
             bankCard.IsAttached = true;
-            bankCard.MemberId = model.MemberId;
 
             try
             {
@@ -66,7 +66,6 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            card.MemberId = null;
             card.IsAttached = false;
 
             try
