@@ -28,7 +28,6 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            bankAccount.ServiceMemberId = model.ServiceMemberId.Value;
             await _db.SaveChangesAsync();
             result.Succeeded = true;
             result.Value = bankAccount.Id;

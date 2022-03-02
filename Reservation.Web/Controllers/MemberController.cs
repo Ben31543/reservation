@@ -4,6 +4,9 @@ using Reservation.Models.Common;
 using Reservation.Models.Member;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Reservation.Web.Controllers
@@ -25,7 +28,14 @@ namespace Reservation.Web.Controllers
             var result = new RequestResult();
             if(!ModelState.IsValid)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                StringBuilder errors = new StringBuilder();
+                IEnumerable<string> allErrors = ModelState.Values.SelectMany(v => v.Errors).Select(i => i.ErrorMessage);
+                foreach (var item in allErrors)
+                {
+                    errors.Append(item);
+                }
+
+                result.Message = $"{ErrorMessages.WrongIncomingParameters} => {errors}";
                 return Json(result);
             }
 
@@ -41,6 +51,7 @@ namespace Reservation.Web.Controllers
             if (!id.HasValue)
             {
                 result.Message = ErrorMessages.WrongIncomingParameters;
+
                 return Json(result);
             }
 
@@ -92,7 +103,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AttachCardToMember([FromBody] AttachCardToMemberModel model)
+        public async Task<IActionResult> AttachCardToMember([FromBody]AttachCardToMemberModel model)
         {
             var result = new RequestResult();
 

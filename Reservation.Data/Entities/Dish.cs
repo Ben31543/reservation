@@ -1,7 +1,10 @@
-﻿namespace Reservation.Data.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Reservation.Data.Entities
 {
     public class Dish
     {
+        [Key]
         public long Id { get; set; }
 
         public string Name { get; set; }

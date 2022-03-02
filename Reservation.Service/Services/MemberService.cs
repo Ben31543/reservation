@@ -56,17 +56,10 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> ResetPasswordAsync(ResetPasswordModel member)
         {
             var result = new RequestResult();
-            var existingMember = await GetMemberByIdAsync(member.Id);
+            var existingMember = await _db.Members.FirstOrDefaultAsync(i => i.Email == member.Login || i.Phone == member.Login);
             if (existingMember == null)
             {
                 result.Message = ErrorMessages.MemberDoesNotExist;
-                result.Value = member.Id;
-                return result;
-            }
-
-            if (existingMember.Email != member.Login || existingMember.Phone != member.Login)
-            {
-                result.Message = ErrorMessages.WrongCredientials;
                 result.Value = member.Id;
                 return result;
             }
@@ -179,6 +172,12 @@ namespace Reservation.Service.Services
             }
 
             var detachResult = await _bankCard.DetachCardFromMemberAsync(bankCardId);
+            if (detachResult.Succeeded)
+            {
+                member.BankCardId = null;
+                await _db.SaveChangesAsync();
+            }
+
             return detachResult;
         }
     }
