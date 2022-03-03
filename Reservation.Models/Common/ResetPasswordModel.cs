@@ -4,8 +4,6 @@ namespace Reservation.Models.Common
 {
     public class ResetPasswordModel
     {
-        public long Id { get; set; }
-
         [Required]
         public string Login { get; set; }
 

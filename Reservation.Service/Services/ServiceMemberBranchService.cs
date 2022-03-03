@@ -58,7 +58,7 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> DeleteBranchAsync(long branchId)
         {
             RequestResult result = new RequestResult();
-            var branch = await _db.ServiceMemberBranches.FirstOrDefaultAsync(i => i.Id == branchId);
+            var branch = await GetBranchByIdAsync(branchId);
             if (branch == null)
             {
                 result.Message = ErrorMessages.BranchNotFound;
@@ -121,7 +121,9 @@ namespace Reservation.Service.Services
 
         public async Task<List<ServiceMemberBranch>> GetBranchesAsync(long serviceMemberId)
         {
-            return await _db.ServiceMemberBranches.Where(i => i.ServiceMemberId == serviceMemberId).ToListAsync();
+            return await _db.ServiceMemberBranches
+                .Where(i => i.ServiceMemberId == serviceMemberId)
+                .ToListAsync();
         }
     }
 }

@@ -60,7 +60,6 @@ namespace Reservation.Service.Services
             if (existingMember == null)
             {
                 result.Message = ErrorMessages.MemberDoesNotExist;
-                result.Value = member.Id;
                 return result;
             }
 

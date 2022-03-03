@@ -4,9 +4,6 @@ using Reservation.Models.Common;
 using Reservation.Models.Member;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Reservation.Web.Controllers
@@ -14,12 +11,9 @@ namespace Reservation.Web.Controllers
     public class MemberController : Controller
     {
         private readonly IMemberService _member;
-        private readonly IBankCardService _bankCard;
-
-        public MemberController(IMemberService member, IBankCardService bankCard)
+        public MemberController(IMemberService member)
         {
             _member = member;
-            _bankCard = bankCard;
         }
 
         [HttpPost]
@@ -28,14 +22,7 @@ namespace Reservation.Web.Controllers
             var result = new RequestResult();
             if(!ModelState.IsValid)
             {
-                StringBuilder errors = new StringBuilder();
-                IEnumerable<string> allErrors = ModelState.Values.SelectMany(v => v.Errors).Select(i => i.ErrorMessage);
-                foreach (var item in allErrors)
-                {
-                    errors.Append(item);
-                }
-
-                result.Message = $"{ErrorMessages.WrongIncomingParameters} => {errors}";
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 
@@ -51,7 +38,6 @@ namespace Reservation.Web.Controllers
             if (!id.HasValue)
             {
                 result.Message = ErrorMessages.WrongIncomingParameters;
-
                 return Json(result);
             }
 
@@ -66,7 +52,7 @@ namespace Reservation.Web.Controllers
             var result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 
@@ -80,7 +66,7 @@ namespace Reservation.Web.Controllers
             var result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 
@@ -94,7 +80,7 @@ namespace Reservation.Web.Controllers
             var result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 
@@ -109,7 +95,7 @@ namespace Reservation.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 

@@ -21,18 +21,18 @@ namespace Reservation.Service.Services
         {
             var result = new RequestResult();
 
-            var bankCard = await _db.BankCards.FirstOrDefaultAsync(i => i.Number == model.CardNumber
-             && i.ValidThru.Year == model.ValidThru.Year
-             && i.ValidThru.Month == model.ValidThru.Month
-             && i.CVV == model.CVV
-             && i.Owner == model.Owner);
+            var bankCard = await _db.BankCards.FirstOrDefaultAsync(
+                i => i.Number == model.CardNumber
+                  && IsValidDate(model.ValidThru, i.ValidThru, false)
+                  && i.CVV == model.CVV
+                  && i.Owner == model.Owner);
             if (bankCard == null)
             {
                 result.Message = ErrorMessages.BankCardDoesNotExist;
                 return result;
             }
 
-            if (!IsValidCard(bankCard.ValidThru))
+            if (!IsValidDate(model.ValidThru, bankCard.ValidThru, true))
             {
                 result.Message = ErrorMessages.BankCardExpired;
                 return result;
@@ -81,9 +81,14 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        private bool IsValidCard(DateTime validThru)
+        private bool IsValidDate(DateTime incoming, DateTime existing, bool toCheckForExpiration)
         {
-            return validThru.Date > DateTime.Now;
+			if (toCheckForExpiration)
+			{
+                return incoming.Date <= existing.Date;
+			}
+
+            return incoming.Year == existing.Year && incoming.Month == existing.Month;
         }
     }
 }

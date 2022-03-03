@@ -46,12 +46,12 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveServiceMemberBranch([FromBody]ServiceMemberBranchEditModel model)
+        public async Task<IActionResult> SaveServiceMemberBranch([FromBody] ServiceMemberBranchEditModel model)
         {
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 

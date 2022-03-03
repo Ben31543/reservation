@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reservation.Web", "Reservation.Web\Reservation.Web.csproj", "{A86372C0-EFA2-421E-9940-20E6E3D3BB1A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reservation.Data", "Reservation.Data\Reservation.Data.csproj", "{FA5576F0-9561-4A26-96AD-9C15CCDAB287}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reservation.Service", "Reservation.Service\Reservation.Service.csproj", "{92F04B98-9163-4A6B-B4BB-2EA84E916865}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reservation.Service", "Reservation.Service\Reservation.Service.csproj", "{92F04B98-9163-4A6B-B4BB-2EA84E916865}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reservation.Models", "Reservation.Models\Reservation.Models.csproj", "{5C7FAF35-E19D-420C-8B38-1DEADC128368}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reservation.Models", "Reservation.Models\Reservation.Models.csproj", "{5C7FAF35-E19D-420C-8B38-1DEADC128368}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reservation.ServiceMember", "Reservation.ServiceMember\Reservation.ServiceMember.csproj", "{0D9D3296-4339-443A-B8E9-870FF3A860F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5C7FAF35-E19D-420C-8B38-1DEADC128368}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C7FAF35-E19D-420C-8B38-1DEADC128368}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C7FAF35-E19D-420C-8B38-1DEADC128368}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D9D3296-4339-443A-B8E9-870FF3A860F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D9D3296-4339-443A-B8E9-870FF3A860F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D9D3296-4339-443A-B8E9-870FF3A860F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D9D3296-4339-443A-B8E9-870FF3A860F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

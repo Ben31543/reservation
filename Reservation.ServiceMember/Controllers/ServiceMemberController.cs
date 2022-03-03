@@ -23,7 +23,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 
@@ -56,13 +56,13 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> VerifyServiceMember([FromBody]SignInModel model)
+        public async Task<IActionResult> VerifyServiceMember([FromBody] SignInModel model)
         {
             RequestResult result = new RequestResult();
 
             if (!ModelState.IsValid)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 
@@ -82,7 +82,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 
@@ -96,7 +96,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 
@@ -105,7 +105,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AttachBankAccount([FromBody]BankAccountAttachModel model)
+        public async Task<IActionResult> AttachBankAccount([FromBody] BankAccountAttachModel model)
         {
             RequestResult result = new RequestResult();
             if (!model.ServiceMemberId.HasValue)
@@ -119,7 +119,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DetachFromBankAccount([FromQuery]long? serviceMemberId, [FromQuery]long? bankAccountId)
+        public async Task<IActionResult> DetachFromBankAccount([FromQuery] long? serviceMemberId, [FromQuery] long? bankAccountId)
         {
             var result = new RequestResult();
             if (!serviceMemberId.HasValue || !bankAccountId.HasValue)
