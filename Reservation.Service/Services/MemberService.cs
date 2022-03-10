@@ -7,6 +7,8 @@ using Reservation.Models.Member;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Services
@@ -178,6 +180,33 @@ namespace Reservation.Service.Services
             }
 
             return detachResult;
+        }
+
+        public async Task<List<MemberDealsModel>> GetMemberDealsHistoryAsync(long memberId)
+        {
+            List<MemberDealsModel> orders = new List<MemberDealsModel>();
+
+            var member = await GetMemberByIdAsync(memberId);
+            if (member == null)
+            {
+                return orders;
+            }
+
+            orders = await _db.Reservings.Include(i => i.ServiceMember)
+                                      .Include(i => i.ServiceMemberBranch)
+                                      .Where(i => i.Id == memberId)
+                                      .Select(i => new MemberDealsModel
+                                      {
+                                          MemberId = memberId,
+                                          Amount = i.Amount,
+                                          Address = i.ServiceMemberBranch.Address,
+                                          OnlinePayment = i.IsOnlinePayment,
+                                          OrdersDate = i.ReservationDate,
+                                          ServiceMemberName = i.ServiceMember.Name
+
+                                      }).ToListAsync();
+
+            return orders;
         }
     }
 }

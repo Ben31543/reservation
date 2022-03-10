@@ -131,5 +131,19 @@ namespace Reservation.Web.Controllers
             result = await _serviceMember.DetachBankAccountAsync(serviceMemberId.Value, bankAccountId.Value);
             return Json(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ServiceDealsHistory(long? serviceId)
+        {
+            RequestResult result = new RequestResult();
+            if (!serviceId.HasValue)
+            {
+                result.Message = ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+            }
+
+            result.Value = await _serviceMember.GetServiceDealsHistoryAsync(serviceId.Value);
+            return (Json(result));
+        }
     }
 }

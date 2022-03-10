@@ -2,6 +2,7 @@
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Interfaces
@@ -21,5 +22,7 @@ namespace Reservation.Service.Interfaces
         Task<RequestResult> AddBankCardAsync(AttachCardToMemberModel model);
 
         Task<RequestResult> DetachBankCardAsync(long memberId, long bankCardId);
+
+        Task<List<MemberDealsModel>> GetMemberDealsHistoryAsync(long memberId);
     }
 }
