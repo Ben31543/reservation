@@ -3,10 +3,13 @@ using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
+using Reservation.Models.Criterias;
 using Reservation.Models.ServiceMember;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Services
@@ -194,6 +197,34 @@ namespace Reservation.Service.Services
             }
 
             return result;
+        }
+
+        public async Task<List<ServiceMemberDealHistoryItemModel>> GetServiceMemberDealsHistoryAsync(long serviceId)
+        {
+            List<ServiceMemberDealHistoryItemModel> deals = new List<ServiceMemberDealHistoryItemModel>();
+
+            var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == serviceId);
+            if (serviceMember == null)
+            {
+                return deals;
+            }
+
+            deals = await _db.Reservings.Include(i => i.ServiceMemberBranch)
+                                     .Where(i => i.Id == serviceId)
+                                     .Select(i => new ServiceMemberDealHistoryItemModel
+                                     {
+                                         Amount = i.Amount,
+                                         OrdersDate = i.ReservationDate,
+                                         BranchName = i.ServiceMemberBranch.Name,
+                                         Address = i.ServiceMemberBranch.Address,
+                                         OnlinePayment = i.IsOnlinePayment
+                                     }).ToListAsync();
+            return deals;
+        }
+
+        public async Task<List<ServiceMember>> GetServiceMembersAsync(ServiceMemberCriteria criteria)
+        {
+           return await _db.ServiceMembers.Where(i => i.Name.Contains(criteria.SearchText)).ToListAsync();
         }
     }
 }

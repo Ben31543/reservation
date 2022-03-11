@@ -177,12 +177,6 @@ namespace Reservation.Data.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<long?>("BankAccountId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("BankCardId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Dishes")
                         .HasColumnType("nvarchar(max)");
 
@@ -194,6 +188,9 @@ namespace Reservation.Data.Migrations
 
                     b.Property<long>("MemberId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime2");
@@ -208,10 +205,6 @@ namespace Reservation.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BankAccountId");
-
-                    b.HasIndex("BankCardId");
 
                     b.HasIndex("MemberId");
 
@@ -356,14 +349,6 @@ namespace Reservation.Data.Migrations
 
             modelBuilder.Entity("Reservation.Data.Entities.Reserving", b =>
                 {
-                    b.HasOne("Reservation.Data.Entities.BankAccount", "BankAccount")
-                        .WithMany()
-                        .HasForeignKey("BankAccountId");
-
-                    b.HasOne("Reservation.Data.Entities.BankCard", "BankCard")
-                        .WithMany()
-                        .HasForeignKey("BankCardId");
-
                     b.HasOne("Reservation.Data.Entities.Member", "Member")
                         .WithMany()
                         .HasForeignKey("MemberId")
@@ -381,10 +366,6 @@ namespace Reservation.Data.Migrations
                         .HasForeignKey("ServiceMemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("BankAccount");
-
-                    b.Navigation("BankCard");
 
                     b.Navigation("Member");
 

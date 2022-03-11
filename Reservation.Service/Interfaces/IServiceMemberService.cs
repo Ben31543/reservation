@@ -1,7 +1,9 @@
 ﻿using Reservation.Data.Entities;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
+using Reservation.Models.Criterias;
 using Reservation.Models.ServiceMember;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Interfaces
@@ -21,5 +23,9 @@ namespace Reservation.Service.Interfaces
         Task<RequestResult> AddBankAccountAsync(BankAccountAttachModel model);
 
         Task<RequestResult> DetachBankAccountAsync(long serviceMemberId, long bankAccountId);
+
+        Task<List<ServiceMemberDealHistoryItemModel>> GetServiceMemberDealsHistoryAsync(long serviceId);
+
+        Task<List<ServiceMember>> GetServiceMembersAsync(ServiceMemberCriteria criteria);
     }
 }

@@ -117,5 +117,19 @@ namespace Reservation.Web.Controllers
             result = await _member.DetachBankCardAsync(memberId.Value, cardId.Value);
             return Json(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetMemberDealsHistory(long? memberId)
+        {
+            RequestResult result = new RequestResult();
+            if (!memberId.HasValue)
+            {
+                result.Message = ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+            }
+
+            result.Value = await _member.GetMemberDealsHistoryAsync(memberId.Value);
+            return (Json(result));
+        }
     }
 }

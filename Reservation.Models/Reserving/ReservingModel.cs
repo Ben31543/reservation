@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Reservation.Data.Entities
+namespace Reservation.Models.Reserving
 {
-    public class Reserving
+    public class ReservingModel
     {
-        [Key]
         public long Id { get; set; }
 
         public DateTime ReservationDate { get; set; }
@@ -20,18 +23,12 @@ namespace Reservation.Data.Entities
 
         public bool IsOnlinePayment { get; set; }
 
-        public string Tables { get; set; }
+        public Dictionary<string, byte> Tables { get; set; }
 
-        public string Dishes { get; set; }
+        public Dictionary<string,byte> Dishes { get; set; }
 
         public bool IsTakeOut { get; set; }
 
         public string Notes { get; set; }
-
-        public Member Member { get; set; }
-
-        public ServiceMember ServiceMember { get; set; }
-
-        public ServiceMemberBranch ServiceMemberBranch { get; set; }
     }
 }
