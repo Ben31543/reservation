@@ -21,7 +21,7 @@ namespace Reservation.Service.Services
         {
             _db = db;
         }
-        public async Task<RequestResult> ReserveAsync(ReservingModel model)
+        public async Task<RequestResult> AddReservingAsync(ReservingModel model)
         {
             RequestResult result = new RequestResult();
             var reserve = new Reserving

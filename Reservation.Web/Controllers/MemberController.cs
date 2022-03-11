@@ -119,7 +119,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MembersDealsHistory(long? memberId)
+        public async Task<IActionResult> GetMemberDealsHistory(long? memberId)
         {
             RequestResult result = new RequestResult();
             if (!memberId.HasValue)

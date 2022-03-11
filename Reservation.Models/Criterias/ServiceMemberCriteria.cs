@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Reservation.Models.Criterias
 {
-    public class ServiceCriteria
+    public class ServiceMemberCriteria
     {
         public string SearchText { get; set; }
     }

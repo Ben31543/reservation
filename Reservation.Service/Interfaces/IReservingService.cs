@@ -10,6 +10,6 @@ namespace Reservation.Service.Interfaces
 {
     public interface IReservingService
     {
-        Task<RequestResult> ReserveAsync(ReservingModel model);
+        Task<RequestResult> AddReservingAsync(ReservingModel model);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Reservation.Models.ServiceMember
 {
-    public class ServiceDealsModel
+    public class ServiceMemberDealHistoryItemModel
     {
         public int Id { get; set; }
 

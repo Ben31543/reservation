@@ -194,10 +194,9 @@ namespace Reservation.Service.Services
 
             orders = await _db.Reservings.Include(i => i.ServiceMember)
                                       .Include(i => i.ServiceMemberBranch)
-                                      .Where(i => i.Id == memberId)
+                                      .Where(i => i.MemberId == memberId)
                                       .Select(i => new MemberDealsModel
                                       {
-                                          MemberId = memberId,
                                           Amount = i.Amount,
                                           Address = i.ServiceMemberBranch.Address,
                                           OnlinePayment = i.IsOnlinePayment,

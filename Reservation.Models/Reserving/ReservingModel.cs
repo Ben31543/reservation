@@ -9,7 +9,6 @@ namespace Reservation.Models.Reserving
 {
     public class ReservingModel
     {
-        [Key]
         public long Id { get; set; }
 
         public DateTime ReservationDate { get; set; }

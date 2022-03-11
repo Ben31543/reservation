@@ -20,7 +20,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DealsHistory(ReservingModel model)
+        public async Task<IActionResult> GetReservingDealsHistory(ReservingModel model)
         {
             var result = new RequestResult();
 
@@ -30,7 +30,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result = await _reserve.ReserveAsync(model);
+            result = await _reserve.AddReservingAsync(model);
             return Json(result);
         }
     }

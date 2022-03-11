@@ -199,19 +199,19 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<List<ServiceDealsModel>> GetServiceDealsHistoryAsync(long serviceId)
+        public async Task<List<ServiceMemberDealHistoryItemModel>> GetServiceMemberDealsHistoryAsync(long serviceId)
         {
-            List<ServiceDealsModel> deals = new List<ServiceDealsModel>();
+            List<ServiceMemberDealHistoryItemModel> deals = new List<ServiceMemberDealHistoryItemModel>();
 
-            var service = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == serviceId);
-            if (service == null)
+            var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == serviceId);
+            if (serviceMember == null)
             {
                 return deals;
             }
 
             deals = await _db.Reservings.Include(i => i.ServiceMemberBranch)
                                      .Where(i => i.Id == serviceId)
-                                     .Select(i => new ServiceDealsModel
+                                     .Select(i => new ServiceMemberDealHistoryItemModel
                                      {
                                          Amount = i.Amount,
                                          OrdersDate = i.ReservationDate,
@@ -222,7 +222,7 @@ namespace Reservation.Service.Services
             return deals;
         }
 
-        public async Task<List<ServiceMember>> GetServicesAsync(ServiceCriteria criteria)
+        public async Task<List<ServiceMember>> GetServiceMembersAsync(ServiceMemberCriteria criteria)
         {
            return await _db.ServiceMembers.Where(i => i.Name.Contains(criteria.SearchText)).ToListAsync();
         }

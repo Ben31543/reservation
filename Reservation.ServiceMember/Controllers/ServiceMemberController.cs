@@ -133,7 +133,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ServiceDealsHistory(long? serviceId)
+        public async Task<IActionResult> GetServiceMemberDealsHistory(long? serviceId)
         {
             RequestResult result = new RequestResult();
             if (!serviceId.HasValue)
@@ -142,7 +142,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _serviceMember.GetServiceDealsHistoryAsync(serviceId.Value);
+            result.Value = await _serviceMember.GetServiceMemberDealsHistoryAsync(serviceId.Value);
             return (Json(result));
         }
     }
