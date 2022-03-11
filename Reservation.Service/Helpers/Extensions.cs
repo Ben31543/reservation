@@ -52,6 +52,7 @@ namespace Reservation.Service.Helpers
             {
                 return true;
             }
+
             return false;
         }
     }
