@@ -17,9 +17,11 @@ namespace Reservation.Service.Services
     public class ReservingService : IReservingService
     {
         private readonly ApplicationContext _db;
-        public ReservingService(ApplicationContext db)
+        private readonly IPaymentService _payment;
+        public ReservingService(ApplicationContext db, IPaymentService payment)
         {
             _db = db;
+            _payment = payment;
         }
         public async Task<RequestResult> AddReservingAsync(ReservingModel model)
         {
@@ -34,7 +36,8 @@ namespace Reservation.Service.Services
                 ServiceMemberBranchId = model.ServiceMemberBranchId,
                 Tables = JsonConvert.SerializeObject(model.Tables),
                 Dishes = JsonConvert.SerializeObject(model.Dishes),
-                Notes = model.Notes
+                Notes = model.Notes,
+                Amount=model.Amount
             };
 
             await _db.Reservings.AddAsync(reserve);
@@ -48,6 +51,19 @@ namespace Reservation.Service.Services
             {
                 result.Message = e.Message;
                 return result;
+            }
+
+            if (reserve.IsOnlinePayment)
+            {
+                var approvePayment = new PaymentDataModel
+                {
+                    Amount = reserve.Amount,
+                    PaymentDate = DateTime.Now,
+                    BankCardIdFrom = reserve.Member.BankCardId.Value,
+                    BankAcountIdTo = reserve.ServiceMember.BankAccountId.Value
+                };
+
+                await _payment.AddPaymentAsync(approvePayment);
             }
 
             result.Value = reserve;
