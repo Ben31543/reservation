@@ -29,15 +29,15 @@ namespace Reservation.Service.Services
                 Amount = model.Amount,
                 BankAcountIdTo = model.BankAcountIdTo,
                 BankCardIdFrom = model.BankCardIdFrom,
-                PaymentDate = model.PaymentDate,
+                PaymentDate = DateTime.Now
             };
 
             try
             {
                 await _db.PaymentDatas.AddAsync(paymentData);
                 paymentData.Approved = true;
-                result.Succeeded = true;
                 await _db.SaveChangesAsync();
+                result.Succeeded = true;
             }
             catch (Exception e)
             {
