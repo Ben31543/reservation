@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Reservation.Data.Constants;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Reservation.Models.ServiceMember
 {
     public class ServiceMemberBankAccountModel
     {
-        [Required]
+        [Required(ErrorMessage = Localizations.Errors.ThisFieldIsRequired)]
         public string AccountNumber { get; set; }
 
         public long BankId { get; set; }

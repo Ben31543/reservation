@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reservation.Data;
+using Reservation.Data.Constants;
 using Reservation.Data.Entities;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
@@ -24,7 +25,7 @@ namespace Reservation.Service.Services
             var bankAccount = await _db.BankAccounts.FirstOrDefaultAsync(i => i.AccountNumber == model.AccountNumber);
             if (bankAccount == null)
             {
-                result.Message = ErrorMessages.BankAccountDoesNotExist;
+                result.Message = Localizations.Errors.BankAccountDoesNotExist;
                 return result;
             }
 
@@ -40,7 +41,7 @@ namespace Reservation.Service.Services
             var bankAccount = await GetBankAccountInfoAsync(accountId);
             if (bankAccount == null)
             {
-                result.Message = ErrorMessages.BankAccountDoesNotExist;
+                result.Message = Localizations.Errors.BankAccountDoesNotExist;
                 return result;
             }
 

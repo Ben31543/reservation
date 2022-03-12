@@ -2,7 +2,7 @@
 
 namespace Reservation.Models.Criterias
 {
-    public class DishCriteria
+    public class DishSearchCriteria
     {
         public string SearchText { get; set; }
 

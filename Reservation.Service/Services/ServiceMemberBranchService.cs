@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Reservation.Data;
+using Reservation.Data.Constants;
 using Reservation.Data.Entities;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMemberBranch;
@@ -61,7 +62,7 @@ namespace Reservation.Service.Services
             var branch = await GetBranchByIdAsync(branchId);
             if (branch == null)
             {
-                result.Message = ErrorMessages.BranchNotFound;
+                result.Message = Localizations.Errors.BranchNotFound;
                 return result;
             }
 
@@ -86,7 +87,7 @@ namespace Reservation.Service.Services
             var branch = await GetBranchByIdAsync(model.Id.Value);
             if (branch == null)
             {
-                result.Message = ErrorMessages.BranchNotFound;
+                result.Message = Localizations.Errors.BranchNotFound;
                 return result;
             }
 

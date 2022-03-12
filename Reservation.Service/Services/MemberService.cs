@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reservation.Data;
+using Reservation.Data.Constants;
 using Reservation.Data.Entities;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
@@ -22,31 +23,33 @@ namespace Reservation.Service.Services
             _db = db;
             _bankCard = bankCard;
         }
-        public async Task<RequestResult> AddNewMemberAsync(MemberRegistrationModel member)
+        public async Task<RequestResult> AddNewMemberAsync(MemberRegistrationModel model)
         {
             var result = new RequestResult();
-            var newMember = new Member
+            var member = new Member
             {
-                Name = member.Name,
-                Surname = member.SurName,
-                BirthDate = member.BirthDate,
-                Email = member.Email,
-                PasswordHash = member.Password.ToHashedPassword(),
-                Phone = member.Phone
+                Name = model.Name,
+                Surname = model.Surname,
+                BirthDate = model.BirthDate,
+                Email = model.Email,
+                PasswordHash = model.Password.ToHashedPassword(),
+                Phone = model.Phone
             };
+            
+            await _db.Members.AddAsync(member);
 
             try
             {
-                _db.Members.Add(newMember);
                 await _db.SaveChangesAsync();
                 result.Succeeded = true;
             }
             catch (Exception ex)
             {
                 result.Message = ex.Message;
+                return result;
             }
 
-            result.Value = newMember;
+            result.Value = member;
             return result;
         }
 
@@ -58,10 +61,11 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> ResetPasswordAsync(ResetPasswordModel member)
         {
             var result = new RequestResult();
-            var existingMember = await _db.Members.FirstOrDefaultAsync(i => i.Email == member.Login || i.Phone == member.Login);
+
+            var existingMember = await _db.Members.FirstOrDefaultAsync(i => i.Email == member.Login);
             if (existingMember == null)
             {
-                result.Message = ErrorMessages.MemberDoesNotExist;
+                result.Message = Localizations.Errors.MemberDoesNotExist;
                 return result;
             }
 
@@ -75,6 +79,7 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
+                return result;
             }
 
             result.Value = existingMember;
@@ -84,10 +89,11 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> UpdateMemberInfoAsync(MemberEditModel member)
         {
             var result = new RequestResult();
+
             var existingMember = await GetMemberByIdAsync(member.Id);
             if (existingMember == null)
             {
-                result.Message = ErrorMessages.MemberDoesNotExist;
+                result.Message = Localizations.Errors.MemberDoesNotExist;
                 result.Value = member.Id;
                 return result;
             }
@@ -115,13 +121,11 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> VerifyMemberAsync(SignInModel member)
         {
             var result = new RequestResult();
-            var existingMember = await _db.Members.FirstOrDefaultAsync(i =>
-                i.Email == member.LogIn && i.PasswordHash == member.Password.ToHashedPassword()
-             || i.Phone == member.LogIn && i.PasswordHash == member.Password.ToHashedPassword());
 
+            var existingMember = await _db.Members.FirstOrDefaultAsync(i => i.Email == member.Login && i.PasswordHash == member.Password.ToHashedPassword());
             if (existingMember == null)
             {
-                result.Message = ErrorMessages.MemberDoesNotExist;
+                result.Message = Localizations.Errors.MemberDoesNotExist;
                 result.Value = member;
                 return result;
             }
@@ -137,7 +141,7 @@ namespace Reservation.Service.Services
             var member = await GetMemberByIdAsync(model.MemberId);
             if (member == null)
             {
-                result.Message = ErrorMessages.MemberDoesNotExist;
+                result.Message = Localizations.Errors.MemberDoesNotExist;
                 return result;
             }
 
@@ -168,7 +172,7 @@ namespace Reservation.Service.Services
             var member = await GetMemberByIdAsync(memberId);
             if (member == null)
             {
-                result.Message = ErrorMessages.MemberDoesNotExist;
+                result.Message = Localizations.Errors.MemberDoesNotExist;
                 return result;
             }
 
@@ -184,7 +188,7 @@ namespace Reservation.Service.Services
 
         public async Task<List<MemberDealsModel>> GetMemberDealsHistoryAsync(long memberId)
         {
-            List<MemberDealsModel> orders = new List<MemberDealsModel>();
+            var orders = new List<MemberDealsModel>();
 
             var member = await GetMemberByIdAsync(memberId);
             if (member == null)
@@ -192,20 +196,17 @@ namespace Reservation.Service.Services
                 return orders;
             }
 
-            orders = await _db.Reservings.Include(i => i.ServiceMember)
-                                      .Include(i => i.ServiceMemberBranch)
-                                      .Where(i => i.MemberId == memberId)
-                                      .Select(i => new MemberDealsModel
-                                      {
-                                          Amount = i.Amount,
-                                          Address = i.ServiceMemberBranch.Address,
-                                          OnlinePayment = i.IsOnlinePayment,
-                                          OrdersDate = i.ReservationDate,
-                                          ServiceMemberName = i.ServiceMember.Name
-
-                                      }).ToListAsync();
-
-            return orders;
+            return await _db.Reservings.Include(i => i.ServiceMember)
+                                         .Include(i => i.ServiceMemberBranch)
+                                         .Where(i => i.MemberId == memberId)
+                                         .Select(i => new MemberDealsModel
+                                         {
+                                             Amount = i.Amount,
+                                             BranchAddress = i.ServiceMemberBranch.Address,
+                                             OnlinePayment = i.IsOnlinePayment,
+                                             ReservingDate = i.ReservationDate,
+                                             ServiceMemberName = i.ServiceMember.Name
+                                         }).ToListAsync();
         }
     }
 }

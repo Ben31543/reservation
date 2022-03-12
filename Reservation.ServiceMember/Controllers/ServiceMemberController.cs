@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Reservation.Data.Constants;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMember;
@@ -38,14 +39,14 @@ namespace Reservation.Web.Controllers
 
             if (id == null)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = Localizations.Errors.WrongIncomingParameters;
                 return Json(result);
             }
 
             var serviceMember = await _serviceMember.GetServiceMemberByIdAsync(id.Value);
             if (serviceMember == null)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = Localizations.Errors.WrongIncomingParameters;
                 result.Value = id;
                 return Json(result);
             }
@@ -110,7 +111,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (!model.ServiceMemberId.HasValue)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = Localizations.Errors.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -124,7 +125,7 @@ namespace Reservation.Web.Controllers
             var result = new RequestResult();
             if (!serviceMemberId.HasValue || !bankAccountId.HasValue)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = Localizations.Errors.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -138,7 +139,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (!serviceId.HasValue)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = Localizations.Errors.WrongIncomingParameters;
                 return Json(result);
             }
 

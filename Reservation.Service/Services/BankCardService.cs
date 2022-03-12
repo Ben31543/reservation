@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reservation.Data;
+using Reservation.Data.Constants;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Service.Helpers;
@@ -28,13 +29,13 @@ namespace Reservation.Service.Services
                   && i.Owner == model.Owner);
             if (bankCard == null)
             {
-                result.Message = ErrorMessages.BankCardDoesNotExist;
+                result.Message = Localizations.Errors.BankCardDoesNotExist;
                 return result;
             }
 
             if (!IsValidDate(model.ValidThru, bankCard.ValidThru, true))
             {
-                result.Message = ErrorMessages.BankCardExpired;
+                result.Message = Localizations.Errors.BankCardExpired;
                 return result;
             }
 
@@ -62,7 +63,7 @@ namespace Reservation.Service.Services
 
             if (card == null)
             {
-                result.Message = ErrorMessages.BankCardDoesNotExist;
+                result.Message = Localizations.Errors.BankCardDoesNotExist;
                 return result;
             }
 

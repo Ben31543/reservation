@@ -27,17 +27,17 @@ namespace Reservation.Service.Services
             var paymentData = new PaymentData
             {
                 Amount = model.Amount,
-                BankAcountIdTo = model.BankAcountIdTo,
-                BankCardIdFrom = model.BankCardIdFrom,
+                BankAcountIdTo = model.BankAcountTo,
+                BankCardIdFrom = model.BankCardAccountFrom,
                 PaymentDate = DateTime.Now
             };
 
+            await _db.PaymentDatas.AddAsync(paymentData);
+
             try
             {
-                await _db.PaymentDatas.AddAsync(paymentData);
                 paymentData.Approved = true;
                 await _db.SaveChangesAsync();
-                result.Succeeded = true;
             }
             catch (Exception e)
             {
@@ -45,6 +45,7 @@ namespace Reservation.Service.Services
                 return result;
             }
 
+            result.Succeeded = true;
             result.Value = paymentData;
             return result;
         }

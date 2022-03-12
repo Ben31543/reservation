@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.Common;
@@ -14,60 +15,77 @@ using System.Web.Helpers;
 
 namespace Reservation.Service.Services
 {
-    public class ReservingService : IReservingService
-    {
-        private readonly ApplicationContext _db;
-        private readonly IPaymentService _payment;
-        public ReservingService(ApplicationContext db, IPaymentService payment)
-        {
-            _db = db;
-            _payment = payment;
-        }
-        public async Task<RequestResult> AddReservingAsync(ReservingModel model)
-        {
-            RequestResult result = new RequestResult();
-            var reserve = new Reserving
-            {
-                IsOnlinePayment = model.IsOnlinePayment,
-                IsTakeOut = model.IsTakeOut,
-                MemberId = model.MemberId,
-                ReservationDate = model.ReservationDate,
-                ServiceMemberId = model.ServiceMemberId,
-                ServiceMemberBranchId = model.ServiceMemberBranchId,
-                Tables = JsonConvert.SerializeObject(model.Tables),
-                Dishes = JsonConvert.SerializeObject(model.Dishes),
-                Notes = model.Notes,
-                Amount=model.Amount
-            };
+	public class ReservingService : IReservingService
+	{
+		private readonly ApplicationContext _db;
+		private readonly IPaymentService _paymentService;
+		public ReservingService(ApplicationContext db, IPaymentService payment)
+		{
+			_db = db;
+			_paymentService = payment;
+		}
 
-            await _db.Reservings.AddAsync(reserve);
+		public async Task<RequestResult> AddReservingAsync(ReservingModel model)
+		{
+			RequestResult result = new RequestResult();
+			var reservation = new Reserving
+			{
+				IsOnlinePayment = model.IsOnlinePayment,
+				IsTakeOut = model.IsTakeOut,
+				MemberId = model.MemberId,
+				ReservationDate = model.ReservationDate,
+				ServiceMemberId = model.ServiceMemberId,
+				ServiceMemberBranchId = model.ServiceMemberBranchId,
+				Tables = JsonConvert.SerializeObject(model.Tables),
+				Dishes = JsonConvert.SerializeObject(model.Dishes),
+				Notes = model.Notes,
+				Amount = model.Amount
+			};
 
-            try
-            {
-                await _db.SaveChangesAsync();
-                result.Succeeded = true;
-            }
-            catch (Exception e)
-            {
-                result.Message = e.Message;
-                return result;
-            }
+			await _db.Reservings.AddAsync(reservation);
 
-            if (reserve.IsOnlinePayment)
-            {
-                var approvePayment = new PaymentDataModel
-                {
-                    Amount = reserve.Amount,
-                    PaymentDate = DateTime.Now,
-                    BankCardIdFrom = reserve.Member.BankCardId.Value,
-                    BankAcountIdTo = reserve.ServiceMember.BankAccountId.Value
-                };
+			try
+			{
+				await _db.SaveChangesAsync();
+				result.Succeeded = true;
+			}
+			catch (Exception e)
+			{
+				result.Message = e.Message;
+				return result;
+			}
 
-                await _payment.AddPaymentAsync(approvePayment);
-            }
+			if (reservation.IsOnlinePayment)
+			{
+				await AddPaymentRequestAsync(reservation);
+			}
 
-            result.Value = reserve;
-            return result;
-        }
-    }
+			result.Value = reservation;
+			return result;
+		}
+
+		private async Task AddPaymentRequestAsync(Reserving reserving)
+		{
+			var reserveData = await _db.Reservings
+									   .Include(i => i.Member)
+									   .Include(i => i.ServiceMember)
+									   .Include(i => i.ServiceMemberBranch)
+									   .FirstOrDefaultAsync(i => i.Id == reserving.Id);
+
+			if (reserveData == null)
+			{
+				return;
+			}
+
+			var paymentData = new PaymentDataModel
+			{
+				Amount = reserving.Amount,
+				PaymentDate = DateTime.Now,
+				BankCardAccountFrom = reserving.Member.BankCard.Number,
+				BankAcountTo = reserving.ServiceMember.BankAccount.AccountNumber
+			};
+
+			await _paymentService.AddPaymentAsync(paymentData);
+		}
+	}
 }

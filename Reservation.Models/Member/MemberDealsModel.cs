@@ -8,9 +8,9 @@ namespace Reservation.Models.Member
 {
     public class MemberDealsModel
     {
-        public int Id { get; set; }
+        public int ReservationId { get; set; }
 
-        public string Address { get; set; }
+        public string BranchAddress { get; set; }
 
         public decimal Amount { get; set; }
 
@@ -18,6 +18,6 @@ namespace Reservation.Models.Member
 
         public string ServiceMemberName { get; set; }
 
-        public DateTime OrdersDate { get; set; }
+        public DateTime ReservingDate { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Reservation.Data.Constants;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMemberBranch;
 using Reservation.Service.Helpers;
@@ -21,7 +22,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (branchId == null)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = Localizations.Errors.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -36,7 +37,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (serviceMemberId == null)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = Localizations.Errors.WrongIncomingParameters;
                 return Json(result);
             }
 
@@ -57,7 +58,7 @@ namespace Reservation.Web.Controllers
 
             if (model.OpenTime >= model.CloseTime)
             {
-                result.Message = "OpenTimeMustBeEarlierThanCloseTime";
+                result.Message = Localizations.Errors.OpenTimeMustBeEarlierThanCloseTime;
                 return Json(result);
             }
 
@@ -79,7 +80,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (branchId == null)
             {
-                result.Message = ErrorMessages.WrongIncomingParameters;
+                result.Message = Localizations.Errors.WrongIncomingParameters;
                 return Json(result);
             }
 

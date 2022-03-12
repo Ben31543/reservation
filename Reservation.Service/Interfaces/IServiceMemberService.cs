@@ -24,8 +24,8 @@ namespace Reservation.Service.Interfaces
 
         Task<RequestResult> DetachBankAccountAsync(long serviceMemberId, long bankAccountId);
 
-        Task<List<ServiceMemberDealHistoryItemModel>> GetServiceMemberDealsHistoryAsync(long serviceId);
+        Task<List<ServiceMemberDealHistoryItemModel>> GetServiceMemberDealsHistoryAsync(long serviceMemberId);
 
-        Task<List<ServiceMember>> GetServiceMembersAsync(ServiceMemberCriteria criteria);
+        Task<List<ServiceMember>> GetServiceMembersAsync(ServiceMemberSearchCriteria criteria);
     }
 }
