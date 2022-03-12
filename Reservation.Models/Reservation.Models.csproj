@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.14">
       <PrivateAssets>all</PrivateAssets>
@@ -16,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Reservation.Data\Reservation.Data.csproj" />
+    <ProjectReference Include="..\Reservation.Resources\Reservation.Resources.csproj" />
   </ItemGroup>
 
 </Project>

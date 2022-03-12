@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Reservation.Data.Constants;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
+using Reservation.Resources.Contents;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
@@ -30,25 +30,25 @@ namespace Reservation.Web.Controllers
 
 			if (!model.Phone.IsValidArmPhoneNumber())
 			{
-				result.Message = Localizations.Errors.InvalidPhoneNumber;
+				result.Message = LocalizationKeys.ErrorMessages.InvalidPhoneNumber;
 				return Json(result);
 			}
 
 			if (!model.Email.IsValidEmail())
 			{
-				result.Message = Localizations.Errors.InvalidEmail;
+				result.Message = LocalizationKeys.ErrorMessages.InvalidEmail;
 				return Json(result);
 			}
 
 			if (model.BirthDate >= DateTime.Now)
 			{
-				result.Message = Localizations.Errors.InvalidDate;
+				result.Message = LocalizationKeys.ErrorMessages.InvalidDate;
 				return Json(result);
 			}
 
 			if (!model.Password.Equals(model.ConfirmPassword, StringComparison.Ordinal))
 			{
-				result.Message = Localizations.Errors.PasswordDoNotMatch;
+				result.Message = LocalizationKeys.ErrorMessages.PasswordDoNotMatch;
 				return Json(result);
 			}
 
@@ -63,7 +63,7 @@ namespace Reservation.Web.Controllers
 
 			if (!id.HasValue)
 			{
-				result.Message = Localizations.Errors.WrongIncomingParameters;
+				result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
 				return Json(result);
 			}
 
@@ -84,19 +84,13 @@ namespace Reservation.Web.Controllers
 
 			if (!model.Phone.IsValidArmPhoneNumber())
 			{
-				result.Message = Localizations.Errors.InvalidPhoneNumber;
+				result.Message = LocalizationKeys.ErrorMessages.InvalidPhoneNumber;
 				return Json(result);
 			}
 
 			if (!model.Email.IsValidEmail())
 			{
-				result.Message = Localizations.Errors.InvalidEmail;
-				return Json(result);
-			}
-
-			if (model.BirthDate >= DateTime.Now)
-			{
-				result.Message = Localizations.Errors.InvalidDate;
+				result.Message = LocalizationKeys.ErrorMessages.InvalidEmail;
 				return Json(result);
 			}
 
@@ -116,7 +110,7 @@ namespace Reservation.Web.Controllers
 
 			if (!model.NewPassword.Equals(model.ConfirmNewPassword, StringComparison.Ordinal))
 			{
-				result.Message = Localizations.Errors.PasswordDoNotMatch;
+				result.Message = LocalizationKeys.ErrorMessages.PasswordDoNotMatch;
 				return Json(result);
 			}
 
@@ -160,7 +154,7 @@ namespace Reservation.Web.Controllers
 
 			if (!cardId.HasValue || !memberId.HasValue)
 			{
-				result.Message = Localizations.Errors.WrongIncomingParameters;
+				result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
 				return Json(result);
 			}
 
@@ -174,7 +168,7 @@ namespace Reservation.Web.Controllers
 			RequestResult result = new RequestResult();
 			if (!memberId.HasValue)
 			{
-				result.Message = Localizations.Errors.WrongIncomingParameters;
+				result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
 				return Json(result);
 			}
 

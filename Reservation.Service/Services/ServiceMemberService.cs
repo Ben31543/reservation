@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reservation.Data;
-using Reservation.Data.Constants;
 using Reservation.Data.Entities;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
 using Reservation.Models.Criterias;
 using Reservation.Models.ServiceMember;
+using Reservation.Resources.Contents;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
@@ -20,7 +20,9 @@ namespace Reservation.Service.Services
         private readonly ApplicationContext _db;
         private readonly IBankAccountService _bankAccService;
 
-        public ServiceMemberService(ApplicationContext db, IBankAccountService bankAccService)
+        public ServiceMemberService(
+            ApplicationContext db,
+            IBankAccountService bankAccService)
         {
             _db = db;
             _bankAccService = bankAccService;
@@ -63,7 +65,7 @@ namespace Reservation.Service.Services
             var serviceMember = await _db.ServiceMembers.SingleOrDefaultAsync(i => i.Email == model.Login);
             if (serviceMember == null)
             {
-                result.Message = Localizations.Errors.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
 
@@ -88,7 +90,7 @@ namespace Reservation.Service.Services
             var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == model.Id);
             if (serviceMember == null)
             {
-                result.Message = Localizations.Errors.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 result.Value = model.Id;
                 return result;
             }
@@ -124,7 +126,7 @@ namespace Reservation.Service.Services
                 .FirstOrDefaultAsync(i => i.Email == model.Login && i.PasswordHash == model.Password.ToHashedPassword());
             if (serviceMember == null)
             {
-                result.Message = Localizations.Errors.WrongCredientials;
+                result.Message = LocalizationKeys.ErrorMessages.WrongCredientials;
                 result.Value = model;
                 return result;
             }
@@ -139,7 +141,7 @@ namespace Reservation.Service.Services
             var serviceMember = await GetServiceMemberByIdAsync(model.ServiceMemberId.Value);
             if (serviceMember == null)
             {
-                result.Message = Localizations.Errors.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
 
@@ -169,14 +171,14 @@ namespace Reservation.Service.Services
             var serviceMember = await GetServiceMemberByIdAsync(serviceMemberId);
             if (serviceMember == null)
             {
-                result.Message = Localizations.Errors.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
 
             var bankAccount = await _bankAccService.GetBankAccountInfoAsync(bankAccountId);
             if (bankAccount == null)
             {
-                result.Message = Localizations.Errors.BankAccountNotAttachedToServiceMember;
+                result.Message = LocalizationKeys.ErrorMessages.BankAccountNotAttachedToServiceMember;
                 return result;
             }
 
@@ -239,5 +241,5 @@ namespace Reservation.Service.Services
 
             return await serviceMembers.ToListAsync();
         }
-    }
+	}
 }

@@ -1,14 +1,14 @@
-﻿using Reservation.Data.Constants;
+﻿using Reservation.Resources.Contents;
 using System.ComponentModel.DataAnnotations;
 
 namespace Reservation.Models.Common
 {
     public class SignInModel
     {
-        [Required(ErrorMessage = Localizations.Errors.ThisFieldIsRequired)]
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         public string Login { get; set; }
 
-        [Required(ErrorMessage = Localizations.Errors.ThisFieldIsRequired)]
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         public string Password { get; set; }
     }
 }

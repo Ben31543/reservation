@@ -1,37 +1,33 @@
-﻿using Reservation.Data.Constants;
+﻿using Reservation.Resources.Contents;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Reservation.Models.Member
 {
 	public class MemberRegistrationModel
 	{
-		[Required(ErrorMessage = Localizations.Errors.ThisFieldIsRequired)]
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
 		[StringLength(20)]
 		public string Name { get; set; }
 
-		[Required(ErrorMessage = Localizations.Errors.ThisFieldIsRequired)]
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
 		[StringLength(20)]
 		public string Surname { get; set; }
 
-		[Required(ErrorMessage = Localizations.Errors.ThisFieldIsRequired)]
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
 		public DateTime BirthDate { get; set; }
 
-		[Required(ErrorMessage = Localizations.Errors.ThisFieldIsRequired)]
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
 		public string Email { get; set; }
 
-		[Required(ErrorMessage = Localizations.Errors.ThisFieldIsRequired)]
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
 		public string Phone { get; set; }
 
-		[Required(ErrorMessage = Localizations.Errors.ThisFieldIsRequired)]
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
 		[MinLength(8), MaxLength(12)]
 		public string Password { get; set; }
 
-		[Required(ErrorMessage = Localizations.Errors.ThisFieldIsRequired)]
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
 		public string ConfirmPassword { get; set; }
 	}
 }

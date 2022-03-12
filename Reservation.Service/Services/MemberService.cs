@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reservation.Data;
-using Reservation.Data.Constants;
 using Reservation.Data.Entities;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
+using Reservation.Resources.Contents;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
@@ -30,7 +30,6 @@ namespace Reservation.Service.Services
             {
                 Name = model.Name,
                 Surname = model.Surname,
-                BirthDate = model.BirthDate,
                 Email = model.Email,
                 PasswordHash = model.Password.ToHashedPassword(),
                 Phone = model.Phone
@@ -65,7 +64,7 @@ namespace Reservation.Service.Services
             var existingMember = await _db.Members.FirstOrDefaultAsync(i => i.Email == member.Login);
             if (existingMember == null)
             {
-                result.Message = Localizations.Errors.MemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
                 return result;
             }
 
@@ -93,7 +92,7 @@ namespace Reservation.Service.Services
             var existingMember = await GetMemberByIdAsync(member.Id);
             if (existingMember == null)
             {
-                result.Message = Localizations.Errors.MemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
                 result.Value = member.Id;
                 return result;
             }
@@ -102,7 +101,6 @@ namespace Reservation.Service.Services
             existingMember.Surname = member.Surname;
             existingMember.Phone = member.Phone;
             existingMember.Email = member.Email;
-            existingMember.BirthDate = member.BirthDate;
 
             try
             {
@@ -125,7 +123,7 @@ namespace Reservation.Service.Services
             var existingMember = await _db.Members.FirstOrDefaultAsync(i => i.Email == member.Login && i.PasswordHash == member.Password.ToHashedPassword());
             if (existingMember == null)
             {
-                result.Message = Localizations.Errors.MemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
                 result.Value = member;
                 return result;
             }
@@ -141,7 +139,7 @@ namespace Reservation.Service.Services
             var member = await GetMemberByIdAsync(model.MemberId);
             if (member == null)
             {
-                result.Message = Localizations.Errors.MemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
                 return result;
             }
 
@@ -172,7 +170,7 @@ namespace Reservation.Service.Services
             var member = await GetMemberByIdAsync(memberId);
             if (member == null)
             {
-                result.Message = Localizations.Errors.MemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
                 return result;
             }
 

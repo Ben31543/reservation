@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reservation.Data;
-using Reservation.Data.Constants;
 using Reservation.Data.Entities;
 using Reservation.Models.Common;
 using Reservation.Models.Criterias;
 using Reservation.Models.Dish;
-using Reservation.Service.Helpers;
+using Reservation.Resources.Contents;
 using Reservation.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -67,7 +66,7 @@ namespace Reservation.Service.Services
             var getDish = await _db.Dishes.FirstOrDefaultAsync(i => i.Id == id);
             if (getDish == null)
             {
-                result.Message = Localizations.Errors.DishDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.DishDoesNotExist;
                 return result;
             }
 
@@ -92,7 +91,7 @@ namespace Reservation.Service.Services
             var dish = await GetDishById(model.Id.Value);
             if (dish == null)
             {
-                result.Message = Localizations.Errors.DishDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.DishDoesNotExist;
                 result.Value = model.Id;
                 return result;
             }
