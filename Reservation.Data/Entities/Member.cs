@@ -24,6 +24,8 @@ namespace Reservation.Data.Entities
 
         public long? BankCardId { get; set; }
 
-        public BankCard BankCard { get; set; }
+		public string ProfilePictureUrl { get; set; }
+
+		public BankCard BankCard { get; set; }
     }
 }

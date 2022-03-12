@@ -2,6 +2,7 @@
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
+using Reservation.Models.ServiceMember;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,5 +25,7 @@ namespace Reservation.Service.Interfaces
         Task<RequestResult> DetachBankCardAsync(long memberId, long bankCardId);
 
         Task<List<MemberDealsModel>> GetMemberDealsHistoryAsync(long memberId);
+
+        Task<RequestResult> SaveMemberProfileImageAsync(SaveImageModel model);
     }
 }

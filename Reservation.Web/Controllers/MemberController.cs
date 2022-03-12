@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Reservation.Data.Enumerations;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
+using Reservation.Models.ServiceMember;
 using Reservation.Resources.Contents;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Reservation.Web.Controllers
@@ -13,9 +17,11 @@ namespace Reservation.Web.Controllers
 	public class MemberController : Controller
 	{
 		private readonly IMemberService _member;
-		public MemberController(IMemberService member)
+		private readonly IHostingEnvironment environment;
+		public MemberController(IMemberService member, IHostingEnvironment environment)
 		{
 			_member = member;
+			this.environment = environment;
 		}
 
 		[HttpPost]
@@ -40,12 +46,6 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			if (model.BirthDate >= DateTime.Now)
-			{
-				result.Message = LocalizationKeys.ErrorMessages.InvalidDate;
-				return Json(result);
-			}
-
 			if (!model.Password.Equals(model.ConfirmPassword, StringComparison.Ordinal))
 			{
 				result.Message = LocalizationKeys.ErrorMessages.PasswordDoNotMatch;
@@ -67,7 +67,12 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			result.Value = await _member.GetMemberByIdAsync(id.Value);
+			var member = await _member.GetMemberByIdAsync(id.Value);
+			if (!string.IsNullOrEmpty(member.ProfilePictureUrl))
+			{
+				member.ProfilePictureUrl = $"{environment.WebRootPath}{member.ProfilePictureUrl}";
+			}
+
 			result.Succeeded = true;
 			return Json(result);
 		}
@@ -173,7 +178,27 @@ namespace Reservation.Web.Controllers
 			}
 
 			result.Value = await _member.GetMemberDealsHistoryAsync(memberId.Value);
-			return (Json(result));
+			return Json(result);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> SaveMemberProfileImage([FromForm] SaveImageModel model)
+		{
+			var result = new RequestResult();
+
+			if (model == null || model.Image == null)
+			{
+				result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+				return Json(result);
+			}
+
+			if (!model.ResourceType.HasValue)
+			{
+				model.ResourceType = ResourceTypes.MemberImage;
+			}
+
+			result = await _member.SaveMemberProfileImageAsync(model);
+			return Json(result);
 		}
 	}
 }

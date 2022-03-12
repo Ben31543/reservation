@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Reservation.Data.Enumerations;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMember;
@@ -12,10 +14,12 @@ namespace Reservation.Web.Controllers
     public class ServiceMemberController : Controller
     {
         private readonly IServiceMemberService _serviceMember;
+        private readonly IHostingEnvironment environment;
 
-        public ServiceMemberController(IServiceMemberService serviceMember)
+        public ServiceMemberController(IServiceMemberService serviceMember, IHostingEnvironment environment)
         {
             _serviceMember = serviceMember;
+            this.environment = environment;
         }
 
         [HttpPost]
@@ -49,6 +53,16 @@ namespace Reservation.Web.Controllers
                 result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
                 result.Value = id;
                 return Json(result);
+            }
+
+			if (!string.IsNullOrEmpty(serviceMember.LogoUrl))
+			{
+                serviceMember.LogoUrl = $"{environment.WebRootPath}{serviceMember.LogoUrl}";
+			}
+
+            if (!string.IsNullOrEmpty(serviceMember.ImageUrl))
+            {
+                serviceMember.ImageUrl = $"{environment.WebRootPath}{serviceMember.ImageUrl}";
             }
 
             result.Succeeded = true;
@@ -134,17 +148,37 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetServiceMemberDealsHistory(long? serviceId)
+        public async Task<IActionResult> GetServiceMemberDealsHistory(long? serviceMemberId)
         {
             RequestResult result = new RequestResult();
-            if (!serviceId.HasValue)
+            if (!serviceMemberId.HasValue)
             {
                 result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
-            result.Value = await _serviceMember.GetServiceMemberDealsHistoryAsync(serviceId.Value);
-            return (Json(result));
+            result.Value = await _serviceMember.GetServiceMemberDealsHistoryAsync(serviceMemberId.Value);
+            return Json(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveServiceMemberImage([FromForm] SaveImageModel model)
+		{
+            var result = new RequestResult();
+
+			if (model == null || model.Image == null)
+			{
+                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+			}
+
+			if (!model.ResourceType.HasValue)
+			{
+                model.ResourceType = ResourceTypes.ServiceMemberImage;
+			}
+
+            result = await _serviceMember.SaveServiceMemberImageAsync(model);
+            return Json(result);
+		}
     }
 }
