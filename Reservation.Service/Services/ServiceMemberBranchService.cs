@@ -4,7 +4,7 @@ using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMemberBranch;
-using Reservation.Service.Helpers;
+using Reservation.Resources.Contents;
 using Reservation.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -61,7 +61,7 @@ namespace Reservation.Service.Services
             var branch = await GetBranchByIdAsync(branchId);
             if (branch == null)
             {
-                result.Message = ErrorMessages.BranchNotFound;
+                result.Message = LocalizationKeys.ErrorMessages.BranchNotFound;
                 return result;
             }
 
@@ -86,7 +86,7 @@ namespace Reservation.Service.Services
             var branch = await GetBranchByIdAsync(model.Id.Value);
             if (branch == null)
             {
-                result.Message = ErrorMessages.BranchNotFound;
+                result.Message = LocalizationKeys.ErrorMessages.BranchNotFound;
                 return result;
             }
 

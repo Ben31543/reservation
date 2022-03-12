@@ -19,6 +19,8 @@ namespace Reservation.Service.Helpers
             services.AddScoped<IDishService, DishService>();
             services.AddScoped<IBankAccountService, BankAccountService>();
             services.AddScoped<IBankCardService, BankCardService>();
+            services.AddScoped<IReservingService, ReservingService>();
+            services.AddScoped<IPaymentService, PaymentService>();
         }
     }
 }

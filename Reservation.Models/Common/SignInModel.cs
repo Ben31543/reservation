@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Reservation.Resources.Contents;
+using System.ComponentModel.DataAnnotations;
 
 namespace Reservation.Models.Common
 {
     public class SignInModel
     {
-        [Required]
-        public string LogIn { get; set; }
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+        public string Login { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         public string Password { get; set; }
     }
 }

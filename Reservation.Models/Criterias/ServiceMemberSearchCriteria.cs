@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Reservation.Models.Criterias
 {
-    public class ServiceMemberCriteria
+    public class ServiceMemberSearchCriteria
     {
-        public string SearchText { get; set; }
-    }
+        public string Name { get; set; }
+
+		public bool? AcceptsOnlinePayment { get; set; }
+	}
 }

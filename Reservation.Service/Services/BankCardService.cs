@@ -2,7 +2,7 @@
 using Reservation.Data;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
-using Reservation.Service.Helpers;
+using Reservation.Resources.Contents;
 using Reservation.Service.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -28,13 +28,13 @@ namespace Reservation.Service.Services
                   && i.Owner == model.Owner);
             if (bankCard == null)
             {
-                result.Message = ErrorMessages.BankCardDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.BankCardDoesNotExist;
                 return result;
             }
 
             if (!IsValidDate(model.ValidThru, bankCard.ValidThru, true))
             {
-                result.Message = ErrorMessages.BankCardExpired;
+                result.Message = LocalizationKeys.ErrorMessages.BankCardExpired;
                 return result;
             }
 
@@ -62,7 +62,7 @@ namespace Reservation.Service.Services
 
             if (card == null)
             {
-                result.Message = ErrorMessages.BankCardDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.BankCardDoesNotExist;
                 return result;
             }
 

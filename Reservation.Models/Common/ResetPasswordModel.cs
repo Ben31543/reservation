@@ -1,18 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Reservation.Resources.Contents;
+using System.ComponentModel.DataAnnotations;
 
 namespace Reservation.Models.Common
 {
     public class ResetPasswordModel
     {
-        [Required]
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         public string Login { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequired")]
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         [MinLength(8), MaxLength(12)]
         public string NewPassword { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequired")]
-        [Compare(nameof(NewPassword))]
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         public string ConfirmNewPassword { get; set; }
     }
 }

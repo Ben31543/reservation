@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Reservation.Resources.Contents;
+using System.ComponentModel.DataAnnotations;
 
 namespace Reservation.Models.Member
 {
@@ -10,14 +7,16 @@ namespace Reservation.Models.Member
     {
         public long Id { get; set; }
 
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         public string Name { get; set; }
 
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         public string Surname { get; set; }
 
-        public DateTime BirthDate { get; set; }
-
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         public string Phone { get; set; }
 
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         public string Email { get; set; }
     }
 }

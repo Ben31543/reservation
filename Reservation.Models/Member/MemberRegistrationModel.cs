@@ -1,38 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Reservation.Resources.Contents;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Reservation.Models.Member
 {
-    public class MemberRegistrationModel
-    {
-        [Required(ErrorMessage ="FieldIsRequired")]
-        [StringLength(20)]
-        public string Name { get; set; }
+	public class MemberRegistrationModel
+	{
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+		[StringLength(20)]
+		public string Name { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequired")]
-        [StringLength(20)]
-        public string SurName { get; set; }
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+		[StringLength(20)]
+		public string Surname { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequired")]
-        public DateTime BirthDate { get; set; }
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+		public DateTime BirthDate { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequired")]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+		public string Email { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequired")]
-        public string Phone { get; set; }
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+		public string Phone { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequired")]
-        [MinLength(8), MaxLength(12)]
-        public string Password { get; set; }
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+		[MinLength(8), MaxLength(12)]
+		public string Password { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequired")]
-        [Compare(nameof(Password))]
-        public string ConfirmPassword { get; set; }
-    }
+		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+		public string ConfirmPassword { get; set; }
+	}
 }

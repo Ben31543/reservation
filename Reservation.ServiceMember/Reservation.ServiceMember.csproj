@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Reservation.Data\Reservation.Data.csproj" />
+    <ProjectReference Include="..\Reservation.Resources\Reservation.Resources.csproj" />
     <ProjectReference Include="..\Reservation.Service\Reservation.Service.csproj" />
   </ItemGroup>
 

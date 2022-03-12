@@ -33,27 +33,47 @@ namespace Reservation.Service.Helpers
             return result.ToString();
         }
 
-        public static bool IsValidPhoneNumber(this string number)
+        public static bool IsValidArmPhoneNumber(this string phoneNumber)
         {
-            if (number.StartsWith("0"))
+            if (phoneNumber.StartsWith("0"))
             {
-                number = number.Substring(1);
+                phoneNumber = phoneNumber.Substring(1);
             }
-            else if (number.StartsWith("374"))
+            else if (phoneNumber.StartsWith("374"))
             {
-                number = number.Substring(3);
+                phoneNumber = phoneNumber.Substring(3);
             }
-            else if (number.StartsWith("+374"))
+            else if (phoneNumber.StartsWith("+374"))
             {
-                number = number.Substring(4);
+                phoneNumber = phoneNumber.Substring(4);
             }
 
-            if (number.Length == 8 && CommonConstants.PhoneCodes.Contains(number.Substring(0, 2)))
+            if (phoneNumber.Length == 8 && CommonConstants.PhoneCodes.Contains(phoneNumber.Substring(0, 2)))
             {
                 return true;
             }
 
             return false;
+        }
+
+        public static bool IsValidEmail(this string email)
+		{
+            email = email.Trim();
+
+            if (email.EndsWith("."))
+            {
+                return false;
+            }
+
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
-using Reservation.Service.Helpers;
+using Reservation.Resources.Contents;
 using Reservation.Service.Interfaces;
 using System.Threading.Tasks;
 
@@ -24,7 +24,7 @@ namespace Reservation.Service.Services
             var bankAccount = await _db.BankAccounts.FirstOrDefaultAsync(i => i.AccountNumber == model.AccountNumber);
             if (bankAccount == null)
             {
-                result.Message = ErrorMessages.BankAccountDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.BankAccountDoesNotExist;
                 return result;
             }
 
@@ -40,7 +40,7 @@ namespace Reservation.Service.Services
             var bankAccount = await GetBankAccountInfoAsync(accountId);
             if (bankAccount == null)
             {
-                result.Message = ErrorMessages.BankAccountDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.BankAccountDoesNotExist;
                 return result;
             }
 

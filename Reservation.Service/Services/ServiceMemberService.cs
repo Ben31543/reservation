@@ -5,6 +5,7 @@ using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
 using Reservation.Models.Criterias;
 using Reservation.Models.ServiceMember;
+using Reservation.Resources.Contents;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
@@ -19,7 +20,9 @@ namespace Reservation.Service.Services
         private readonly ApplicationContext _db;
         private readonly IBankAccountService _bankAccService;
 
-        public ServiceMemberService(ApplicationContext db, IBankAccountService bankAccService)
+        public ServiceMemberService(
+            ApplicationContext db,
+            IBankAccountService bankAccService)
         {
             _db = db;
             _bankAccService = bankAccService;
@@ -62,7 +65,7 @@ namespace Reservation.Service.Services
             var serviceMember = await _db.ServiceMembers.SingleOrDefaultAsync(i => i.Email == model.Login);
             if (serviceMember == null)
             {
-                result.Message = ErrorMessages.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
 
@@ -87,7 +90,7 @@ namespace Reservation.Service.Services
             var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == model.Id);
             if (serviceMember == null)
             {
-                result.Message = ErrorMessages.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 result.Value = model.Id;
                 return result;
             }
@@ -120,10 +123,10 @@ namespace Reservation.Service.Services
             RequestResult result = new RequestResult();
 
             var serviceMember = await _db.ServiceMembers
-                .FirstOrDefaultAsync(i => i.Email == model.LogIn && i.PasswordHash == model.Password.ToHashedPassword());
+                .FirstOrDefaultAsync(i => i.Email == model.Login && i.PasswordHash == model.Password.ToHashedPassword());
             if (serviceMember == null)
             {
-                result.Message = ErrorMessages.WrongCredientials;
+                result.Message = LocalizationKeys.ErrorMessages.WrongCredientials;
                 result.Value = model;
                 return result;
             }
@@ -138,7 +141,7 @@ namespace Reservation.Service.Services
             var serviceMember = await GetServiceMemberByIdAsync(model.ServiceMemberId.Value);
             if (serviceMember == null)
             {
-                result.Message = ErrorMessages.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
 
@@ -168,14 +171,14 @@ namespace Reservation.Service.Services
             var serviceMember = await GetServiceMemberByIdAsync(serviceMemberId);
             if (serviceMember == null)
             {
-                result.Message = ErrorMessages.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
 
             var bankAccount = await _bankAccService.GetBankAccountInfoAsync(bankAccountId);
             if (bankAccount == null)
             {
-                result.Message = ErrorMessages.BankAccountNotAttachedToServiceMember;
+                result.Message = LocalizationKeys.ErrorMessages.BankAccountNotAttachedToServiceMember;
                 return result;
             }
 
@@ -199,32 +202,44 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<List<ServiceMemberDealHistoryItemModel>> GetServiceMemberDealsHistoryAsync(long serviceId)
+        public async Task<List<ServiceMemberDealHistoryItemModel>> GetServiceMemberDealsHistoryAsync(long serviceMemberId)
         {
-            List<ServiceMemberDealHistoryItemModel> deals = new List<ServiceMemberDealHistoryItemModel>();
+            var deals = new List<ServiceMemberDealHistoryItemModel>();
 
-            var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == serviceId);
+            var serviceMember = await GetServiceMemberByIdAsync(serviceMemberId);
             if (serviceMember == null)
             {
                 return deals;
             }
 
             deals = await _db.Reservings.Include(i => i.ServiceMemberBranch)
-                                     .Where(i => i.Id == serviceId)
-                                     .Select(i => new ServiceMemberDealHistoryItemModel
-                                     {
-                                         Amount = i.Amount,
-                                         OrdersDate = i.ReservationDate,
-                                         BranchName = i.ServiceMemberBranch.Name,
-                                         Address = i.ServiceMemberBranch.Address,
-                                         OnlinePayment = i.IsOnlinePayment
-                                     }).ToListAsync();
+                                        .Where(i => i.Id == serviceMemberId)
+                                        .Select(i => new ServiceMemberDealHistoryItemModel
+                                        {
+                                            Amount = i.Amount,
+                                            OrdersDate = i.ReservationDate,
+                                            BranchName = i.ServiceMemberBranch.Name,
+                                            Address = i.ServiceMemberBranch.Address,
+                                            OnlinePayment = i.IsOnlinePayment
+                                        }).ToListAsync();
             return deals;
         }
 
-        public async Task<List<ServiceMember>> GetServiceMembersAsync(ServiceMemberCriteria criteria)
+        public async Task<List<ServiceMember>> GetServiceMembersAsync(ServiceMemberSearchCriteria criteria)
         {
-           return await _db.ServiceMembers.Where(i => i.Name.Contains(criteria.SearchText)).ToListAsync();
+            var serviceMembers = _db.ServiceMembers.AsNoTracking().AsQueryable();
+
+			if (!string.IsNullOrEmpty(criteria.Name))
+			{
+                serviceMembers = serviceMembers.Where(i => i.Name.Contains(criteria.Name));
+			}
+
+			if (criteria.AcceptsOnlinePayment.HasValue)
+			{
+                serviceMembers = serviceMembers.Where(i => i.AcceptsOnlinePayment == criteria.AcceptsOnlinePayment.Value);
+            }
+
+            return await serviceMembers.ToListAsync();
         }
-    }
+	}
 }

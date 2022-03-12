@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Reservation.Resources.Contents;
+using System.ComponentModel.DataAnnotations;
 
 namespace Reservation.Models.ServiceMember
 {
@@ -6,11 +7,11 @@ namespace Reservation.Models.ServiceMember
     {
         public long? Id { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequried")]
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         [StringLength(50)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequried")]
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         [StringLength(255)]
         public string Email { get; set; }
 
@@ -24,7 +25,7 @@ namespace Reservation.Models.ServiceMember
 
         public string LogoUrl { get; set; }
 
-        [Required(ErrorMessage = "FieldIsRequried")]
+        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
         public bool AcceptsOnlinePayment { get; set; }
     }
 }
