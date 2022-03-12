@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.BankCard;
@@ -18,10 +19,13 @@ namespace Reservation.Service.Services
     {
         private readonly ApplicationContext _db;
         private readonly IBankCardService _bankCard;
-        public MemberService(ApplicationContext db, IBankCardService bankCard)
+        private readonly ILogger _logger;
+
+        public MemberService(ApplicationContext db, IBankCardService bankCard, ILogger<MemberService> logger)
         {
             _db = db;
             _bankCard = bankCard;
+            _logger = logger;
         }
         public async Task<RequestResult> AddNewMemberAsync(MemberRegistrationModel model)
         {
@@ -34,7 +38,7 @@ namespace Reservation.Service.Services
                 PasswordHash = model.Password.ToHashedPassword(),
                 Phone = model.Phone
             };
-            
+
             await _db.Members.AddAsync(member);
 
             try
@@ -45,6 +49,7 @@ namespace Reservation.Service.Services
             catch (Exception ex)
             {
                 result.Message = ex.Message;
+                _logger.LogError(ex.Message);
                 return result;
             }
 
@@ -78,6 +83,7 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
+                _logger.LogError(e.Message);
                 return result;
             }
 
@@ -110,6 +116,7 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
+                _logger.LogError(e.Message);
             }
 
             result.Value = existingMember;
@@ -158,6 +165,7 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
+                _logger.LogError(e.Message);
                 return result;
             }
 

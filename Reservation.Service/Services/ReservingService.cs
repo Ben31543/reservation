@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Reservation.Data;
 using Reservation.Data.Entities;
@@ -19,10 +20,13 @@ namespace Reservation.Service.Services
 	{
 		private readonly ApplicationContext _db;
 		private readonly IPaymentService _paymentService;
-		public ReservingService(ApplicationContext db, IPaymentService payment)
+		private readonly ILogger _logger;
+
+		public ReservingService(ApplicationContext db, IPaymentService payment, ILogger<ReservingService> logger)
 		{
 			_db = db;
 			_paymentService = payment;
+			_logger = logger;
 		}
 
 		public async Task<RequestResult> AddReservingAsync(ReservingModel model)
@@ -52,6 +56,7 @@ namespace Reservation.Service.Services
 			catch (Exception e)
 			{
 				result.Message = e.Message;
+				_logger.LogError(e.Message);
 				return result;
 			}
 

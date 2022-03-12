@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMemberBranch;
 using Reservation.Resources.Contents;
@@ -11,14 +12,19 @@ namespace Reservation.Web.Controllers
     public class ServiceMemberBranchController : Controller
     {
         private readonly IServiceMemberBranchService _branch;
-        public ServiceMemberBranchController(IServiceMemberBranchService branch)
+        private readonly ILogger _logger;
+
+        public ServiceMemberBranchController(IServiceMemberBranchService branch, ILogger<ServiceMemberBranchController> logger)
         {
             _branch = branch;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetBranchById(long? branchId)
         {
+            _logger.LogWarning("Requesting ServiceMemberBranch/GetBranchById");
+
             RequestResult result = new RequestResult();
             if (branchId == null)
             {
@@ -34,6 +40,8 @@ namespace Reservation.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBranches(long? serviceMemberId)
         {
+            _logger.LogWarning("Requesting ServiceMemberBranch/GetBranches");
+
             RequestResult result = new RequestResult();
             if (serviceMemberId == null)
             {
@@ -49,6 +57,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveServiceMemberBranch([FromBody] ServiceMemberBranchEditModel model)
         {
+            _logger.LogWarning("Requesting ServiceMemberBranch/SaveServiceMemberBranch");
+
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
@@ -77,6 +87,8 @@ namespace Reservation.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteBranch(long? branchId)
         {
+            _logger.LogWarning("Requesting ServiceMemberBranch/DeleteBranch");
+
             RequestResult result = new RequestResult();
             if (branchId == null)
             {

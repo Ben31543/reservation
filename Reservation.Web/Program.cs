@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace Reservation.Web
 {
-	public class Program
+    public class Program
     {
         public static void Main(string[] args)
         {
@@ -11,10 +12,12 @@ namespace Reservation.Web
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+          Host.CreateDefaultBuilder(args)
+            .UseSerilog((hostingContext, services, loggerConfiguration) => loggerConfiguration
+            .ReadFrom.Configuration(hostingContext.Configuration))
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
     }
 }

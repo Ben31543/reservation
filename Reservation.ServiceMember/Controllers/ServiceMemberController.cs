@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMember;
@@ -12,15 +13,19 @@ namespace Reservation.Web.Controllers
     public class ServiceMemberController : Controller
     {
         private readonly IServiceMemberService _serviceMember;
+        private readonly ILogger _logger;
 
-        public ServiceMemberController(IServiceMemberService serviceMember)
+        public ServiceMemberController(IServiceMemberService serviceMember, ILogger<ServiceMemberController> logger)
         {
             _serviceMember = serviceMember;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> RegisterServiceMember([FromBody] ServiceMemberRegistrationModel model)
         {
+            _logger.LogWarning("Requesting ServiceMember/RegisterServiceMember");
+
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
@@ -35,6 +40,8 @@ namespace Reservation.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetServiceMember(long? id)
         {
+            _logger.LogWarning("Requesting ServiceMember/GetServiceMember");
+
             RequestResult result = new RequestResult();
 
             if (id == null)
@@ -59,6 +66,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> VerifyServiceMember([FromBody] SignInModel model)
         {
+            _logger.LogWarning("Requesting ServiceMember/VerifyServiceMember");
+
             RequestResult result = new RequestResult();
 
             if (!ModelState.IsValid)
@@ -80,6 +89,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
+            _logger.LogWarning("Requesting ServiceMember/ResetPassword");
+
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
@@ -94,6 +105,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateServiceMember([FromBody] ServiceMemberEditModel model)
         {
+            _logger.LogWarning("Requesting ServiceMember/UpdateServiceMember");
+
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
@@ -108,6 +121,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AttachBankAccount([FromBody] BankAccountAttachModel model)
         {
+            _logger.LogWarning("Requesting ServiceMember/AttachBankAccount");
+
             RequestResult result = new RequestResult();
             if (!model.ServiceMemberId.HasValue)
             {
@@ -122,6 +137,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> DetachFromBankAccount([FromQuery] long? serviceMemberId, [FromQuery] long? bankAccountId)
         {
+            _logger.LogWarning("Requesting ServiceMember/DetachFromBankAccount");
+
             var result = new RequestResult();
             if (!serviceMemberId.HasValue || !bankAccountId.HasValue)
             {
@@ -136,6 +153,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> GetServiceMemberDealsHistory(long? serviceId)
         {
+            _logger.LogWarning("Requesting ServiceMember/GetServiceMemberDealsHistory");
+
             RequestResult result = new RequestResult();
             if (!serviceId.HasValue)
             {
