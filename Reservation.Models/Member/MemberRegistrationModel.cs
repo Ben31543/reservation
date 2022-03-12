@@ -15,9 +15,6 @@ namespace Reservation.Models.Member
 		public string Surname { get; set; }
 
 		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
-		public DateTime BirthDate { get; set; }
-
-		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
 		public string Email { get; set; }
 
 		[Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]

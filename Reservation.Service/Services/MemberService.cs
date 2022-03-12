@@ -4,6 +4,7 @@ using Reservation.Data.Entities;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
+using Reservation.Models.ServiceMember;
 using Reservation.Resources.Contents;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
@@ -206,5 +207,34 @@ namespace Reservation.Service.Services
                                              ServiceMemberName = i.ServiceMember.Name
                                          }).ToListAsync();
         }
+
+        public async Task<RequestResult> SaveMemberProfileImageAsync(SaveImageModel model)
+		{
+            var result = new RequestResult();
+
+            var member = await GetMemberByIdAsync(model.Id);
+			if (member == null)
+			{
+                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
+                return result;
+			}
+
+            var imageUrl = await ImageService.SaveAsync(model.Image, PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
+            member.ProfilePictureUrl = imageUrl;
+
+			try
+			{
+                await _db.SaveChangesAsync();
+			}
+			catch (Exception e)
+			{
+                result.Message = e.Message;
+                return result;
+			}
+
+            result.Succeeded = true;
+            result.Value = imageUrl;
+            return result;
+		}
     }
 }
