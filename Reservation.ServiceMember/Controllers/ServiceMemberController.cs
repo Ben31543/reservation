@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Reservation.Data.Enumerations;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMember;
@@ -14,17 +13,19 @@ namespace Reservation.Web.Controllers
     public class ServiceMemberController : Controller
     {
         private readonly IServiceMemberService _serviceMember;
-        private readonly IHostingEnvironment environment;
+        private readonly ILogger _logger;
 
-        public ServiceMemberController(IServiceMemberService serviceMember, IHostingEnvironment environment)
+        public ServiceMemberController(IServiceMemberService serviceMember, ILogger<ServiceMemberController> logger)
         {
             _serviceMember = serviceMember;
-            this.environment = environment;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> RegisterServiceMember([FromBody] ServiceMemberRegistrationModel model)
         {
+            _logger.LogWarning("Requesting ServiceMember/RegisterServiceMember");
+
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
@@ -39,6 +40,8 @@ namespace Reservation.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetServiceMember(long? id)
         {
+            _logger.LogWarning("Requesting ServiceMember/GetServiceMember");
+
             RequestResult result = new RequestResult();
 
             if (id == null)
@@ -55,16 +58,6 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-			if (!string.IsNullOrEmpty(serviceMember.LogoUrl))
-			{
-                serviceMember.LogoUrl = $"{environment.WebRootPath}{serviceMember.LogoUrl}";
-			}
-
-            if (!string.IsNullOrEmpty(serviceMember.ImageUrl))
-            {
-                serviceMember.ImageUrl = $"{environment.WebRootPath}{serviceMember.ImageUrl}";
-            }
-
             result.Succeeded = true;
             result.Value = serviceMember;
             return Json(result);
@@ -73,6 +66,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> VerifyServiceMember([FromBody] SignInModel model)
         {
+            _logger.LogWarning("Requesting ServiceMember/VerifyServiceMember");
+
             RequestResult result = new RequestResult();
 
             if (!ModelState.IsValid)
@@ -94,6 +89,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
+            _logger.LogWarning("Requesting ServiceMember/ResetPassword");
+
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
@@ -108,6 +105,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateServiceMember([FromBody] ServiceMemberEditModel model)
         {
+            _logger.LogWarning("Requesting ServiceMember/UpdateServiceMember");
+
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
@@ -122,6 +121,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AttachBankAccount([FromBody] BankAccountAttachModel model)
         {
+            _logger.LogWarning("Requesting ServiceMember/AttachBankAccount");
+
             RequestResult result = new RequestResult();
             if (!model.ServiceMemberId.HasValue)
             {
@@ -136,6 +137,8 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> DetachFromBankAccount([FromQuery] long? serviceMemberId, [FromQuery] long? bankAccountId)
         {
+            _logger.LogWarning("Requesting ServiceMember/DetachFromBankAccount");
+
             var result = new RequestResult();
             if (!serviceMemberId.HasValue || !bankAccountId.HasValue)
             {
@@ -148,37 +151,19 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetServiceMemberDealsHistory(long? serviceMemberId)
+        public async Task<IActionResult> GetServiceMemberDealsHistory(long? serviceId)
         {
+            _logger.LogWarning("Requesting ServiceMember/GetServiceMemberDealsHistory");
+
             RequestResult result = new RequestResult();
-            if (!serviceMemberId.HasValue)
+            if (!serviceId.HasValue)
             {
                 result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
-            result.Value = await _serviceMember.GetServiceMemberDealsHistoryAsync(serviceMemberId.Value);
-            return Json(result);
+            result.Value = await _serviceMember.GetServiceMemberDealsHistoryAsync(serviceId.Value);
+            return (Json(result));
         }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveServiceMemberImage([FromForm] SaveImageModel model)
-		{
-            var result = new RequestResult();
-
-			if (model == null || model.Image == null)
-			{
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
-                return Json(result);
-			}
-
-			if (!model.ResourceType.HasValue)
-			{
-                model.ResourceType = ResourceTypes.ServiceMemberImage;
-			}
-
-            result = await _serviceMember.SaveServiceMemberImageAsync(model);
-            return Json(result);
-		}
     }
 }

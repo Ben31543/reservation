@@ -15,7 +15,7 @@ namespace Reservation.Service.Interfaces
 
         Task<RequestResult> DeleteDishAsync(long id);
 
-        Task<List<Dish>> GetAllDishesAsync(long serviceMemberId);
+        Task<List<Dish>> GetAllDishAsync(long serviceMemberId);
 
         Task<Dish> GetDishById(long id);
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
@@ -12,9 +13,12 @@ namespace Reservation.Service.Services
     public class BankCardService : IBankCardService
     {
         private readonly ApplicationContext _db;
-        public BankCardService(ApplicationContext db)
+        private readonly ILogger _logger;
+
+        public BankCardService(ApplicationContext db, ILogger<BankCardService> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         public async Task<RequestResult> AttachCardToMemberAsync(AttachCardToMemberModel model)
@@ -48,6 +52,7 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
+                _logger.LogError(e.Message);
             }
 
             result.Value = bankCard.Id;
@@ -76,6 +81,7 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
+                _logger.LogError(e.Message);
             }
 
             return result;

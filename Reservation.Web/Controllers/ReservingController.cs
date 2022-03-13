@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Reservation.Models.Common;
 using Reservation.Models.Reserving;
 using Reservation.Service.Helpers;
@@ -13,15 +14,19 @@ namespace Reservation.Web.Controllers
     public class ReservingController:Controller
     {
         private readonly IReservingService _reserve;
+        private readonly ILogger _logger;
 
-        public ReservingController(IReservingService reserve)
+        public ReservingController(IReservingService reserve, ILogger<ReservingController> logger)
         {
             _reserve = reserve;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> GetReservingDealsHistory(ReservingModel model)
         {
+            _logger.LogWarning("Requesting Reserving/GetReservingDealsHistory");
+
             var result = new RequestResult();
 
             if (!ModelState.IsValid)

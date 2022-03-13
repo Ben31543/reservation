@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Reservation.Data;
 using Reservation.Data.Entities;
-using Reservation.Data.Enumerations;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
 using Reservation.Models.Criterias;
@@ -17,20 +15,17 @@ using System.Threading.Tasks;
 
 namespace Reservation.Service.Services
 {
-	public class ServiceMemberService : IServiceMemberService
+    public class ServiceMemberService : IServiceMemberService
     {
         private readonly ApplicationContext _db;
         private readonly IBankAccountService _bankAccService;
-        private IHostingEnvironment _environment;
 
         public ServiceMemberService(
             ApplicationContext db,
-            IBankAccountService bankAccService,
-            IHostingEnvironment environment)
+            IBankAccountService bankAccService)
         {
             _db = db;
             _bankAccService = bankAccService;
-            _environment = environment;
         }
 
         public async Task<ServiceMember> GetServiceMemberByIdAsync(long id)
@@ -246,46 +241,5 @@ namespace Reservation.Service.Services
 
             return await serviceMembers.ToListAsync();
         }
-
-        public async Task<RequestResult> SaveServiceMemberImageAsync(SaveImageModel model)
-		{
-            var result = new RequestResult();
-
-            var serviceMember = await GetServiceMemberByIdAsync(model.Id);
-			if (serviceMember == null)
-			{
-                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
-                return result;
-			}
-
-            var imageUrl = await ImageService.SaveAsync(model.Image, PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
-			switch (model.ResourceType)
-			{
-				case ResourceTypes.ServiceMemberLogo:
-                    serviceMember.LogoUrl = imageUrl;
-					break;
-
-				case ResourceTypes.ServiceMemberImage:
-                    serviceMember.ImageUrl = imageUrl;
-					break;
-
-				default:
-					break;
-			}
-
-			try
-			{
-                await _db.SaveChangesAsync();
-                result.Succeeded = true;
-			}
-			catch (Exception e)
-			{
-                result.Message = e.Message;
-                return result;
-			}
-
-            result.Value = imageUrl;
-            return result;
-		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Reservation.Data;
+﻿using Microsoft.Extensions.Logging;
+using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.Common;
 using Reservation.Models.Reserving;
@@ -14,10 +15,12 @@ namespace Reservation.Service.Services
     public class PaymentService : IPaymentService
     {
         private readonly ApplicationContext _db;
+        private readonly ILogger _logger;
 
-        public PaymentService(ApplicationContext db)
+        public PaymentService(ApplicationContext db, ILogger<PaymentService> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         public async Task<RequestResult> AddPaymentAsync(PaymentDataModel model)
@@ -42,6 +45,7 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
+                _logger.LogError(e.Message);
                 return result;
             }
 
