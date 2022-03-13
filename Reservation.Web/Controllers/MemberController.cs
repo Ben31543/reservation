@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Reservation.Data.Enumerations;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
@@ -12,13 +14,18 @@ namespace Reservation.Web.Controllers
 {
     public class MemberController : Controller
     {
-        private readonly IMemberService _member;
         private readonly ILogger _logger;
+        private readonly IMemberService _member;
+        private readonly IHostingEnvironment _environment;
 
-        public MemberController(IMemberService member, ILogger<MemberController> logger)
+        public MemberController(
+            IMemberService member,
+            IHostingEnvironment environment,
+            ILogger<MemberController> logger)
         {
             _member = member;
             _logger = logger;
+            _environment = environment;
         }
 
         [HttpPost]
@@ -50,7 +57,13 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _member.GetMemberByIdAsync(id.Value);
+            var member = await _member.GetMemberByIdAsync(id.Value);
+            if (!string.IsNullOrEmpty(member.ProfilePictureUrl))
+            {
+                member.ProfilePictureUrl = $"{_environment.WebRootPath}{member.ProfilePictureUrl}";
+            }
+
+            result.Value = member;
             result.Succeeded = true;
             return Json(result);
         }
@@ -134,6 +147,26 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _member.DetachBankCardAsync(memberId.Value, cardId.Value);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveMemberProfileImage([FromForm] SaveImageModel model)
+        {
+            var result = new RequestResult();
+
+            if (model == null || model.Image == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+            }
+
+            if (!model.ResourceType.HasValue)
+            {
+                model.ResourceType = ResourceTypes.MemberImage;
+            }
+
+            result = await _member.SaveMemberProfileImageAsync(model);
             return Json(result);
         }
     }

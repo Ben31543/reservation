@@ -203,16 +203,45 @@ namespace Reservation.Service.Services
             }
 
             return await _db.Reservings.Include(i => i.ServiceMember)
-                                         .Include(i => i.ServiceMemberBranch)
-                                         .Where(i => i.MemberId == memberId)
-                                         .Select(i => new MemberDealsModel
-                                         {
-                                             Amount = i.Amount,
-                                             BranchAddress = i.ServiceMemberBranch.Address,
-                                             OnlinePayment = i.IsOnlinePayment,
-                                             ReservingDate = i.ReservationDate,
-                                             ServiceMemberName = i.ServiceMember.Name
-                                         }).ToListAsync();
+                                       .Include(i => i.ServiceMemberBranch)
+                                       .Where(i => i.MemberId == memberId)
+                                       .Select(i => new MemberDealsModel
+                                       {
+                                           Amount = i.Amount,
+                                           BranchAddress = i.ServiceMemberBranch.Address,
+                                           OnlinePayment = i.IsOnlinePayment,
+                                           ReservingDate = i.ReservationDate,
+                                           ServiceMemberName = i.ServiceMember.Name
+                                       }).ToListAsync();
+        }
+
+        public async Task<RequestResult> SaveMemberProfileImageAsync(SaveImageModel model)
+        {
+            var result = new RequestResult();
+
+            var member = await GetMemberByIdAsync(model.Id);
+            if (member == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
+                return result;
+            }
+
+            var imageUrl = await ImageService.SaveAsync(model.Image, PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
+            member.ProfilePictureUrl = imageUrl;
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                result.Message = e.Message;
+                return result;
+            }
+
+            result.Succeeded = true;
+            result.Value = imageUrl;
+            return result;
         }
     }
 }

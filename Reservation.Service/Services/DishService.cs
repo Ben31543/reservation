@@ -123,7 +123,7 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<List<Dish>> GetAllDishAsync(long serviceMemberId)
+        public async Task<List<Dish>> GetAllDishesAsync(long serviceMemberId)
         {
             return await _db.Dishes.Where(i => i.ServiceMemberId == serviceMemberId).ToListAsync();
         }
