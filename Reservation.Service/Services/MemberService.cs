@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.BankCard;
@@ -19,13 +18,10 @@ namespace Reservation.Service.Services
     {
         private readonly ApplicationContext _db;
         private readonly IBankCardService _bankCard;
-        private readonly ILogger _logger;
-
-        public MemberService(ApplicationContext db, IBankCardService bankCard, ILogger<MemberService> logger)
+        public MemberService(ApplicationContext db, IBankCardService bankCard)
         {
             _db = db;
             _bankCard = bankCard;
-            _logger = logger;
         }
         public async Task<RequestResult> AddNewMemberAsync(MemberRegistrationModel model)
         {
@@ -38,7 +34,7 @@ namespace Reservation.Service.Services
                 PasswordHash = model.Password.ToHashedPassword(),
                 Phone = model.Phone
             };
-
+            
             await _db.Members.AddAsync(member);
 
             try
@@ -49,7 +45,6 @@ namespace Reservation.Service.Services
             catch (Exception ex)
             {
                 result.Message = ex.Message;
-                _logger.LogError(ex.Message);
                 return result;
             }
 
@@ -83,7 +78,6 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
-                _logger.LogError(e.Message);
                 return result;
             }
 
@@ -116,7 +110,6 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
-                _logger.LogError(e.Message);
             }
 
             result.Value = existingMember;
@@ -165,7 +158,6 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
-                _logger.LogError(e.Message);
                 return result;
             }
 
@@ -203,45 +195,21 @@ namespace Reservation.Service.Services
             }
 
             return await _db.Reservings.Include(i => i.ServiceMember)
-                                       .Include(i => i.ServiceMemberBranch)
-                                       .Where(i => i.MemberId == memberId)
-                                       .Select(i => new MemberDealsModel
-                                       {
-                                           Amount = i.Amount,
-                                           BranchAddress = i.ServiceMemberBranch.Address,
-                                           OnlinePayment = i.IsOnlinePayment,
-                                           ReservingDate = i.ReservationDate,
-                                           ServiceMemberName = i.ServiceMember.Name
-                                       }).ToListAsync();
+                                         .Include(i => i.ServiceMemberBranch)
+                                         .Where(i => i.MemberId == memberId)
+                                         .Select(i => new MemberDealsModel
+                                         {
+                                             Amount = i.Amount,
+                                             BranchAddress = i.ServiceMemberBranch.Address,
+                                             OnlinePayment = i.IsOnlinePayment,
+                                             ReservingDate = i.ReservationDate,
+                                             ServiceMemberName = i.ServiceMember.Name
+                                         }).ToListAsync();
         }
 
-        public async Task<RequestResult> SaveMemberProfileImageAsync(SaveImageModel model)
+        public Task<RequestResult> SaveMemberProfileImageAsync(SaveImageModel model)
         {
-            var result = new RequestResult();
-
-            var member = await GetMemberByIdAsync(model.Id);
-            if (member == null)
-            {
-                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
-                return result;
-            }
-
-            var imageUrl = await ImageService.SaveAsync(model.Image, PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
-            member.ProfilePictureUrl = imageUrl;
-
-            try
-            {
-                await _db.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                result.Message = e.Message;
-                return result;
-            }
-
-            result.Succeeded = true;
-            result.Value = imageUrl;
-            return result;
+            throw new NotImplementedException();
         }
     }
 }

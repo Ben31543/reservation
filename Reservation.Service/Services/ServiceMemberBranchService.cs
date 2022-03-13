@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Reservation.Data;
 using Reservation.Data.Entities;
@@ -17,14 +16,9 @@ namespace Reservation.Service.Services
     public class ServiceMemberBranchService : IServiceMemberBranchService
     {
         private readonly ApplicationContext _db;
-        private readonly IServiceMemberService _serviceMember;
-        private readonly ILogger _logger;
-
-        public ServiceMemberBranchService(ApplicationContext db, IServiceMemberService serviceMember, ILogger<ServiceMemberBranchService> logger)
+        public ServiceMemberBranchService(ApplicationContext db)
         {
             _db = db;
-            _serviceMember = serviceMember;
-            _logger = logger;
         }
 
         public async Task<RequestResult> AddBranchAsync(ServiceMemberBranchEditModel model)
@@ -36,8 +30,8 @@ namespace Reservation.Service.Services
                 Address = model.Address,
                 Phone = model.Phone,
                 TablesSchema = JsonConvert.SerializeObject(model.TablesSchema),
-                OpenTime = model.OpenTime,
-                CloseTime = model.CloseTime,
+                OpenTime = JsonConvert.SerializeObject(model.OpenTime),
+                CloseTime = JsonConvert.SerializeObject(model.CloseTime),
                 IsActive = model.IsActive.Value,
                 ServiceMemberId = model.ServiceMemberId,
                 WorkDays = JsonConvert.SerializeObject(model.WorkDays)
@@ -52,7 +46,6 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
-                _logger.LogError(e.Message);
                 return result;
             }
 
@@ -79,7 +72,6 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
-                _logger.LogError(e.Message);
                 return result;
             }
 
@@ -99,8 +91,8 @@ namespace Reservation.Service.Services
             branch.Name = model.Name;
             branch.Address = model.Address;
             branch.IsActive = model.IsActive.Value;
-            branch.OpenTime = model.OpenTime;
-            branch.CloseTime = model.CloseTime;
+            branch.OpenTime = JsonConvert.SerializeObject(model.OpenTime);
+            branch.CloseTime = JsonConvert.SerializeObject(model.CloseTime);
             branch.Phone = model.Phone;
             branch.TablesSchema = JsonConvert.SerializeObject(model.TablesSchema);
             branch.WorkDays = JsonConvert.SerializeObject(model.WorkDays);
@@ -113,7 +105,6 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
-                _logger.LogError(e.Message);
                 return result;
             }
 

@@ -1,4 +1,5 @@
-﻿using Reservation.Models.BankCard;
+﻿using Reservation.Data.Entities;
+using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using System.Threading.Tasks;
 
@@ -9,5 +10,7 @@ namespace Reservation.Service.Interfaces
         Task<RequestResult> AttachCardToMemberAsync(AttachCardToMemberModel model);
 
         Task<RequestResult> DetachCardFromMemberAsync(long bankCardId);
+
+        Task<BankCard> GetBankCardByIdAsync(long id);
     }
 }

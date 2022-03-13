@@ -13,8 +13,6 @@ namespace Reservation.Data.Entities
 
         public string Surname { get; set; }
 
-        public DateTime BirthDate { get; set; }
-
         public string Phone { get; set; }
 
         public string Email { get; set; }
@@ -23,8 +21,6 @@ namespace Reservation.Data.Entities
         public string PasswordHash { get; set; }
 
         public long? BankCardId { get; set; }
-
-        public string ProfilePictureUrl { get; set; }
 
         public BankCard BankCard { get; set; }
     }

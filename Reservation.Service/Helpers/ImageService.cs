@@ -15,7 +15,7 @@ namespace Reservation.Service.Helpers
 			using (var fileStream = new FileStream(filePath, FileMode.Create))
 			{
 				await file.CopyToAsync(fileStream);
-				return path;
+				return filePath;
 			}
 		}
 	}

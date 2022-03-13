@@ -5,6 +5,7 @@ using Reservation.Models.ServiceMemberBranch;
 using Reservation.Resources.Contents;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace Reservation.Web.Controllers
@@ -23,7 +24,7 @@ namespace Reservation.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBranchById(long? branchId)
         {
-            _logger.LogWarning("Requesting ServiceMemberBranch/GetBranchById");
+            _logger.LogWarning("Request: ServiceMemberBranch/GetBranchById, data: {@branchId}", branchId);
 
             RequestResult result = new RequestResult();
             if (branchId == null)
@@ -40,7 +41,7 @@ namespace Reservation.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBranches(long? serviceMemberId)
         {
-            _logger.LogWarning("Requesting ServiceMemberBranch/GetBranches");
+            _logger.LogWarning("Request: ServiceMemberBranch/GetBranches, data: {@serviceMemberId}", serviceMemberId);
 
             RequestResult result = new RequestResult();
             if (serviceMemberId == null)
@@ -54,11 +55,16 @@ namespace Reservation.Web.Controllers
             return Json(result);
         }
 
+        [HttpGet]
+        public JsonResult esiminch()
+        {
+            return Json(DateTime.Now.TimeOfDay);
+        }
+
         [HttpPost]
         public async Task<IActionResult> SaveServiceMemberBranch([FromBody] ServiceMemberBranchEditModel model)
         {
-            _logger.LogWarning("Requesting ServiceMemberBranch/SaveServiceMemberBranch");
-
+            _logger.LogWarning("Request: ServiceMemberBranch/SaveServiceMemberBranch, data: {@model}", model);
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
@@ -66,7 +72,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            if (model.OpenTime >= model.CloseTime)
+            if (model.OpenTime.Hour >= model.CloseTime.Hour)
             {
                 result.Message = LocalizationKeys.ErrorMessages.OpenTimeMustBeEarlierThanCloseTime;
                 return Json(result);
@@ -87,7 +93,7 @@ namespace Reservation.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteBranch(long? branchId)
         {
-            _logger.LogWarning("Requesting ServiceMemberBranch/DeleteBranch");
+            _logger.LogWarning("Request: ServiceMemberBranch/DeleteBranch, data: {@branchId}", branchId);
 
             RequestResult result = new RequestResult();
             if (branchId == null)

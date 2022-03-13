@@ -20,6 +20,8 @@
 			public const string ThisFieldIsRequired = "ThisFieldIsRequired";
 			public const string PasswordDoNotMatch = "PasswordDoNotMatch";
 			public const string OpenTimeMustBeEarlierThanCloseTime = "OpenTimeMustBeEarlierThanCloseTime";
+			public const string InsufficientBalance = "InsufficientBalance";
+			public const string ReservationNotFound = "ReservationNotFound";
 		}
 	}
 }
