@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Reservation.Data.Enumerations;
 using Reservation.Models.BankCard;
@@ -16,13 +17,16 @@ namespace Reservation.Web.Controllers
 	{
 		private readonly IMemberService _member;
 		private readonly ILogger _logger;
+		private readonly IHostingEnvironment _environment;
 
 		public MemberController(
 			IMemberService member,
-			ILogger<MemberController> logger)
+			ILogger<MemberController> logger,
+			IHostingEnvironment environment)
 		{
 			_member = member;
 			_logger = logger;
+			_environment = environment;
 		}
 
 		[HttpPost]
@@ -72,7 +76,13 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			result.Value = await _member.GetMemberByIdAsync(id.Value);
+			var member = await _member.GetMemberByIdAsync(id.Value);
+			if (member != null && !string.IsNullOrEmpty(member.ProfilePictureUrl))
+			{
+				member.ProfilePictureUrl = $"{_environment.WebRootPath}{member.ProfilePictureUrl}";
+			}
+
+			result.Value = member;
 			result.Succeeded = true;
 			_logger.LogResponse("Member/GetMemberById", result);
 			return Json(result);

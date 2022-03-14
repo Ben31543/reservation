@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Data.Entities;
@@ -22,15 +23,18 @@ namespace Reservation.Service.Services
         private readonly ILogger _logger;
         private readonly ApplicationContext _db;
         private readonly IBankAccountService _bankAccService;
+        private readonly IHostingEnvironment _environment;
 
         public ServiceMemberService(
             ApplicationContext db,
             IBankAccountService bankAccService,
-            ILogger<ServiceMemberService> logger)
+            ILogger<ServiceMemberService> logger,
+            IHostingEnvironment environment)
         {
             _db = db;
             _bankAccService = bankAccService;
             _logger = logger;
+            _environment = environment;
         }
 
         public async Task<ServiceMember> GetServiceMemberByIdAsync(long id)
@@ -264,7 +268,11 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            var imageUrl = await ImageService.SaveAsync(model.Image, PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
+            var imageUrl = await ImageService.SaveAsync(
+                model.Image,
+                _environment.WebRootPath,
+                PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
+
             switch (model.ResourceType)
             {
                 case ResourceTypes.ServiceMemberLogo:

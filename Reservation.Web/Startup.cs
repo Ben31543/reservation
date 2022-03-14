@@ -22,7 +22,7 @@ namespace Reservation.Web
         {
             services.RegisterApplicationServices();
             services.AddDbContext<ApplicationContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options => options.UseSqlServer(Configuration.GetConnectionString("RemoteDbConnection")));
             services.AddControllersWithViews();
         }
 

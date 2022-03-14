@@ -6,10 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Reservation.Data;
 using Reservation.Service.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Reservation.ServiceMember
 {
@@ -26,7 +22,7 @@ namespace Reservation.ServiceMember
 		{
 			services.RegisterApplicationServices();
 			services.AddDbContext<ApplicationContext>(
-				options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+				options => options.UseSqlServer(Configuration.GetConnectionString("RemoteDbConnection")));
 			services.AddControllersWithViews();
 		}
 

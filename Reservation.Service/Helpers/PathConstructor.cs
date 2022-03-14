@@ -12,13 +12,16 @@ namespace Reservation.Service.Helpers
 					return $@"\Images\ServiceMembers\{id}\Logo\";
 
 				case ResourceTypes.ServiceMemberImage:
-					return $@"\Images\ServiceMembers\{id}\Images\";
+					return $@"\Images\ServiceMembers\{id}\Image\";
 
 				case ResourceTypes.MemberImage:
-					return $@"\Images\Members\{id}\Images\";
+					return $@"\Images\Members\{id}\";
 
 				case ResourceTypes.ProductImage:
 					return $@"\Images\Products\{id}\";
+
+				case ResourceTypes.BranchImage:
+					return $@"\Images\Branches\{id}\";
 
 				default:
 					return string.Empty;

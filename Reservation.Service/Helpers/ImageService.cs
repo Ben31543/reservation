@@ -7,15 +7,22 @@ namespace Reservation.Service.Helpers
 {
 	public static class ImageService
 	{
-		public async static Task<string> SaveAsync(IFormFile file, string path)
+		public async static Task<string> SaveAsync(IFormFile file, string resourcePath, string path)
 		{
-			var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-			string filePath = $@"{path}{uniqueFileName}";
+			string filePath = $"{resourcePath}{path}";
+			if (!Directory.Exists(filePath))
+			{
+				Directory.CreateDirectory(filePath);
+			}
 
-			using (var fileStream = new FileStream(filePath, FileMode.Create))
+			var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+			string imagePath = $"{path}{uniqueFileName}";
+			string fullFilefilePath = $@"{filePath}{uniqueFileName}";
+
+			using (var fileStream = new FileStream(fullFilefilePath, FileMode.Create))
 			{
 				await file.CopyToAsync(fileStream);
-				return filePath;
+				return imagePath;
 			}
 		}
 	}

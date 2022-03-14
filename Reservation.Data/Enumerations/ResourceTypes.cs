@@ -5,6 +5,7 @@
 		ServiceMemberLogo = 1,
 		ServiceMemberImage = 2,
 		MemberImage = 3,
-		ProductImage = 4
+		ProductImage = 4,
+		BranchImage = 5
 	}
 }
