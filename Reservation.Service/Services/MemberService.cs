@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.BankCard;
@@ -18,11 +19,18 @@ namespace Reservation.Service.Services
     {
         private readonly ApplicationContext _db;
         private readonly IBankCardService _bankCard;
-        public MemberService(ApplicationContext db, IBankCardService bankCard)
+        private readonly ILogger _logger;
+
+        public MemberService(
+            ApplicationContext db,
+            IBankCardService bankCard,
+            ILogger<MemberService> logger)
         {
             _db = db;
             _bankCard = bankCard;
+            _logger = logger;
         }
+
         public async Task<RequestResult> AddNewMemberAsync(MemberRegistrationModel model)
         {
             var result = new RequestResult();
@@ -44,6 +52,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 result.Message = ex.Message;
                 return result;
             }
@@ -77,6 +86,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
             }
@@ -109,7 +119,9 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
+                return result;
             }
 
             result.Value = existingMember;
@@ -157,6 +169,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
             }
@@ -207,9 +220,34 @@ namespace Reservation.Service.Services
                                          }).ToListAsync();
         }
 
-        public Task<RequestResult> SaveMemberProfileImageAsync(SaveImageModel model)
+        public async Task<RequestResult> SaveMemberProfileImageAsync(SaveImageModel model)
         {
-            throw new NotImplementedException();
+            var result = new RequestResult();
+
+            var member = await GetMemberByIdAsync(model.Id);
+            if (member == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
+                return result;
+            }
+
+            var imageUrl = await ImageService.SaveAsync(model.Image, PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
+            member.ProfilePictureUrl = imageUrl;
+
+            try
+            {
+                await _db.SaveChangesAsync();
+                result.Succeeded = true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                result.Message = e.Message;
+                return result;
+            }
+
+            result.Value = imageUrl;
+            return result;
         }
     }
 }

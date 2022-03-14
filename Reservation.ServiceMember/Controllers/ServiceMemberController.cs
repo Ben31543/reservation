@@ -31,7 +31,7 @@ namespace Reservation.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterServiceMember([FromBody] ServiceMemberRegistrationModel model)
         {
-            _logger.LogWarning("Requesting ServiceMember/RegisterServiceMember");
+            _logger.LogRequest("ServiceMember/RegisterServiceMember", model);
 
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
@@ -41,13 +41,14 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _serviceMember.RegisterServiceMemberAsync(model);
+            _logger.LogResponse("ServiceMember/RegisterServiceMember", result);
             return Json(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetServiceMember(long? id)
         {
-            _logger.LogWarning("Requesting ServiceMember/GetServiceMember");
+            _logger.LogRequest("ServiceMember/GetServiceMember", id);
 
             RequestResult result = new RequestResult();
 
@@ -77,13 +78,14 @@ namespace Reservation.Web.Controllers
 
             result.Succeeded = true;
             result.Value = serviceMember;
+            _logger.LogResponse("ServiceMember/GetServiceMember", result);
             return Json(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> VerifyServiceMember([FromBody] SignInModel model)
         {
-            _logger.LogWarning("Requesting ServiceMember/VerifyServiceMember");
+            _logger.LogRequest("ServiceMember/VerifyServiceMember", model);
 
             RequestResult result = new RequestResult();
 
@@ -100,13 +102,14 @@ namespace Reservation.Web.Controllers
                 return NotFound(result);
             }
 
+            _logger.LogResponse("ServiceMember/VerifyServiceMember", result);
             return Json(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
-            _logger.LogWarning("Requesting ServiceMember/ResetPassword");
+            _logger.LogRequest("ServiceMember/ResetPassword", model);
 
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
@@ -116,13 +119,14 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _serviceMember.ResetPasswordAsync(model);
+            _logger.LogResponse("ServiceMember/ResetPassword", result);
             return Json(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateServiceMember([FromBody] ServiceMemberEditModel model)
         {
-            _logger.LogWarning("Requesting ServiceMember/UpdateServiceMember");
+            _logger.LogRequest("ServiceMember/UpdateServiceMember", model);
 
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
@@ -132,13 +136,14 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _serviceMember.UpdateServiceMemberInfoAsync(model);
+            _logger.LogResponse("ServiceMember/UpdateServiceMember", result);
             return Json(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> AttachBankAccount([FromBody] BankAccountAttachModel model)
         {
-            _logger.LogWarning("Requesting ServiceMember/AttachBankAccount");
+            _logger.LogRequest("ServiceMember/AttachBankAccount", model);
 
             RequestResult result = new RequestResult();
             if (!model.ServiceMemberId.HasValue)
@@ -148,13 +153,14 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _serviceMember.AddBankAccountAsync(model);
+            _logger.LogResponse("ServiceMember/AttachBankAccount", result);
             return Json(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> DetachFromBankAccount([FromQuery] long? serviceMemberId, [FromQuery] long? bankAccountId)
         {
-            _logger.LogWarning("Requesting ServiceMember/DetachFromBankAccount");
+            _logger.LogRequest("ServiceMember/DetachFromBankAccount", new { ServiceMemberId = serviceMemberId, BankAccountId = bankAccountId });
 
             var result = new RequestResult();
             if (!serviceMemberId.HasValue || !bankAccountId.HasValue)
@@ -164,13 +170,14 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _serviceMember.DetachBankAccountAsync(serviceMemberId.Value, bankAccountId.Value);
+            _logger.LogResponse("ServiceMember/DetachFromBankAccount", result);
             return Json(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> GetServiceMemberDealsHistory(long? serviceMemberId)
         {
-            _logger.LogWarning("Requesting ServiceMember/GetServiceMemberDealsHistory");
+            _logger.LogRequest("ServiceMember/GetServiceMemberDealsHistory", serviceMemberId);
 
             RequestResult result = new RequestResult();
             if (!serviceMemberId.HasValue)
@@ -180,12 +187,14 @@ namespace Reservation.Web.Controllers
             }
 
             result.Value = await _serviceMember.GetServiceMemberDealsHistoryAsync(serviceMemberId.Value);
+            _logger.LogResponse("ServiceMember/GetServiceMemberDealsHistory", result);
             return Json(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveServiceMemberImage([FromForm] SaveImageModel model)
         {
+            _logger.LogRequest("ServiceMember/SaveServiceMemberImage", model);
             var result = new RequestResult();
 
             if (model == null || model.Image == null)
@@ -200,6 +209,7 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _serviceMember.SaveServiceMemberImageAsync(model);
+            _logger.LogResponse("ServiceMember/SaveServiceMemberImage", result);
             return Json(result);
         }
     }

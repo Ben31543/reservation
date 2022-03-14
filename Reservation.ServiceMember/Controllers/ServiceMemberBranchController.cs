@@ -24,7 +24,7 @@ namespace Reservation.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBranchById(long? branchId)
         {
-            _logger.LogWarning("Request: ServiceMemberBranch/GetBranchById, data: {@branchId}", branchId);
+            _logger.LogRequest("ServiceMemberBranch/GetBranchById", branchId);
 
             RequestResult result = new RequestResult();
             if (branchId == null)
@@ -35,13 +35,14 @@ namespace Reservation.Web.Controllers
 
             result.Value = await _branch.GetBranchByIdAsync(branchId.Value);
             result.Succeeded = true;
+            _logger.LogResponse("ServiceMemberBranch/GetBranchById", result);
             return Json(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetBranches(long? serviceMemberId)
         {
-            _logger.LogWarning("Request: ServiceMemberBranch/GetBranches, data: {@serviceMemberId}", serviceMemberId);
+            _logger.LogRequest("ServiceMemberBranch/GetBranches", serviceMemberId);
 
             RequestResult result = new RequestResult();
             if (serviceMemberId == null)
@@ -52,19 +53,14 @@ namespace Reservation.Web.Controllers
 
             result.Value = await _branch.GetBranchesAsync(serviceMemberId.Value);
             result.Succeeded = true;
+            _logger.LogResponse("ServiceMemberBranch/GetBranches", result);
             return Json(result);
-        }
-
-        [HttpGet]
-        public JsonResult esiminch()
-        {
-            return Json(DateTime.Now.TimeOfDay);
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveServiceMemberBranch([FromBody] ServiceMemberBranchEditModel model)
         {
-            _logger.LogWarning("Request: ServiceMemberBranch/SaveServiceMemberBranch, data: {@model}", model);
+            _logger.LogRequest("ServiceMemberBranch/SaveServiceMemberBranch", model);
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
@@ -87,13 +83,14 @@ namespace Reservation.Web.Controllers
                 result = await _branch.AddBranchAsync(model);
             }
 
+            _logger.LogResponse("ServiceMemberBranch/SaveServiceMemberBranch", result);
             return Json(result);
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteBranch(long? branchId)
         {
-            _logger.LogWarning("Request: ServiceMemberBranch/DeleteBranch, data: {@branchId}", branchId);
+            _logger.LogRequest("ServiceMemberBranch/DeleteBranch", branchId);
 
             RequestResult result = new RequestResult();
             if (branchId == null)
@@ -103,6 +100,7 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _branch.DeleteBranchAsync(branchId.Value);
+            _logger.LogResponse("ServiceMemberBranch/DeleteBranch", result);
             return Json(result);
         }
     }

@@ -7,18 +7,16 @@ using System.Threading.Tasks;
 
 namespace Reservation.Service.Interfaces
 {
-    public interface IDishService
-    {
-        Task<RequestResult> AddNewDishAsync(DishModel dish);
+	public interface IDishService
+	{
+		Task<RequestResult> AddNewDishAsync(DishModel dish);
 
-        Task<RequestResult> EditDishAsync(DishModel dish);
+		Task<RequestResult> EditDishAsync(DishModel dish);
 
-        Task<RequestResult> DeleteDishAsync(long id);
+		Task<RequestResult> DeleteDishAsync(long id);
 
-        Task<List<Dish>> GetAllDishesAsync(long serviceMemberId);
+		Task<Dish> GetDishById(long id);
 
-        Task<Dish> GetDishById(long id);
-
-        Task<List<Dish>> GetDishesAsync(DishSearchCriteria criteria,long serviceMemberId); 
-    }
+		Task<List<Dish>> GetDishesAsync(DishSearchCriteria criteria, long serviceMemberId);
+	}
 }

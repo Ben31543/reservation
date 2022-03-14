@@ -18,7 +18,10 @@ namespace Reservation.Service.Services
         private readonly IPaymentService _paymentService;
         private readonly ILogger _logger;
 
-        public ReservingService(ApplicationContext db, IPaymentService payment, ILogger<ReservingService> logger)
+        public ReservingService(
+            ApplicationContext db,
+            IPaymentService payment,
+            ILogger<ReservingService> logger)
         {
             _db = db;
             _paymentService = payment;
@@ -52,8 +55,8 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
-                result.Message = e.Message;
                 _logger.LogError(e.Message);
+                result.Message = e.Message;
                 return result;
             }
 
@@ -85,8 +88,8 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
-                result.Message = e.Message;
                 _logger.LogError(e.Message);
+                result.Message = e.Message;
                 return result;
             }
 

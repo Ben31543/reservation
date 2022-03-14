@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Reservation.Data;
 using Reservation.Data.Entities;
@@ -16,9 +17,14 @@ namespace Reservation.Service.Services
     public class ServiceMemberBranchService : IServiceMemberBranchService
     {
         private readonly ApplicationContext _db;
-        public ServiceMemberBranchService(ApplicationContext db)
+        private readonly ILogger _logger;
+
+        public ServiceMemberBranchService(
+            ApplicationContext db,
+            ILogger<ServiceMemberBranchService> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         public async Task<RequestResult> AddBranchAsync(ServiceMemberBranchEditModel model)
@@ -45,6 +51,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
             }
@@ -71,6 +78,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
             }
@@ -104,6 +112,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
             }

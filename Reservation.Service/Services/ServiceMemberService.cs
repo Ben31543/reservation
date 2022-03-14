@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Data.Enumerations;
@@ -18,15 +19,18 @@ namespace Reservation.Service.Services
 {
     public class ServiceMemberService : IServiceMemberService
     {
+        private readonly ILogger _logger;
         private readonly ApplicationContext _db;
         private readonly IBankAccountService _bankAccService;
 
         public ServiceMemberService(
             ApplicationContext db,
-            IBankAccountService bankAccService)
+            IBankAccountService bankAccService,
+            ILogger<ServiceMemberService> logger)
         {
             _db = db;
             _bankAccService = bankAccService;
+            _logger = logger;
         }
 
         public async Task<ServiceMember> GetServiceMemberByIdAsync(long id)
@@ -54,7 +58,9 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
+                return result;
             }
 
             return result;
@@ -79,6 +85,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
             }
@@ -111,6 +118,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
             }
@@ -160,6 +168,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
             }
@@ -196,6 +205,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
             }
@@ -276,6 +286,7 @@ namespace Reservation.Service.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
             }
