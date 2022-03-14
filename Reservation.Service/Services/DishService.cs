@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.Common;
@@ -17,12 +16,10 @@ namespace Reservation.Service.Services
     public class DishService : IDishService
     {
         private readonly ApplicationContext _db;
-        private readonly ILogger _logger;
 
-        public DishService(ApplicationContext db, ILogger<DishService> logger)
+        public DishService(ApplicationContext db)
         {
             _db = db;
-            _logger = logger;
         }
 
         public async Task<Dish> GetDishById(long id)
@@ -55,7 +52,6 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
-                _logger.LogError(e.Message);
                 return result;
             }
 
@@ -83,7 +79,6 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
-                _logger.LogError(e.Message);
                 return result;
             }
             return result;
@@ -116,14 +111,13 @@ namespace Reservation.Service.Services
             catch (Exception e)
             {
                 result.Message = e.Message;
-                _logger.LogError(e.Message);
                 return result;
             }
             result.Value = model;
             return result;
         }
 
-        public async Task<List<Dish>> GetAllDishesAsync(long serviceMemberId)
+        public async Task<List<Dish>> GetAllDishAsync(long serviceMemberId)
         {
             return await _db.Dishes.Where(i => i.ServiceMemberId == serviceMemberId).ToListAsync();
         }
@@ -166,6 +160,11 @@ namespace Reservation.Service.Services
             }
 
             return await dishes.ToListAsync();
+        }
+
+        public Task<List<Dish>> GetAllDishesAsync(long serviceMemberId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

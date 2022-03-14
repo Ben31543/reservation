@@ -1,4 +1,5 @@
 ﻿using Reservation.Data.Enumerations;
+using Reservation.Models.Common;
 using System;
 using System.Collections.Generic;
 
@@ -16,9 +17,9 @@ namespace Reservation.Models.ServiceMemberBranch
 
 		public string Phone { get; set; }
 
-		public TimeSpan OpenTime { get; set; }
+		public Time OpenTime { get; set; }
 
-		public TimeSpan CloseTime { get; set; }
+		public Time CloseTime { get; set; }
 
 		public Dictionary<DayOfWeek, bool> WorkDays { get; set; }
 

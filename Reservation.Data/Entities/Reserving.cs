@@ -28,6 +28,8 @@ namespace Reservation.Data.Entities
 
         public string Notes { get; set; }
 
+        public bool IsActive { get; set; }
+
         public Member Member { get; set; }
 
         public ServiceMember ServiceMember { get; set; }

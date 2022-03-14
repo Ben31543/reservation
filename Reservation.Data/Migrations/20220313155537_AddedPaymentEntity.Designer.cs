@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Reservation.Data;
 
 namespace Reservation.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20220313155537_AddedPaymentEntity")]
+    partial class AddedPaymentEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,9 +206,6 @@ namespace Reservation.Data.Migrations
                     b.Property<string>("Dishes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsOnlinePayment")
                         .HasColumnType("bit");
 
@@ -301,8 +300,8 @@ namespace Reservation.Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CloseTime")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<TimeSpan>("CloseTime")
+                        .HasColumnType("time");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -310,8 +309,8 @@ namespace Reservation.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OpenTime")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<TimeSpan>("OpenTime")
+                        .HasColumnType("time");
 
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");

@@ -1,4 +1,5 @@
-﻿using Reservation.Models.Common;
+﻿using Reservation.Data.Entities;
+using Reservation.Models.Common;
 using Reservation.Models.Reserving;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,10 @@ namespace Reservation.Service.Interfaces
 {
     public interface IPaymentService
     {
-        Task<RequestResult> AddPaymentAsync(PaymentDataModel model);
+        Task<RequestResult> AddPaymentDataAsync(PaymentDataModel model);
+
+        Task<RequestResult> RequestPaymentAsync(long fromId, long toId, PaymentData paymentData);
+
+        Task<RequestResult> RequestRefundAsync(long fromId, long toId, decimal amount);
     }
 }

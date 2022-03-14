@@ -12,6 +12,10 @@ namespace Reservation.Models.Reserving
 
         public DateTime PaymentDate { get; set; }
 
+        public long BankCardId { get; set; }
+
+        public long BankAccountId { get; set; }
+
         public string BankCardAccountFrom { get; set; }
 
         public string BankAcountTo { get; set; }

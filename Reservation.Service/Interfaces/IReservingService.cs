@@ -11,5 +11,7 @@ namespace Reservation.Service.Interfaces
     public interface IReservingService
     {
         Task<RequestResult> AddReservingAsync(ReservingModel model);
+
+        Task<RequestResult> CancelReservingAsync(long id);
     }
 }
