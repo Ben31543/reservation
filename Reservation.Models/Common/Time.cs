@@ -10,6 +10,7 @@ namespace Reservation.Models.Common
     {
         public int Hour { get; set; }
 
+        //TODO: turn to string
         public int Minute { get; set; }
     }
 }
