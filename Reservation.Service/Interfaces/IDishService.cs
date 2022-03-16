@@ -18,5 +18,9 @@ namespace Reservation.Service.Interfaces
 		Task<Dish> GetDishById(long id);
 
 		Task<List<Dish>> GetDishesAsync(DishSearchCriteria criteria, long serviceMemberId);
+
+		Task<RequestResult> SaveDishImageAsync(SaveImageModel model);
+
+		Task<List<Dish>> GetAllDishAsync(long serviceMemberId);
 	}
 }
