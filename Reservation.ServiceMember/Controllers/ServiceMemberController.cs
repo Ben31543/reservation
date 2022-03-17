@@ -258,18 +258,18 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetDishes([FromBody] DishSearchCriteria dishSearch)
+        public async Task<IActionResult> GetDishes([FromBody] DishSearchCriteria criteria)
         {
-            _logger.LogRequest("ServiceMember/GetDishes", dishSearch);
+            _logger.LogRequest("ServiceMember/GetDishes", criteria);
 
             RequestResult result = new RequestResult();
-            if (dishSearch.ServiceMemberId == null)
+            if (criteria.ServiceMemberId == null)
             {
                 result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
-            result.Value = await _dishService.GetDishesAsync(dishSearch);
+            result.Value = await _dishService.GetDishesAsync(criteria);
             result.Succeeded = true;
             _logger.LogResponse("ServiceMember/GetDishes", result);
             return Json(result);
