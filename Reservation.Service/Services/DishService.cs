@@ -130,15 +130,10 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<List<Dish>> GetAllDishAsync(long serviceMemberId)
-        {
-            return await _db.Dishes.Where(i => i.ServiceMemberId == serviceMemberId).ToListAsync();
-        }
-
-        public async Task<List<Dish>> GetDishesAsync(DishSearchCriteria criteria, long serviceMemberId)
+        public async Task<List<Dish>> GetDishesAsync(DishSearchCriteria criteria)
         {
             var dishes = _db.Dishes
-                .Where(i => i.ServiceMemberId == serviceMemberId)
+                .Where(i => i.ServiceMemberId == criteria.ServiceMemberId)
                 .AsNoTracking()
                 .AsQueryable();
 

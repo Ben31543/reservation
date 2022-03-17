@@ -258,36 +258,18 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDishesCriteria(long? serviceMemberId, DishSearchCriteria dishSearch)
+        public async Task<IActionResult> GetDishes(DishSearchCriteria dishSearch)
         {
-            _logger.LogRequest("ServiceMember/GetDishesCriteria", serviceMemberId);
+            _logger.LogRequest("ServiceMember/GetDishes", dishSearch);
 
             RequestResult result = new RequestResult();
-            if (serviceMemberId == null)
+            if (dishSearch.ServiceMemberId == null)
             {
                 result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
                 return Json(result);
             }
 
-            result.Value = await _dish.GetDishesAsync(dishSearch, serviceMemberId.Value);
-            result.Succeeded = true;
-            _logger.LogResponse("ServiceMember/GetDishesCriteria", result);
-            return Json(result);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetDishes(long? serviceMemberId, DishSearchCriteria dishSearch)
-        {
-            _logger.LogRequest("ServiceMember/GetDishes", serviceMemberId);
-
-            RequestResult result = new RequestResult();
-            if (serviceMemberId == null)
-            {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
-                return Json(result);
-            }
-
-            result.Value = await _dish.GetAllDishAsync(serviceMemberId.Value);
+            result.Value = await _dish.GetDishesAsync(dishSearch);
             result.Succeeded = true;
             _logger.LogResponse("ServiceMember/GetDishes", result);
             return Json(result);
