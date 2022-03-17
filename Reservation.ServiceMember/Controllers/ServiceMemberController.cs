@@ -18,9 +18,9 @@ namespace Reservation.Web.Controllers
     {
         private readonly ILogger _logger;
         private readonly IHostingEnvironment _environment;
-        private readonly IServiceMemberService _serviceMember;
-        private readonly IServiceMemberBranchService _branch;
-        private readonly IDishService _dish;
+        private readonly IServiceMemberService _serviceMemberService;
+        private readonly IServiceMemberBranchService _branchService;
+        private readonly IDishService _dishService;
 
         public ServiceMemberController(
             IServiceMemberService serviceMember,
@@ -29,11 +29,11 @@ namespace Reservation.Web.Controllers
             IServiceMemberBranchService branch,
             IDishService dish)
         {
-            _serviceMember = serviceMember;
+            _serviceMemberService = serviceMember;
             _logger = logger;
             _environment = environment;
-            _branch = branch;
-            _dish = dish;
+            _branchService = branch;
+            _dishService = dish;
         }
 
         [HttpPost]
@@ -48,7 +48,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result = await _serviceMember.RegisterServiceMemberAsync(model);
+            result = await _serviceMemberService.RegisterServiceMemberAsync(model);
             _logger.LogResponse("ServiceMember/RegisterServiceMember", result);
             return Json(result);
         }
@@ -66,7 +66,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            var serviceMember = await _serviceMember.GetServiceMemberByIdAsync(id.Value);
+            var serviceMember = await _serviceMemberService.GetServiceMemberByIdAsync(id.Value);
             if (serviceMember == null)
             {
                 result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
@@ -103,7 +103,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result = await _serviceMember.VerifyServiceMemberAsync(model);
+            result = await _serviceMemberService.VerifyServiceMemberAsync(model);
 
             if (!result.Succeeded)
             {
@@ -126,7 +126,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result = await _serviceMember.ResetPasswordAsync(model);
+            result = await _serviceMemberService.ResetPasswordAsync(model);
             _logger.LogResponse("ServiceMember/ResetPassword", result);
             return Json(result);
         }
@@ -143,7 +143,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result = await _serviceMember.UpdateServiceMemberInfoAsync(model);
+            result = await _serviceMemberService.UpdateServiceMemberInfoAsync(model);
             _logger.LogResponse("ServiceMember/UpdateServiceMember", result);
             return Json(result);
         }
@@ -160,7 +160,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result = await _serviceMember.AddBankAccountAsync(model);
+            result = await _serviceMemberService.AddBankAccountAsync(model);
             _logger.LogResponse("ServiceMember/AttachBankAccount", result);
             return Json(result);
         }
@@ -177,7 +177,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result = await _serviceMember.DetachBankAccountAsync(serviceMemberId.Value, bankAccountId.Value);
+            result = await _serviceMemberService.DetachBankAccountAsync(serviceMemberId.Value, bankAccountId.Value);
             _logger.LogResponse("ServiceMember/DetachFromBankAccount", result);
             return Json(result);
         }
@@ -194,7 +194,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _serviceMember.GetServiceMemberDealsHistoryAsync(serviceMemberId.Value);
+            result.Value = await _serviceMemberService.GetServiceMemberDealsHistoryAsync(serviceMemberId.Value);
             _logger.LogResponse("ServiceMember/GetServiceMemberDealsHistory", result);
             return Json(result);
         }
@@ -216,7 +216,7 @@ namespace Reservation.Web.Controllers
                 model.ResourceType = ResourceTypes.ServiceMemberImage;
             }
 
-            result = await _serviceMember.SaveServiceMemberImageAsync(model);
+            result = await _serviceMemberService.SaveServiceMemberImageAsync(model);
             _logger.LogResponse("ServiceMember/SaveServiceMemberImage", result);
             return Json(result);
         }
@@ -233,16 +233,16 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _branch.GetBranchesAsync(serviceMemberId.Value);
+            result.Value = await _branchService.GetBranchesAsync(serviceMemberId.Value);
             result.Succeeded = true;
             _logger.LogResponse("ServiceMember/GetBranches", result);
             return Json(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSelectedDish(long? dishId)
+        public async Task<IActionResult> GetDish(long? dishId)
         {
-            _logger.LogRequest("ServiceMember/GetSelectedDish", dishId);
+            _logger.LogRequest("ServiceMember/GetDish", dishId);
 
             RequestResult result = new RequestResult();
             if (dishId == null)
@@ -251,14 +251,14 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _dish.GetDishById(dishId.Value);
+            result.Value = await _dishService.GetDishById(dishId.Value);
             result.Succeeded = true;
-            _logger.LogResponse("ServiceMember/GetSelectedDish", result);
+            _logger.LogResponse("ServiceMember/GetDish", result);
             return Json(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetDishes(DishSearchCriteria dishSearch)
+        [HttpPost]
+        public async Task<IActionResult> GetDishes([FromBody] DishSearchCriteria dishSearch)
         {
             _logger.LogRequest("ServiceMember/GetDishes", dishSearch);
 
@@ -269,7 +269,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _dish.GetDishesAsync(dishSearch);
+            result.Value = await _dishService.GetDishesAsync(dishSearch);
             result.Succeeded = true;
             _logger.LogResponse("ServiceMember/GetDishes", result);
             return Json(result);
@@ -287,7 +287,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _dish.AddNewDishAsync(model);
+            result.Value = await _dishService.AddNewDishAsync(model);
             _logger.LogResponse("ServiceMember/AddNewDish", result);
             return Json(result);
         }
@@ -304,7 +304,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _dish.EditDishAsync(model);
+            result.Value = await _dishService.EditDishAsync(model);
             _logger.LogResponse("ServiceMember/EditDish", result);
             return Json(result);
         }
@@ -321,7 +321,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _dish.DeleteDishAsync(dishId.Value);
+            result.Value = await _dishService.DeleteDishAsync(dishId.Value);
             _logger.LogResponse("ServiceMember/DeleteDish", result);
             return Json(result);
         }
@@ -340,10 +340,10 @@ namespace Reservation.Web.Controllers
 
             if (!model.ResourceType.HasValue)
             {
-                model.ResourceType = ResourceTypes.MemberImage;
+                model.ResourceType = ResourceTypes.DishImage;
             }
 
-            result.Value = await _dish.SaveDishImageAsync(model);
+            result.Value = await _dishService.SaveDishImageAsync(model);
             _logger.LogResponse("ServiceMember/SaveDishImage", result);
             return Json(result);
         }

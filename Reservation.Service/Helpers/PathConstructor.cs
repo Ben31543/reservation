@@ -17,8 +17,8 @@ namespace Reservation.Service.Helpers
 				case ResourceTypes.MemberImage:
 					return $@"\Images\Members\{id}\";
 
-				case ResourceTypes.ProductImage:
-					return $@"\Images\Products\{id}\";
+				case ResourceTypes.DishImage:
+					return $@"\Images\Dishes\{id}\";
 
 				case ResourceTypes.BranchImage:
 					return $@"\Images\Branches\{id}\";

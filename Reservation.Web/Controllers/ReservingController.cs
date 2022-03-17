@@ -10,14 +10,14 @@ namespace Reservation.Web.Controllers
 {
 	public class ReservingController : Controller
 	{
-		private readonly IReservingService _reserve;
+		private readonly IReservingService _reservingService;
 		private readonly ILogger _logger;
 
 		public ReservingController(
-			IReservingService reserve,
+			IReservingService reservingService,
 			ILogger<ReservingController> logger)
 		{
-			_reserve = reserve;
+			_reservingService = reservingService;
 			_logger = logger;
 		}
 
@@ -33,7 +33,7 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			result = await _reserve.AddReservingAsync(model);
+			result = await _reservingService.AddReservingAsync(model);
 			_logger.LogResponse("Reserving/GetReservingDealsHistory", result);
 			return Json(result);
 		}

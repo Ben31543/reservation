@@ -12,12 +12,12 @@ namespace Reservation.Web.Controllers
 {
     public class ServiceMemberBranchController : Controller
     {
-        private readonly IServiceMemberBranchService _branch;
+        private readonly IServiceMemberBranchService _branchService;
         private readonly ILogger _logger;
 
         public ServiceMemberBranchController(IServiceMemberBranchService branch, ILogger<ServiceMemberBranchController> logger)
         {
-            _branch = branch;
+            _branchService = branch;
             _logger = logger;
         }
 
@@ -33,7 +33,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _branch.GetBranchByIdAsync(branchId.Value);
+            result.Value = await _branchService.GetBranchByIdAsync(branchId.Value);
             result.Succeeded = true;
             _logger.LogResponse("ServiceMemberBranch/GetBranchById", result);
             return Json(result);
@@ -58,11 +58,11 @@ namespace Reservation.Web.Controllers
 
             if (model.Id.HasValue && model.Id.Value != default)
             {
-                result = await _branch.EditBranchInfoAsync(model);
+                result = await _branchService.EditBranchInfoAsync(model);
             }
             else
             {
-                result = await _branch.AddBranchAsync(model);
+                result = await _branchService.AddBranchAsync(model);
             }
 
             _logger.LogResponse("ServiceMemberBranch/SaveServiceMemberBranch", result);
@@ -81,7 +81,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result = await _branch.DeleteBranchAsync(branchId.Value);
+            result = await _branchService.DeleteBranchAsync(branchId.Value);
             _logger.LogResponse("ServiceMemberBranch/DeleteBranch", result);
             return Json(result);
         }

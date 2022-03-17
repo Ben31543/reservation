@@ -5,6 +5,7 @@ namespace Reservation.Models.Criterias
     public class DishSearchCriteria
     {
         public long? ServiceMemberId { get; set; }
+
         public string SearchText { get; set; }
 
         public decimal? PriceMin { get; set; }

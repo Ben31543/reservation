@@ -15,7 +15,7 @@ namespace Reservation.Web.Controllers
 {
 	public class MemberController : Controller
 	{
-		private readonly IMemberService _member;
+		private readonly IMemberService _memberService;
 		private readonly ILogger _logger;
 		private readonly IHostingEnvironment _environment;
 
@@ -24,7 +24,7 @@ namespace Reservation.Web.Controllers
 			ILogger<MemberController> logger,
 			IHostingEnvironment environment)
 		{
-			_member = member;
+			_memberService = member;
 			_logger = logger;
 			_environment = environment;
 		}
@@ -59,7 +59,7 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			result = await _member.AddNewMemberAsync(model);
+			result = await _memberService.AddNewMemberAsync(model);
 			_logger.LogResponse("Member/AddNewMember", result);
 			return Json(result);
 		}
@@ -76,7 +76,7 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			var member = await _member.GetMemberByIdAsync(id.Value);
+			var member = await _memberService.GetMemberByIdAsync(id.Value);
 			if (member != null && !string.IsNullOrEmpty(member.ProfilePictureUrl))
 			{
 				member.ProfilePictureUrl = $"{_environment.WebRootPath}{member.ProfilePictureUrl}";
@@ -111,7 +111,7 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			result = await _member.UpdateMemberInfoAsync(model);
+			result = await _memberService.UpdateMemberInfoAsync(model);
 			_logger.LogResponse("Member/UpdateMemberInfo", result);
 			return Json(result);
 		}
@@ -133,7 +133,7 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			result = await _member.ResetPasswordAsync(model);
+			result = await _memberService.ResetPasswordAsync(model);
 			_logger.LogResponse("Member/ResetPassword", result);
 			return Json(result);
 		}
@@ -149,7 +149,7 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			result = await _member.VerifyMemberAsync(model);
+			result = await _memberService.VerifyMemberAsync(model);
 			_logger.LogResponse("Member/VerifyMember", result);
 			return Json(result);
 		}
@@ -166,7 +166,7 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			result = await _member.AddBankCardAsync(model);
+			result = await _memberService.AddBankCardAsync(model);
 			_logger.LogResponse("Member/AttachCardToMember", result);
 			return Json(result);
 		}
@@ -183,7 +183,7 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			result = await _member.DetachBankCardAsync(memberId.Value, cardId.Value);
+			result = await _memberService.DetachBankCardAsync(memberId.Value, cardId.Value);
 			_logger.LogResponse("Member/DetachCardFromMember", result);
 			return Json(result);
 		}
@@ -199,7 +199,7 @@ namespace Reservation.Web.Controllers
 				return Json(result);
 			}
 
-			result.Value = await _member.GetMemberDealsHistoryAsync(memberId.Value);
+			result.Value = await _memberService.GetMemberDealsHistoryAsync(memberId.Value);
 			_logger.LogResponse("Member/GetMemberDealsHistory", result);
 			return (Json(result));
 		}
@@ -221,7 +221,7 @@ namespace Reservation.Web.Controllers
 				model.ResourceType = ResourceTypes.MemberImage;
 			}
 
-			result = await _member.SaveMemberProfileImageAsync(model);
+			result = await _memberService.SaveMemberProfileImageAsync(model);
 			_logger.LogResponse("Member/SaveMemberProfilePicture", result);
 			return Json(result);
 		}
