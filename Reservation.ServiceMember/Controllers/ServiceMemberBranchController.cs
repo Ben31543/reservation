@@ -39,24 +39,6 @@ namespace Reservation.Web.Controllers
             return Json(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetBranches(long? serviceMemberId)
-        {
-            _logger.LogRequest("ServiceMemberBranch/GetBranches", serviceMemberId);
-
-            RequestResult result = new RequestResult();
-            if (serviceMemberId == null)
-            {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
-                return Json(result);
-            }
-
-            result.Value = await _branch.GetBranchesAsync(serviceMemberId.Value);
-            result.Succeeded = true;
-            _logger.LogResponse("ServiceMemberBranch/GetBranches", result);
-            return Json(result);
-        }
-
         [HttpPost]
         public async Task<IActionResult> SaveServiceMemberBranch([FromBody] ServiceMemberBranchEditModel model)
         {

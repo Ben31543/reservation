@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using Reservation.Data.Enumerations;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
+using Reservation.Models.Criterias;
+using Reservation.Models.Dish;
 using Reservation.Models.ServiceMember;
 using Reservation.Resources.Contents;
 using Reservation.Service.Helpers;
@@ -17,15 +19,21 @@ namespace Reservation.Web.Controllers
         private readonly ILogger _logger;
         private readonly IHostingEnvironment _environment;
         private readonly IServiceMemberService _serviceMember;
+        private readonly IServiceMemberBranchService _branch;
+        private readonly IDishService _dish;
 
         public ServiceMemberController(
             IServiceMemberService serviceMember,
             ILogger<ServiceMemberController> logger,
-            IHostingEnvironment environment)
+            IHostingEnvironment environment,
+            IServiceMemberBranchService branch,
+            IDishService dish)
         {
             _serviceMember = serviceMember;
             _logger = logger;
             _environment = environment;
+            _branch = branch;
+            _dish = dish;
         }
 
         [HttpPost]
@@ -210,6 +218,133 @@ namespace Reservation.Web.Controllers
 
             result = await _serviceMember.SaveServiceMemberImageAsync(model);
             _logger.LogResponse("ServiceMember/SaveServiceMemberImage", result);
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetBranches(long? serviceMemberId)
+        {
+            _logger.LogRequest("ServiceMember/GetBranches", serviceMemberId);
+
+            RequestResult result = new RequestResult();
+            if (serviceMemberId == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+            }
+
+            result.Value = await _branch.GetBranchesAsync(serviceMemberId.Value);
+            result.Succeeded = true;
+            _logger.LogResponse("ServiceMember/GetBranches", result);
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSelectedDish(long? dishId)
+        {
+            _logger.LogRequest("ServiceMember/GetSelectedDish", dishId);
+
+            RequestResult result = new RequestResult();
+            if (dishId == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+            }
+
+            result.Value = await _dish.GetDishById(dishId.Value);
+            result.Succeeded = true;
+            _logger.LogResponse("ServiceMember/GetSelectedDish", result);
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDishes(DishSearchCriteria dishSearch)
+        {
+            _logger.LogRequest("ServiceMember/GetDishes", dishSearch);
+
+            RequestResult result = new RequestResult();
+            if (dishSearch.ServiceMemberId == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+            }
+
+            result.Value = await _dish.GetDishesAsync(dishSearch);
+            result.Succeeded = true;
+            _logger.LogResponse("ServiceMember/GetDishes", result);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddNewDish([FromForm] DishModel model)
+        {
+            _logger.LogRequest("ServiceMember/AddNewDish", model);
+
+            RequestResult result = new RequestResult();
+            if (!ModelState.IsValid)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+            }
+
+            result.Value = await _dish.AddNewDishAsync(model);
+            _logger.LogResponse("ServiceMember/AddNewDish", result);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditDish([FromForm] DishModel model)
+        {
+            _logger.LogRequest("ServiceMember/EditDish", model);
+
+            RequestResult result = new RequestResult();
+            if (!ModelState.IsValid)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+            }
+
+            result.Value = await _dish.EditDishAsync(model);
+            _logger.LogResponse("ServiceMember/EditDish", result);
+            return Json(result);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteDish(long? dishId)
+        {
+            _logger.LogRequest("ServiceMember/DeleteDish", dishId);
+
+            RequestResult result = new RequestResult();
+            if (dishId == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+            }
+
+            result.Value = await _dish.DeleteDishAsync(dishId.Value);
+            _logger.LogResponse("ServiceMember/DeleteDish", result);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveDishImage([FromForm] SaveImageModel model)
+        {
+            _logger.LogRequest("ServiceMember/SaveDishImage", model);
+
+            RequestResult result = new RequestResult();
+            if (model == null || model.Image == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                return Json(result);
+            }
+
+            if (!model.ResourceType.HasValue)
+            {
+                model.ResourceType = ResourceTypes.MemberImage;
+            }
+
+            result.Value = await _dish.SaveDishImageAsync(model);
+            _logger.LogResponse("ServiceMember/SaveDishImage", result);
             return Json(result);
         }
     }

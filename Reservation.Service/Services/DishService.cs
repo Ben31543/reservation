@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Data.Entities;
@@ -6,6 +7,7 @@ using Reservation.Models.Common;
 using Reservation.Models.Criterias;
 using Reservation.Models.Dish;
 using Reservation.Resources.Contents;
+using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -18,13 +20,16 @@ namespace Reservation.Service.Services
     {
         private readonly ApplicationContext _db;
         private readonly ILogger _logger;
+        private readonly IHostingEnvironment _environment;
 
         public DishService(
             ApplicationContext db,
-            ILogger<DishService> logger)
+            ILogger<DishService> logger,
+            IHostingEnvironment environment)
         {
             _db = db;
             _logger = logger;
+            _environment = environment;
         }
 
         public async Task<Dish> GetDishById(long id)
@@ -125,15 +130,10 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<List<Dish>> GetAllDishAsync(long serviceMemberId)
-        {
-            return await _db.Dishes.Where(i => i.ServiceMemberId == serviceMemberId).ToListAsync();
-        }
-
-        public async Task<List<Dish>> GetDishesAsync(DishSearchCriteria criteria, long serviceMemberId)
+        public async Task<List<Dish>> GetDishesAsync(DishSearchCriteria criteria)
         {
             var dishes = _db.Dishes
-                .Where(i => i.ServiceMemberId == serviceMemberId)
+                .Where(i => i.ServiceMemberId == criteria.ServiceMemberId)
                 .AsNoTracking()
                 .AsQueryable();
 
@@ -168,6 +168,40 @@ namespace Reservation.Service.Services
             }
 
             return await dishes.ToListAsync();
+        }
+
+        public async Task<RequestResult> SaveDishImageAsync(SaveImageModel model)
+        {
+            RequestResult result = new RequestResult();
+
+            var dish = await GetDishById(model.Id);
+            if(dish == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                return result;
+            }
+
+            var imageUrl = await ImageService.SaveAsync(
+                model.Image,
+                _environment.WebRootPath,
+                PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
+
+            dish.ImageUrl = imageUrl;
+
+            try
+            {
+                await _db.SaveChangesAsync();
+                result.Succeeded = true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                result.Message = e.Message;
+                return result;
+            }
+
+            result.Value = imageUrl;
+            return result;
         }
     }
 }
