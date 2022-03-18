@@ -132,10 +132,9 @@ namespace Reservation.Service.Services
 
         public async Task<List<Dish>> GetDishesAsync(DishSearchCriteria criteria)
         {
-            var dishes = _db.Dishes
+            var dishes = await _db.Dishes
                 .Where(i => i.ServiceMemberId == criteria.ServiceMemberId)
-                .AsNoTracking()
-                .AsQueryable();
+                .ToListAsync();
 
 			if (!dishes.Any())
 			{
@@ -144,30 +143,30 @@ namespace Reservation.Service.Services
 
             if (criteria.DishType.HasValue)
             {
-                dishes = dishes.Where(i => i.TypeId == (byte)criteria.DishType);
+                dishes = dishes.Where(i => i.TypeId == (byte)criteria.DishType).ToList();
             }
 
             if (criteria.PriceMin.HasValue)
             {
-                dishes = dishes.Where(i => i.Price >= criteria.PriceMin);
+                dishes = dishes.Where(i => i.Price >= criteria.PriceMin).ToList();
             }
 
             if (criteria.PriceMax.HasValue)
             {
-                dishes = dishes.Where(i => i.Price <= criteria.PriceMax);
+                dishes = dishes.Where(i => i.Price <= criteria.PriceMax).ToList();
             }
 
             if (criteria.IsAvailable.HasValue)
             {
-                dishes = dishes.Where(i => i.IsAvailable == criteria.IsAvailable);
+                dishes = dishes.Where(i => i.IsAvailable == criteria.IsAvailable).ToList();
             }
 
             if (!string.IsNullOrWhiteSpace(criteria.SearchText))
             {
-                dishes = dishes.Where(i => i.Name.Contains(criteria.SearchText,StringComparison.OrdinalIgnoreCase));
+                dishes = dishes.Where(i => i.Name.Contains(criteria.SearchText,StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            return await dishes.ToListAsync();
+            return dishes;
         }
 
         public async Task<RequestResult> SaveDishImageAsync(SaveImageModel model)

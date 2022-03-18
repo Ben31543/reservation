@@ -235,7 +235,8 @@ namespace Reservation.Service.Services
                                             OrdersDate = i.ReservationDate,
                                             BranchName = i.ServiceMemberBranch.Name,
                                             Address = i.ServiceMemberBranch.Address,
-                                            OnlinePayment = i.IsOnlinePayment
+                                            OnlinePayment = i.IsOnlinePayment,
+                                            IsActive = i.IsActive
                                         }).ToListAsync();
             return deals;
         }

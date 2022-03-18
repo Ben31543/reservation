@@ -17,27 +17,37 @@ namespace Reservation.Service.Services
         private readonly ApplicationContext _db;
         private readonly IPaymentService _paymentService;
         private readonly ILogger _logger;
+        private readonly IServiceMemberService _serviceMemberService;
 
         public ReservingService(
             ApplicationContext db,
             IPaymentService payment,
-            ILogger<ReservingService> logger)
+            ILogger<ReservingService> logger,
+            IServiceMemberService serviceMemberService)
         {
             _db = db;
             _paymentService = payment;
             _logger = logger;
+            _serviceMemberService = serviceMemberService;
         }
 
         public async Task<RequestResult> AddReservingAsync(ReservingModel model)
         {
             RequestResult result = new RequestResult();
+            var serviceMember = await _serviceMemberService.GetServiceMemberByIdAsync(model.ServiceMemberId);
+            if (serviceMember == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
+                return result;
+            }
+
             var reservation = new Reserving
             {
                 IsOnlinePayment = model.IsOnlinePayment,
                 IsTakeOut = model.IsTakeOut,
                 MemberId = model.MemberId,
                 ReservationDate = model.ReservationDate,
-                ServiceMemberId = model.ServiceMemberId,
+                ServiceMemberId = serviceMember.Id,
                 ServiceMemberBranchId = model.ServiceMemberBranchId,
                 Tables = JsonConvert.SerializeObject(model.Tables),
                 Dishes = JsonConvert.SerializeObject(model.Dishes),
@@ -46,6 +56,7 @@ namespace Reservation.Service.Services
                 IsActive = true
             };
 
+            ++serviceMember.OrdersCount;
             await _db.Reservings.AddAsync(reservation);
 
             try
@@ -65,7 +76,6 @@ namespace Reservation.Service.Services
                 await AddPaymentRequestAsync(reservation);
             }
 
-            result.Value = reservation;
             return result;
         }
 
@@ -106,7 +116,9 @@ namespace Reservation.Service.Services
         {
             var reserveData = await _db.Reservings
                                        .Include(i => i.Member)
+                                        .ThenInclude(i => i.BankCard)
                                        .Include(i => i.ServiceMember)
+                                         .ThenInclude(i => i.BankAccount)
                                        .Include(i => i.ServiceMemberBranch)
                                        .FirstOrDefaultAsync(i => i.Id == reserving.Id);
 
@@ -120,7 +132,9 @@ namespace Reservation.Service.Services
                 Amount = reserving.Amount,
                 PaymentDate = DateTime.Now,
                 BankCardAccountFrom = reserving.Member.BankCard.Number,
-                BankAcountTo = reserving.ServiceMember.BankAccount.AccountNumber
+                BankAcountTo = reserving.ServiceMember.BankAccount.AccountNumber,
+                BankAccountId = reserving.ServiceMember.BankAccountId.Value,
+                BankCardId = reserving.Member.BankCardId.Value
             };
 
             await _paymentService.AddPaymentDataAsync(paymentData);
@@ -130,7 +144,9 @@ namespace Reservation.Service.Services
         {
             var reserveData = await _db.Reservings
                                        .Include(i => i.Member)
+                                        .ThenInclude(i=>i.BankCard)
                                        .Include(i => i.ServiceMember)
+                                        .ThenInclude(i=>i.BankAccount)
                                        .FirstOrDefaultAsync(i => i.Id == reserving.Id);
 
             if (reserveData == null)

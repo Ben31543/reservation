@@ -22,9 +22,9 @@ namespace Reservation.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> GetReservingDealsHistory(ReservingModel model)
+		public async Task<IActionResult> AddReserving([FromBody]ReservingModel model)
 		{
-			_logger.LogRequest("Reserving/GetReservingDealsHistory", model);
+			_logger.LogRequest("Reserving/AddReserving", model);
 			var result = new RequestResult();
 
 			if (!ModelState.IsValid)
@@ -34,7 +34,24 @@ namespace Reservation.Web.Controllers
 			}
 
 			result = await _reservingService.AddReservingAsync(model);
-			_logger.LogResponse("Reserving/GetReservingDealsHistory", result);
+			_logger.LogResponse("Reserving/AddReserving", result);
+			return Json(result);
+		} 
+
+		[HttpGet]
+		public async Task<IActionResult> CancelReserving(long? id)
+		{
+			_logger.LogRequest("Reserving/CancelReserving", id);
+			var result = new RequestResult();
+
+			if (id == null)
+			{
+				result.Message = ModelState.GetErrorMessages();
+				return Json(result);
+			}
+
+			result = await _reservingService.CancelReservingAsync(id.Value);
+			_logger.LogResponse("Reserving/CancelReserving", result);
 			return Json(result);
 		}
 	}

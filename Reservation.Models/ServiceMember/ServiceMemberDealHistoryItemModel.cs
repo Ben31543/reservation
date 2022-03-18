@@ -21,5 +21,7 @@ namespace Reservation.Models.ServiceMember
         public string BranchName { get; set; }
 
         public DateTime OrdersDate { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

@@ -276,14 +276,14 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddNewDish([FromForm] DishModel model)
+        public async Task<IActionResult> AddNewDish([FromBody] DishModel model)
         {
             _logger.LogRequest("ServiceMember/AddNewDish", model);
 
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 
@@ -293,7 +293,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditDish([FromForm] DishModel model)
+        public async Task<IActionResult> EditDish([FromBody] DishModel model)
         {
             _logger.LogRequest("ServiceMember/EditDish", model);
 
