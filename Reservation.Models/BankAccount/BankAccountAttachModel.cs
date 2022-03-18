@@ -7,7 +7,7 @@ namespace Reservation.Models.BankAccount
     {
         public long? ServiceMemberId { get; set; }
 
-        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+        [Required(ErrorMessage = LocalizationKeys.Contents.AccountNumber + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
         public string AccountNumber { get; set; }
     }
 }

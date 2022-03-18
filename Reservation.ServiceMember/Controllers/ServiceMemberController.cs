@@ -154,6 +154,13 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("ServiceMember/AttachBankAccount", model);
 
             RequestResult result = new RequestResult();
+
+			if (!ModelState.IsValid)
+			{
+                result.Message = ModelState.GetErrorMessages();
+                return Json(result);
+            }
+
             if (!model.ServiceMemberId.HasValue)
             {
                 result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
@@ -276,9 +283,9 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddNewDish([FromBody] DishModel model)
+        public async Task<IActionResult> SaveDish([FromBody] DishModel model)
         {
-            _logger.LogRequest("ServiceMember/AddNewDish", model);
+            _logger.LogRequest("ServiceMember/SaveDish", model);
 
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
@@ -288,7 +295,7 @@ namespace Reservation.Web.Controllers
             }
 
             result.Value = await _dishService.AddNewDishAsync(model);
-            _logger.LogResponse("ServiceMember/AddNewDish", result);
+            _logger.LogResponse("ServiceMember/SaveDish", result);
             return Json(result);
         }
 
@@ -300,7 +307,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (!ModelState.IsValid)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 

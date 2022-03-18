@@ -5,10 +5,10 @@ namespace Reservation.Models.Common
 {
     public class SignInModel
     {
-        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+        [Required(ErrorMessage = LocalizationKeys.Contents.Login + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
         public string Login { get; set; }
 
-        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+        [Required(ErrorMessage = LocalizationKeys.Contents.Passowrd + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
         public string Password { get; set; }
     }
 }

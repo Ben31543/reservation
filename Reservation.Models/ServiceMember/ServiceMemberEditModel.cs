@@ -7,11 +7,11 @@ namespace Reservation.Models.ServiceMember
     {
         public long? Id { get; set; }
 
-        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+        [Required(ErrorMessage = LocalizationKeys.Contents.Name + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
         [StringLength(50)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+        [Required(ErrorMessage = LocalizationKeys.Contents.Email + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
         [StringLength(255)]
         public string Email { get; set; }
 
@@ -25,7 +25,7 @@ namespace Reservation.Models.ServiceMember
 
         public string LogoUrl { get; set; }
 
-        [Required(ErrorMessage = LocalizationKeys.ErrorMessages.ThisFieldIsRequired)]
+        [Required(ErrorMessage = LocalizationKeys.Contents.AcceptsOnlinePayment + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
         public bool AcceptsOnlinePayment { get; set; }
     }
 }

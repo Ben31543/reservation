@@ -17,11 +17,37 @@
 			public const string InvalidPhoneNumber = "InvalidPhoneNumber";
 			public const string InvalidEmail = "InvalidEmail";
 			public const string InvalidDate = "InvalidDate";
-			public const string ThisFieldIsRequired = "ThisFieldIsRequired";
+			public const string FieldIsRequired = "FieldIsRequired";
 			public const string PasswordDoNotMatch = "PasswordDoNotMatch";
 			public const string OpenTimeMustBeEarlierThanCloseTime = "OpenTimeMustBeEarlierThanCloseTime";
 			public const string InsufficientBalance = "InsufficientBalance";
 			public const string ReservationNotFound = "ReservationNotFound";
+		}
+
+		public static class Contents
+		{
+			public const string Name = "Name";
+			public const string Id = "Id";
+			public const string Address = "Address";
+			public const string IsAvailable = "IsAvailable";
+			public const string Phone = "Phone";
+			public const string Amount = "Amount";
+			public const string ServiceMemberId = "ServiceMemberId";
+			public const string MemberId = "MemberId";
+			public const string Description = "Description";
+			public const string ImageUrl = "ImageUrl";
+			public const string AccountNumber = "AccountNumber";
+			public const string CardNumber = "CardNumber";
+			public const string CVV = "CVV";
+			public const string ValidThru = "ValidThru";
+			public const string Owner = "Owner";
+			public const string Login = "Login";
+			public const string Passowrd = "Passowrd";
+			public const string Price = "Price";
+			public const string Type = "Type";
+			public const string Surname = "Surname";
+			public const string Email = "Email";
+			public const string AcceptsOnlinePayment = "AcceptsOnlinePayment";
 		}
 	}
 }
