@@ -3,11 +3,15 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Reservation.Data;
 using Reservation.Data.Entities;
+using Reservation.Data.Enumerations;
 using Reservation.Models.Common;
 using Reservation.Models.Reserving;
+using Reservation.Models.ServiceMemberBranch;
 using Reservation.Resources.Contents;
 using Reservation.Service.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reservation.Service.Services
@@ -18,17 +22,20 @@ namespace Reservation.Service.Services
         private readonly IPaymentService _paymentService;
         private readonly ILogger _logger;
         private readonly IServiceMemberService _serviceMemberService;
+        private readonly IDishService _dishService;
 
         public ReservingService(
             ApplicationContext db,
             IPaymentService payment,
             ILogger<ReservingService> logger,
-            IServiceMemberService serviceMemberService)
+            IServiceMemberService serviceMemberService,
+            IDishService dishService)
         {
             _db = db;
             _paymentService = payment;
             _logger = logger;
             _serviceMemberService = serviceMemberService;
+            _dishService = dishService;
         }
 
         public async Task<RequestResult> AddReservingAsync(ReservingModel model)
@@ -39,6 +46,20 @@ namespace Reservation.Service.Services
             {
                 result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
+            }
+
+            Dish dish = null;
+            decimal amount = 0;
+            if (model.Dishes != null)
+            {
+                foreach (var dishItem in model.Dishes)
+                {
+                    dish = await _dishService.GetDishById(dishItem.Key);
+                    if (dish != null)
+                    {
+                        amount += dish.Price * dishItem.Value;
+                    }
+                }
             }
 
             var reservation = new Reserving
@@ -52,12 +73,17 @@ namespace Reservation.Service.Services
                 Tables = JsonConvert.SerializeObject(model.Tables),
                 Dishes = JsonConvert.SerializeObject(model.Dishes),
                 Notes = model.Notes,
-                Amount = model.Amount,
+                Amount = amount,
                 IsActive = true
             };
 
             ++serviceMember.OrdersCount;
             await _db.Reservings.AddAsync(reservation);
+
+            if (reservation.IsOnlinePayment)
+            {
+                await AddPaymentRequestAsync(reservation);
+            }
 
             try
             {
@@ -69,11 +95,6 @@ namespace Reservation.Service.Services
                 _logger.LogError(e.Message);
                 result.Message = e.Message;
                 return result;
-            }
-
-            if (reservation.IsOnlinePayment)
-            {
-                await AddPaymentRequestAsync(reservation);
             }
 
             return result;
@@ -112,6 +133,41 @@ namespace Reservation.Service.Services
             return result;
         }
 
+        public async Task<IList<ReservableBranchModel>> GetReservableBranchesAsync(SearchForReservingModel model)
+        {
+            var branches = _db.ServiceMemberBranches.Include(i => i.ServiceMember).Where(i => i.IsActive).AsQueryable();
+            if (!string.IsNullOrEmpty(model.ServiceMemberName))
+            {
+                branches = branches.Where(i => i.ServiceMember.Name.Contains(model.ServiceMemberName));
+            }
+
+            IList<ServiceMemberBranch> returnableBranches = new List<ServiceMemberBranch>();
+            foreach (var branch in branches)
+            {
+                Dictionary<TableSchemas, byte> schemas = JsonConvert.DeserializeObject(branch.TablesSchema) as Dictionary<TableSchemas, byte>;
+                if (schemas.ContainsKey(model.PersonsCount.Value) && schemas[model.PersonsCount.Value] != 0)
+                {
+                    returnableBranches.Add(branch);
+                }
+            }
+
+            return returnableBranches.Select(i => new ReservableBranchModel
+            {
+                Id = i.Id,
+                ServiceMemberName = i.ServiceMember.Name,
+                BranchAddress = i.Address,
+                LogoUrl = i.ServiceMember.LogoUrl,
+                FreeTimes = _db.Reservings
+                                .Where(r =>
+                                           r.ServiceMemberBranchId == i.Id
+                                           && r.IsActive
+                                           && r.ReservationDate.Date == model.ReservingDate.Value.Date
+                                           && r.ReservationDate.TimeOfDay != model.ReservingDate.Value.TimeOfDay)
+                                .Select(d => d.ReservationDate)
+                                .ToList()
+            }).ToList();
+        }
+
         private async Task AddPaymentRequestAsync(Reserving reserving)
         {
             var reserveData = await _db.Reservings
@@ -144,9 +200,9 @@ namespace Reservation.Service.Services
         {
             var reserveData = await _db.Reservings
                                        .Include(i => i.Member)
-                                        .ThenInclude(i=>i.BankCard)
+                                        .ThenInclude(i => i.BankCard)
                                        .Include(i => i.ServiceMember)
-                                        .ThenInclude(i=>i.BankAccount)
+                                        .ThenInclude(i => i.BankAccount)
                                        .FirstOrDefaultAsync(i => i.Id == reserving.Id);
 
             if (reserveData == null)

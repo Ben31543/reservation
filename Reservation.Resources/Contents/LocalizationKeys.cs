@@ -48,6 +48,7 @@
 			public const string Surname = "Surname";
 			public const string Email = "Email";
 			public const string AcceptsOnlinePayment = "AcceptsOnlinePayment";
+			public const string ReservingDate = "ReservingDate";
 		}
 	}
 }
