@@ -50,6 +50,7 @@ namespace Reservation.Service.Services
 
             Dish dish = null;
             decimal amount = 0;
+            Dictionary<string, byte> dishes = new Dictionary<string, byte>();
             if (model.Dishes != null)
             {
                 foreach (var dishItem in model.Dishes)
@@ -58,6 +59,7 @@ namespace Reservation.Service.Services
                     if (dish != null)
                     {
                         amount += dish.Price * dishItem.Value;
+                        dishes.Add(dish.Name, dishItem.Value);
                     }
                 }
             }
@@ -70,8 +72,8 @@ namespace Reservation.Service.Services
                 ReservationDate = model.ReservationDate,
                 ServiceMemberId = serviceMember.Id,
                 ServiceMemberBranchId = model.ServiceMemberBranchId,
-                Tables = JsonConvert.SerializeObject(model.Tables),
-                Dishes = JsonConvert.SerializeObject(model.Dishes),
+                Tables = JsonConvert.SerializeObject(model.Tables.ToString()),
+                Dishes = JsonConvert.SerializeObject(dishes),
                 Notes = model.Notes,
                 Amount = amount,
                 IsActive = true
@@ -80,7 +82,7 @@ namespace Reservation.Service.Services
             ++serviceMember.OrdersCount;
             await _db.Reservings.AddAsync(reservation);
 
-            if (reservation.IsOnlinePayment)
+            if (reservation.IsOnlinePayment && serviceMember.AcceptsOnlinePayment)
             {
                 await AddPaymentRequestAsync(reservation);
             }
@@ -144,11 +146,15 @@ namespace Reservation.Service.Services
             IList<ServiceMemberBranch> returnableBranches = new List<ServiceMemberBranch>();
             foreach (var branch in branches)
             {
-                Dictionary<TableSchemas, byte> schemas = JsonConvert.DeserializeObject(branch.TablesSchema) as Dictionary<TableSchemas, byte>;
-                if (schemas.ContainsKey(model.PersonsCount.Value) && schemas[model.PersonsCount.Value] != 0)
+                Dictionary<TableSchemas, byte> schemas = JsonConvert.DeserializeObject<Dictionary<TableSchemas, byte>>(branch.TablesSchema);
+                foreach (var item in schemas)
                 {
-                    returnableBranches.Add(branch);
+                    if (item.Key == model.PersonsCount.Value && item.Key != 0)
+                    {
+                        returnableBranches.Add(branch);
+                    }
                 }
+               
             }
 
             return returnableBranches.Select(i => new ReservableBranchModel
@@ -157,14 +163,7 @@ namespace Reservation.Service.Services
                 ServiceMemberName = i.ServiceMember.Name,
                 BranchAddress = i.Address,
                 LogoUrl = i.ServiceMember.LogoUrl,
-                FreeTimes = _db.Reservings
-                                .Where(r =>
-                                           r.ServiceMemberBranchId == i.Id
-                                           && r.IsActive
-                                           && r.ReservationDate.Date == model.ReservingDate.Value.Date
-                                           && r.ReservationDate.TimeOfDay != model.ReservingDate.Value.TimeOfDay)
-                                .Select(d => d.ReservationDate)
-                                .ToList()
+                FreeTimes = GetFreeTimes(i, model.ReservingDate.Value)
             }).ToList();
         }
 
@@ -214,6 +213,23 @@ namespace Reservation.Service.Services
                 reserving.ServiceMember.BankAccount.Id,
                 reserving.Member.BankCard.Id,
                 reserving.Amount);
+        }
+
+        private List<int> GetFreeTimes(ServiceMemberBranch branch, DateTime date)
+        {
+            var reservings = _db.Reservings.Where(i => i.IsActive
+                                    && i.ServiceMemberBranchId == branch.Id)
+                                    .Select(i => i.ReservationDate.Hour).ToList();
+
+            KeyValuePair<Time, Time> workingHours = new KeyValuePair<Time, Time>(JsonConvert.DeserializeObject(branch.OpenTime) as Time, JsonConvert.DeserializeObject(branch.CloseTime) as Time);
+            List<int> allTimes = new List<int>();
+           // Time open = new 
+            //int count = workingHours.Value.Hour - workingHours.Key.Hour;
+            //for (int i = 0; i <= count; i++)
+            //{
+            //    allTimes.Add(i);
+            //}
+            return allTimes.Except(reservings).ToList();
         }
     }
 }

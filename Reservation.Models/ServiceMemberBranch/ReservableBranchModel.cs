@@ -16,6 +16,6 @@ namespace Reservation.Models.ServiceMemberBranch
 
         public string LogoUrl { get; set; }
 
-        public IList<DateTime> FreeTimes { get; set; }
+        public IList<int> FreeTimes { get; set; }
     }
 }
