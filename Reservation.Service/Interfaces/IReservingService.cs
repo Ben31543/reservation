@@ -1,5 +1,6 @@
 ﻿using Reservation.Models.Common;
 using Reservation.Models.Reserving;
+using Reservation.Models.ServiceMemberBranch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace Reservation.Service.Interfaces
         Task<RequestResult> AddReservingAsync(ReservingModel model);
 
         Task<RequestResult> CancelReservingAsync(long id);
+
+        Task<IList<ReservableBranchModel>> GetReservableBranchesAsync(SearchForReservingModel model);
     }
 }
