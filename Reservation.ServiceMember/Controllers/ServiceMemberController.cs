@@ -79,11 +79,6 @@ namespace Reservation.Web.Controllers
                 serviceMember.LogoUrl = $"{_environment.WebRootPath}{serviceMember.LogoUrl}";
             }
 
-            if (!string.IsNullOrEmpty(serviceMember.ImageUrl))
-            {
-                serviceMember.ImageUrl = $"{_environment.WebRootPath}{serviceMember.ImageUrl}";
-            }
-
             result.Succeeded = true;
             result.Value = serviceMember;
             _logger.LogResponse("ServiceMember/GetServiceMember", result);

@@ -40,7 +40,6 @@ namespace Reservation.Service.Services
                 CloseTime = JsonConvert.SerializeObject(model.CloseTime),
                 IsActive = model.IsActive.Value,
                 ServiceMemberId = model.ServiceMemberId,
-                WorkDays = JsonConvert.SerializeObject(model.WorkDays)
             };
 
             await _db.ServiceMemberBranches.AddAsync(branch);
@@ -103,7 +102,6 @@ namespace Reservation.Service.Services
             branch.CloseTime = JsonConvert.SerializeObject(model.CloseTime);
             branch.Phone = model.Phone;
             branch.TablesSchema = JsonConvert.SerializeObject(model.TablesSchema);
-            branch.WorkDays = JsonConvert.SerializeObject(model.WorkDays);
 
             try
             {

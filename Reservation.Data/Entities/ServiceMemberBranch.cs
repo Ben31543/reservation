@@ -20,8 +20,6 @@ namespace Reservation.Data.Entities
 
         public string CloseTime { get; set; }
 
-        public string WorkDays { get; set; }
-
         public string TablesSchema { get; set; }
 
         public bool IsActive { get; set; }

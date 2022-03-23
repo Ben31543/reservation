@@ -1,4 +1,6 @@
-﻿namespace Reservation.Models.Common
+﻿using System.Text.Json.Serialization;
+
+namespace Reservation.Models.Common
 {
     public class Time
     {

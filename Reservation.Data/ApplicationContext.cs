@@ -26,6 +26,6 @@ namespace Reservation.Data
 
         public DbSet<ServiceMemberBranch> ServiceMemberBranches { get; set; }
 
-        public DbSet<PaymentData> PaymentDatas { get; set; }
+        public DbSet<Payment> PaymentDatas { get; set; }
     }
 }

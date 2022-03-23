@@ -21,7 +21,7 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> AttachBankAccountToServiceMemberAsync(BankAccountAttachModel model)
         {
             RequestResult result = new RequestResult();
-            var bankAccount = await _db.BankAccounts.FirstOrDefaultAsync(i => i.AccountNumber == model.AccountNumber);
+            var bankAccount = await _db.BankAccounts.FirstOrDefaultAsync(i => i.AccountNumber == model.AccountNumber && i.Owner == model.Owner);
             if (bankAccount == null)
             {
                 result.Message = LocalizationKeys.ErrorMessages.BankAccountDoesNotExist;

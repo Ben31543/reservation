@@ -18,7 +18,7 @@ namespace Reservation.Service.Interfaces
 
         Task<RequestResult> ResetPasswordAsync(ResetPasswordModel model);
 
-        Task<ServiceMember> GetServiceMemberByIdAsync(long id);
+        Task<ServiceMember> GetServiceMemberByIdAsync(long id, bool isMember = false);
 
         Task<RequestResult> AddBankAccountAsync(BankAccountAttachModel model);
 

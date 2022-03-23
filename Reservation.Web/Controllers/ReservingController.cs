@@ -78,6 +78,12 @@ namespace Reservation.Web.Controllers
                 model.ReservingDate = DateTime.Now.AddDays(1);
             }
 
+            if (model.ReservingDate.Value.Date < DateTime.Now.Date)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.InvalidDate;
+                return Json(result);
+            }
+
             result.Value = await _reservingService.GetReservableBranchesAsync(model);
             result.Succeeded = true;
             _logger.LogResponse("Reserving/GetReservablePlaces", result);

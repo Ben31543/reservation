@@ -37,9 +37,16 @@ namespace Reservation.Service.Services
             _environment = environment;
         }
 
-        public async Task<ServiceMember> GetServiceMemberByIdAsync(long id)
+        public async Task<ServiceMember> GetServiceMemberByIdAsync(long id, bool isMember = false)
         {
-            return await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == id);
+            var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == id);
+            if (isMember)
+            {
+                ++serviceMember.ViewsCount;
+                await _db.SaveChangesAsync();
+            }
+
+            return serviceMember;
         }
 
         public async Task<RequestResult> RegisterServiceMemberAsync(ServiceMemberRegistrationModel model)
@@ -112,7 +119,6 @@ namespace Reservation.Service.Services
             serviceMember.InstagramUrl = model.InstagramUrl;
             serviceMember.FacebookUrl = model.FacebookUrl;
             serviceMember.LogoUrl = model.LogoUrl;
-            serviceMember.ImageUrl = model.ImageUrl;
             serviceMember.Email = model.Email;
 
             try
@@ -245,13 +251,13 @@ namespace Reservation.Service.Services
         {
             var serviceMembers = _db.ServiceMembers.AsNoTracking().AsQueryable();
 
-			if (!string.IsNullOrEmpty(criteria.Name))
-			{
+            if (!string.IsNullOrEmpty(criteria.Name))
+            {
                 serviceMembers = serviceMembers.Where(i => i.Name.Contains(criteria.Name));
-			}
+            }
 
-			if (criteria.AcceptsOnlinePayment.HasValue)
-			{
+            if (criteria.AcceptsOnlinePayment.HasValue)
+            {
                 serviceMembers = serviceMembers.Where(i => i.AcceptsOnlinePayment == criteria.AcceptsOnlinePayment.Value);
             }
 
@@ -274,19 +280,7 @@ namespace Reservation.Service.Services
                 _environment.WebRootPath,
                 PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
 
-            switch (model.ResourceType)
-            {
-                case ResourceTypes.ServiceMemberLogo:
-                    serviceMember.LogoUrl = imageUrl;
-                    break;
-
-                case ResourceTypes.ServiceMemberImage:
-                    serviceMember.ImageUrl = imageUrl;
-                    break;
-
-                default:
-                    break;
-            }
+            serviceMember.LogoUrl = imageUrl;
 
             try
             {
