@@ -33,7 +33,7 @@ namespace Reservation.Service.Services
         {
             RequestResult result = new RequestResult();
 
-            var paymentData = new PaymentData
+            var paymentData = new Payment
             {
                 Amount = model.Amount,
                 BankAcountIdTo = model.BankAcountTo,
@@ -58,7 +58,7 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> RequestPaymentAsync(long fromId, long toId, PaymentData paymentData)
+        public async Task<RequestResult> RequestPaymentAsync(long fromId, long toId, Payment paymentData)
         {
             RequestResult result = new RequestResult();
 

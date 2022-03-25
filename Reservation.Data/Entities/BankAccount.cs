@@ -10,6 +10,8 @@ namespace Reservation.Data.Entities
 
         public string AccountNumber { get; set; }
 
+        public string Owner { get; set; }
+
         public decimal? Balance { get; set; }
 
         public long BankId { get; set; }

@@ -24,8 +24,6 @@ namespace Reservation.Data.Entities
 
         public int ViewsCount { get; set; }
 
-        public string ImageUrl { get; set; }
-
         public string LogoUrl { get; set; }
 
         public bool AcceptsOnlinePayment { get; set; }

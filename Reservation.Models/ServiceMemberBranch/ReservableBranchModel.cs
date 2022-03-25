@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reservation.Models.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,6 @@ namespace Reservation.Models.ServiceMemberBranch
 
         public string LogoUrl { get; set; }
 
-        public IList<int> FreeTimes { get; set; }
+        public IList<Time> FreeTimes { get; set; }
     }
 }

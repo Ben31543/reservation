@@ -154,7 +154,6 @@ namespace Reservation.Service.Services
                         returnableBranches.Add(branch);
                     }
                 }
-               
             }
 
             return returnableBranches.Select(i => new ReservableBranchModel
@@ -215,21 +214,35 @@ namespace Reservation.Service.Services
                 reserving.Amount);
         }
 
-        private List<int> GetFreeTimes(ServiceMemberBranch branch, DateTime date)
+        private List<Time> GetFreeTimes(ServiceMemberBranch branch, DateTime date)
         {
             var reservings = _db.Reservings.Where(i => i.IsActive
-                                    && i.ServiceMemberBranchId == branch.Id)
+                                    && i.ServiceMemberBranchId == branch.Id
+                                    && i.ReservationDate.Date == date.Date)
                                     .Select(i => i.ReservationDate.Hour).ToList();
 
-            KeyValuePair<Time, Time> workingHours = new KeyValuePair<Time, Time>(JsonConvert.DeserializeObject(branch.OpenTime) as Time, JsonConvert.DeserializeObject(branch.CloseTime) as Time);
-            List<int> allTimes = new List<int>();
-           // Time open = new 
-            //int count = workingHours.Value.Hour - workingHours.Key.Hour;
-            //for (int i = 0; i <= count; i++)
-            //{
-            //    allTimes.Add(i);
-            //}
-            return allTimes.Except(reservings).ToList();
+            var openTime = JsonConvert.DeserializeObject<Time>(branch.OpenTime) as Time;
+            var closeTime = JsonConvert.DeserializeObject<Time>(branch.CloseTime) as Time;
+
+            List<Time> allTimes = new List<Time>();
+            if (openTime == null || closeTime == null)
+            {
+                return allTimes;
+            }
+
+            for (int i = openTime.Hour; i <= closeTime.Hour - 1; i++)
+            {
+                if (!reservings.Contains(i))
+                {
+                    allTimes.Add(new Time
+                    {
+                        Hour = i,
+                        Minute = "00"
+                    });
+                }
+            }
+
+            return allTimes;
         }
     }
 }
