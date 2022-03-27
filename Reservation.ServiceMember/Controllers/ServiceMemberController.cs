@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Reservation.Data.Enumerations;
 using Reservation.Models.BankAccount;
@@ -8,8 +11,11 @@ using Reservation.Models.Criterias;
 using Reservation.Models.Dish;
 using Reservation.Models.ServiceMember;
 using Reservation.Resources.Contents;
+using Reservation.Resources.Controllers;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Reservation.Web.Controllers
@@ -21,19 +27,22 @@ namespace Reservation.Web.Controllers
         private readonly IServiceMemberService _serviceMemberService;
         private readonly IServiceMemberBranchService _branchService;
         private readonly IDishService _dishService;
+        private readonly IStringLocalizer<ResourcesController> _localizer;
 
         public ServiceMemberController(
             IServiceMemberService serviceMember,
             ILogger<ServiceMemberController> logger,
             IHostingEnvironment environment,
             IServiceMemberBranchService branch,
-            IDishService dish)
+            IDishService dish,
+            IStringLocalizer<ResourcesController> localizer)
         {
             _serviceMemberService = serviceMember;
             _logger = logger;
             _environment = environment;
             _branchService = branch;
             _dishService = dish;
+            _localizer = localizer;
         }
 
         [HttpPost]
@@ -49,6 +58,11 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _serviceMemberService.RegisterServiceMemberAsync(model);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/RegisterServiceMember", result);
             return Json(result);
         }
@@ -62,14 +76,14 @@ namespace Reservation.Web.Controllers
 
             if (id == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
             var serviceMember = await _serviceMemberService.GetServiceMemberByIdAsync(id.Value);
             if (serviceMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 result.Value = id;
                 return Json(result);
             }
@@ -81,6 +95,11 @@ namespace Reservation.Web.Controllers
 
             result.Succeeded = true;
             result.Value = serviceMember;
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/GetServiceMember", result);
             return Json(result);
         }
@@ -99,10 +118,20 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _serviceMemberService.VerifyServiceMemberAsync(model);
+            if (result.Succeeded)
+            {
+                await Authenticate(model.Login);
+            }
 
             if (!result.Succeeded)
             {
-                return NotFound(result);
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist].Value;
+                return Json(result);
+            }
+
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
             }
 
             _logger.LogResponse("ServiceMember/VerifyServiceMember", result);
@@ -122,6 +151,11 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _serviceMemberService.ResetPasswordAsync(model);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/ResetPassword", result);
             return Json(result);
         }
@@ -150,19 +184,24 @@ namespace Reservation.Web.Controllers
 
             RequestResult result = new RequestResult();
 
-			if (!ModelState.IsValid)
-			{
+            if (!ModelState.IsValid)
+            {
                 result.Message = ModelState.GetErrorMessages();
                 return Json(result);
             }
 
             if (!model.ServiceMemberId.HasValue)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
             result = await _serviceMemberService.AddBankAccountAsync(model);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/AttachBankAccount", result);
             return Json(result);
         }
@@ -175,11 +214,16 @@ namespace Reservation.Web.Controllers
             var result = new RequestResult();
             if (!serviceMemberId.HasValue || !bankAccountId.HasValue)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
             result = await _serviceMemberService.DetachBankAccountAsync(serviceMemberId.Value, bankAccountId.Value);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/DetachFromBankAccount", result);
             return Json(result);
         }
@@ -192,11 +236,16 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (!serviceMemberId.HasValue)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
             result.Value = await _serviceMemberService.GetServiceMemberDealsHistoryAsync(serviceMemberId.Value);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/GetServiceMemberDealsHistory", result);
             return Json(result);
         }
@@ -209,7 +258,7 @@ namespace Reservation.Web.Controllers
 
             if (model == null || model.Image == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
@@ -219,6 +268,11 @@ namespace Reservation.Web.Controllers
             }
 
             result = await _serviceMemberService.SaveServiceMemberImageAsync(model);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/SaveServiceMemberImage", result);
             return Json(result);
         }
@@ -231,12 +285,17 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (serviceMemberId == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
             result.Value = await _branchService.GetBranchesAsync(serviceMemberId.Value);
             result.Succeeded = true;
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/GetBranches", result);
             return Json(result);
         }
@@ -249,7 +308,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (dishId == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
@@ -267,12 +326,17 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (criteria.ServiceMemberId == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
             result.Value = await _dishService.GetDishesAsync(criteria);
             result.Succeeded = true;
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/GetDishes", result);
             return Json(result);
         }
@@ -289,7 +353,12 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _dishService.AddNewDishAsync(model);
+            result = await _dishService.AddNewDishAsync(model);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/SaveDish", result);
             return Json(result);
         }
@@ -306,7 +375,12 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _dishService.EditDishAsync(model);
+            result = await _dishService.EditDishAsync(model);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/EditDish", result);
             return Json(result);
         }
@@ -319,11 +393,16 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (dishId == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
-            result.Value = await _dishService.DeleteDishAsync(dishId.Value);
+            result = await _dishService.DeleteDishAsync(dishId.Value);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/DeleteDish", result);
             return Json(result);
         }
@@ -336,7 +415,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (model == null || model.Image == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
@@ -345,9 +424,31 @@ namespace Reservation.Web.Controllers
                 model.ResourceType = ResourceTypes.DishImage;
             }
 
-            result.Value = await _dishService.SaveDishImageAsync(model);
+            result = await _dishService.SaveDishImageAsync(model);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMember/SaveDishImage", result);
             return Json(result);
+        }
+
+        private async Task Authenticate(string userName)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
+            };
+
+            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Account");
         }
     }
 }
