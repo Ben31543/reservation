@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Reservation.Models.Common;
 using Reservation.Models.ServiceMemberBranch;
 using Reservation.Resources.Contents;
+using Reservation.Resources.Controllers;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
@@ -14,11 +16,15 @@ namespace Reservation.Web.Controllers
     {
         private readonly IServiceMemberBranchService _branchService;
         private readonly ILogger _logger;
+        private readonly IStringLocalizer<ResourcesController> _localizer;
 
-        public ServiceMemberBranchController(IServiceMemberBranchService branch, ILogger<ServiceMemberBranchController> logger)
+        public ServiceMemberBranchController(IServiceMemberBranchService branch,
+            ILogger<ServiceMemberBranchController> logger,
+            IStringLocalizer<ResourcesController> localizer)
         {
             _branchService = branch;
             _logger = logger;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -29,7 +35,7 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (branchId == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
@@ -52,7 +58,7 @@ namespace Reservation.Web.Controllers
 
             if (model.OpenTime.Hour >= model.CloseTime.Hour)
             {
-                result.Message = LocalizationKeys.ErrorMessages.OpenTimeMustBeEarlierThanCloseTime;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.OpenTimeMustBeEarlierThanCloseTime].Value;
                 return Json(result);
             }
 
@@ -63,6 +69,11 @@ namespace Reservation.Web.Controllers
             else
             {
                 result = await _branchService.AddBranchAsync(model);
+            }
+
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
             }
 
             _logger.LogResponse("ServiceMemberBranch/SaveServiceMemberBranch", result);
@@ -77,11 +88,16 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
             if (branchId == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
                 return Json(result);
             }
 
             result = await _branchService.DeleteBranchAsync(branchId.Value);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
+
             _logger.LogResponse("ServiceMemberBranch/DeleteBranch", result);
             return Json(result);
         }
