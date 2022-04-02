@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Reservation.Data.Enumerations;
 using Reservation.Models.BankCard;
 using Reservation.Models.Common;
 using Reservation.Models.Member;
@@ -16,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Reservation.Resources.Enumerations;
 
 namespace Reservation.Web.Controllers
 {

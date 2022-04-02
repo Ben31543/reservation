@@ -24,18 +24,17 @@ namespace Reservation.ServiceMember
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.RegisterApplicationServices();
-			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-					.AddCookie(options =>
-					{
-						options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/ServiceMember/VerifyServiceMember");
-					});
-			services.AddDbContext<ApplicationContext>(
-				options => options.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
+			services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TestDbConnection")));
+			services.AddControllersWithViews();
 			services.AddLocalization(opts =>
 			{
 				opts.ResourcesPath = "Resources";
 			});
-			services.AddControllersWithViews();
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+					.AddCookie(options =>
+					{
+						options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Member/VerifyMember");
+					});
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -65,7 +64,6 @@ namespace Reservation.ServiceMember
 				SupportedUICultures = supportedCultures
 			});
 
-			app.UseRequestLocalization();
 			app.UseStaticFiles();
 			app.UseRouting();
 			app.UseAuthentication();

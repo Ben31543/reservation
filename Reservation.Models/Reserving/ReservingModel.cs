@@ -1,8 +1,8 @@
-﻿using Reservation.Data.Enumerations;
-using Reservation.Resources.Contents;
+﻿using Reservation.Resources.Contents;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Reservation.Resources.Enumerations;
 
 namespace Reservation.Models.Reserving
 {

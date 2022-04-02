@@ -24,18 +24,17 @@ namespace Reservation.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.RegisterApplicationServices();
+            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TestDbConnection")));
+            services.AddControllersWithViews();
+            services.AddLocalization(opts =>
+            {
+                opts.ResourcesPath = "Resources";
+            });
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(options =>
                     {
                         options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Member/VerifyMember");
                     });
-            services.AddDbContext<ApplicationContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
-            services.AddLocalization(opts =>
-            {
-                opts.ResourcesPath = "Resources";
-            });
-            services.AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

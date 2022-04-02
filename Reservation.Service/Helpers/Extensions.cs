@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Reservation.Data.Constants;
+using Reservation.Resources.Constants;
 
 namespace Reservation.Service.Helpers
 {
@@ -48,7 +48,7 @@ namespace Reservation.Service.Helpers
                 phoneNumber = phoneNumber.Substring(4);
             }
 
-            if (phoneNumber.Length == 8 && CommonConstants.PhoneCodes.Contains(phoneNumber.Substring(0, 2)))
+            if (phoneNumber.Length == 8 && CommonConstants.ArmenianPhoneOperators.Contains(phoneNumber.Substring(0, 2)))
             {
                 return true;
             }

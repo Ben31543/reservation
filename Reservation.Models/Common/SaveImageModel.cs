@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Reservation.Data.Enumerations;
+using Reservation.Resources.Enumerations;
 
 namespace Reservation.Models.Common
 {

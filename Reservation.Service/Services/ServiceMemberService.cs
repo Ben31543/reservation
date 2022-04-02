@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Data.Entities;
-using Reservation.Data.Enumerations;
 using Reservation.Models.BankAccount;
 using Reservation.Models.Common;
 using Reservation.Models.Criterias;
@@ -278,7 +277,7 @@ namespace Reservation.Service.Services
             var imageUrl = await ImageService.SaveAsync(
                 model.Image,
                 _environment.WebRootPath,
-                PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
+                PathConstructor.ConstructFilePathFor(model.ResourceType.Value, serviceMember.Id));
 
             serviceMember.LogoUrl = imageUrl;
 

@@ -1,4 +1,4 @@
-﻿namespace Reservation.Data.Enumerations
+﻿namespace Reservation.Resources.Enumerations
 {
     public enum DishTypes
     {

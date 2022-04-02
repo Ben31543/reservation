@@ -1,9 +1,5 @@
-﻿using Reservation.Data.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Reservation.Resources.Enumerations;
 
 namespace Reservation.Models.Reserving
 {

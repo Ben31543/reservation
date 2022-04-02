@@ -1,7 +1,7 @@
-﻿using Reservation.Data.Enumerations;
-using Reservation.Models.Common;
+﻿using Reservation.Models.Common;
 using System;
 using System.Collections.Generic;
+using Reservation.Resources.Enumerations;
 
 namespace Reservation.Models.ServiceMemberBranch
 {

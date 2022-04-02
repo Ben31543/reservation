@@ -183,7 +183,7 @@ namespace Reservation.Service.Services
             var imageUrl = await ImageService.SaveAsync(
                 model.Image,
                 _environment.WebRootPath,
-                PathConstructor.ConstructFilePathFor(model.Id, model.ResourceType.Value));
+                PathConstructor.ConstructFilePathFor(model.ResourceType.Value, dish.ServiceMemberId));
 
             dish.ImageUrl = imageUrl;
 

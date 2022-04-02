@@ -10,6 +10,7 @@ using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
 using System.Threading.Tasks;
+using Reservation.Resources.Enumerations;
 
 namespace Reservation.Web.Controllers
 {
@@ -88,7 +89,7 @@ namespace Reservation.Web.Controllers
             }
             if (!model.PersonsCount.HasValue)
             {
-                model.PersonsCount = Data.Enumerations.TableSchemas.OneToTwoPersons;
+                model.PersonsCount = TableSchemas.OneToTwoPersons;
             }
 
             if (!model.ReservingDate.HasValue)

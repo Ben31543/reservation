@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Reservation.Data.Enumerations
+namespace Reservation.Resources.Enumerations
 {
 	public enum TableSchemas
 	{

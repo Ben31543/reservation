@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Reservation.Data;
 using Reservation.Data.Entities;
-using Reservation.Data.Enumerations;
 using Reservation.Models.Common;
 using Reservation.Models.Reserving;
 using Reservation.Models.ServiceMemberBranch;
@@ -13,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Reservation.Resources.Enumerations;
 
 namespace Reservation.Service.Services
 {

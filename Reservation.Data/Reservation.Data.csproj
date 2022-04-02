@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <None Remove="Entities\ao3323nr.uzq~" />
+    <None Remove="Constants\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +21,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Constants\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Constants\**" />
   </ItemGroup>
 
 </Project>
