@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Reservation.Resources.Enumerations;
+using Reservation.Service.Helpers;
 
 namespace Reservation.Service.Services
 {
@@ -22,6 +23,7 @@ namespace Reservation.Service.Services
         private readonly IPaymentService _paymentService;
         private readonly ILogger _logger;
         private readonly IServiceMemberService _serviceMemberService;
+        private readonly IServiceMemberBranchService _serviceMemberBranchService;
         private readonly IDishService _dishService;
 
         public ReservingService(
@@ -29,13 +31,15 @@ namespace Reservation.Service.Services
             IPaymentService payment,
             ILogger<ReservingService> logger,
             IServiceMemberService serviceMemberService,
-            IDishService dishService)
+            IDishService dishService,
+            IServiceMemberBranchService serviceMemberBranchService)
         {
             _db = db;
             _paymentService = payment;
             _logger = logger;
             _serviceMemberService = serviceMemberService;
             _dishService = dishService;
+            _serviceMemberBranchService = serviceMemberBranchService;
         }
 
         public async Task<RequestResult> AddReservingAsync(ReservingModel model)
@@ -78,7 +82,7 @@ namespace Reservation.Service.Services
                 Amount = amount,
                 IsActive = true
             };
-
+           
             ++serviceMember.OrdersCount;
             await _db.Reservings.AddAsync(reservation);
 
@@ -99,6 +103,10 @@ namespace Reservation.Service.Services
                 return result;
             }
 
+            EmailSenderService.NotifyServiceMemberAsync(serviceMember.Email, $"YOU HAVE A NEW ONLINE BOOKING #{reservation.Id}\nBooking date :: {reservation.ReservationDate}\nAddress :: {serviceMember.Name}, {reservation.ServiceMemberBranch.Name}" +
+                                                         $"Number of persons :: {reservation.Tables}\nDishes :: {reservation.Dishes}\n" +
+                                                         $"IsOnlinePayment :: {reservation.IsOnlinePayment}" +
+                                                         $"\nAmount :: {reservation.Amount}\nIsTakeOut :: {reservation.IsTakeOut}");
             return result;
         }
 
@@ -132,6 +140,8 @@ namespace Reservation.Service.Services
             }
 
             result.Succeeded = true;
+
+            EmailSenderService.NotifyServiceMemberAsync(reserving.ServiceMember.Email, $"The Online Booking has been canceled #{reserving.Id}");
             return result;
         }
 
@@ -142,7 +152,7 @@ namespace Reservation.Service.Services
             {
                 branches = branches.Where(i => i.ServiceMember.Name.Contains(model.ServiceMemberName));
             }
-
+            
             IList<ServiceMemberBranch> returnableBranches = new List<ServiceMemberBranch>();
             foreach (var branch in branches)
             {
