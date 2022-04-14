@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Reservation.Web</title>
+    <link rel="stylesheet" href="~/css/Member/site.css" />
+</head>
+<body>
+    <div>
+        <div class="middle">
+            <div class="findtext">Find your table for any occasion</div>
+            <div class="middle2">
+                <input class="select" type="date" id="start" name="trip-start" value='@DateTime.Today.ToString("yyyy-MM-dd")'>
+
+                <select class="select">
+                    <option value="1">1-2 people</option>
+                    <option value="2">3-5 people</option>
+                    <option value="3">6-10 people</option>
+                    <option value="4">10-15 people</option>
+                    <option value="5">16 and more people</option>
+                </select>
+                <input class="text" type="text" placeholder="Restaurant">
+                <button>Search</button>
+            </div>
+        </div>
+
+    </div>
+</body>
+

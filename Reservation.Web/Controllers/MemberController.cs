@@ -38,6 +38,10 @@ namespace Reservation.Web.Controllers
             _localizer = localizer;
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> AddNewMember([FromBody] MemberRegistrationModel model)
         {

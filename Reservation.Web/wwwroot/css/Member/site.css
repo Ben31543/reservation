@@ -1,0 +1,94 @@
+﻿@media (max-device-width: 768px){
+    .menu {
+        display: none;
+    }
+}
+.header{
+    background-color: #145b8e;
+    display:flex;
+}
+.header div{
+    display:flex;
+}
+.logo {
+    cursor: pointer;
+    padding-left: 10px;
+    height: 35px;
+    width: 35px;
+}
+.flags img {
+    cursor: pointer;
+    height: 25px;
+    width: 25px;
+    margin-left: 4px;
+}
+.right {
+    margin-left: 70%;
+    margin-top: 5px;
+}
+.left div {
+    cursor: pointer;
+    margin-left: 20px;
+    color: white;
+    font-family: monospace;
+    font-size: 25px;
+    font-weight: bold;
+}
+.signinbutton {
+    cursor: pointer;
+    margin-right: 25px;
+    background-color: #1f8ad7;
+    outline: none;
+    border: none;
+    color: white;
+    width: 130px;
+    height: 25px;
+    border-radius: 5px;
+}
+.flags{
+    margin-left:50px;
+}
+.middle {
+    height: 200px;
+    background-color:antiquewhite;
+}
+.select{
+    align-items:center;
+    height:50px;
+    box-sizing:border-box;
+    padding: 0.3125rem;
+    border-color:#145b8e;
+    border-radius:5px;
+}
+.findtext {
+    padding-top:10px;
+    font-weight: 700;
+    font-size: 50px;
+    text-align: center;
+    font-family: BrandonText;
+}
+.selectoptions{
+    display:flex;
+}
+.middle2{
+    margin: 30px 0 0 510px;
+    align-items: center;
+}
+.text {
+    height: 45px;
+    border-color:#145b8e;
+    border-radius: 5px;
+}
+.middle2 button {
+    margin-left:20px;
+    cursor: pointer;
+    margin-right: 25px;
+    background-color: #1f8ad7;
+    outline: none;
+    border: none;
+    color: white;
+    width: 90px;
+    height: 40px;
+    border-radius: 5px;
+    font-weight:bold;
+}
