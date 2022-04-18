@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Data.Entities;
@@ -13,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Reservation.Resources.Constants;
 
 namespace Reservation.Service.Services
 {
@@ -20,16 +20,13 @@ namespace Reservation.Service.Services
     {
         private readonly ApplicationContext _db;
         private readonly ILogger _logger;
-        private readonly IHostingEnvironment _environment;
 
         public DishService(
             ApplicationContext db,
-            ILogger<DishService> logger,
-            IHostingEnvironment environment)
+            ILogger<DishService> logger)
         {
             _db = db;
             _logger = logger;
-            _environment = environment;
         }
 
         public async Task<Dish> GetDishById(long id)
@@ -182,7 +179,7 @@ namespace Reservation.Service.Services
 
             var imageUrl = await ImageService.SaveAsync(
                 model.Image,
-                _environment.WebRootPath,
+                CommonConstants.ImagesHostingPath,
                 PathConstructor.ConstructFilePathFor(model.ResourceType.Value, dish.ServiceMemberId));
 
             dish.ImageUrl = imageUrl;

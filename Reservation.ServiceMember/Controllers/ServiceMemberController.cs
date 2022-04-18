@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -16,6 +15,7 @@ using Reservation.Service.Interfaces;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Reservation.Resources.Constants;
 using Reservation.Resources.Enumerations;
 
 namespace Reservation.Web.Controllers
@@ -23,7 +23,6 @@ namespace Reservation.Web.Controllers
     public class ServiceMemberController : Controller
     {
         private readonly ILogger _logger;
-        private readonly IHostingEnvironment _environment;
         private readonly IServiceMemberService _serviceMemberService;
         private readonly IServiceMemberBranchService _branchService;
         private readonly IDishService _dishService;
@@ -32,14 +31,12 @@ namespace Reservation.Web.Controllers
         public ServiceMemberController(
             IServiceMemberService serviceMember,
             ILogger<ServiceMemberController> logger,
-            IHostingEnvironment environment,
             IServiceMemberBranchService branch,
             IDishService dish,
             IStringLocalizer<ResourcesController> localizer)
         {
             _serviceMemberService = serviceMember;
             _logger = logger;
-            _environment = environment;
             _branchService = branch;
             _dishService = dish;
             _localizer = localizer;
@@ -90,7 +87,7 @@ namespace Reservation.Web.Controllers
 
             if (!string.IsNullOrEmpty(serviceMember.LogoUrl))
             {
-                serviceMember.LogoUrl = $"{_environment.WebRootPath}{serviceMember.LogoUrl}";
+                serviceMember.LogoUrl = $"{CommonConstants.ImagesHostingPath}{serviceMember.LogoUrl}";
             }
 
             result.Succeeded = true;

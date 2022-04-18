@@ -9,19 +9,19 @@ namespace Reservation.Service.Helpers
             switch (resourceType)
             {
                 case ResourceTypes.ServiceMemberLogo:
-                    return $@"\Images\ServiceMembers\{id}\Logo\";
+                    return $"/Images/ServiceMembers/{id}/Logo/";
 
                 case ResourceTypes.ServiceMemberImage:
-                    return $@"\Images\ServiceMembers\{id}\Image\";
+                    return $"/Images/ServiceMembers/{id}/Image/";
                 
                 case ResourceTypes.MemberImage: 
-                    return $@"\Images\Members\{id}\";
+                    return $"/Images/Members/{id}/";
                 
                 case ResourceTypes.DishImage:
-                    return $@"\Images\ServiceMembers\{id}\Dishes\";
+                    return $"/Images/ServiceMembers/{id}/Dishes/";
 
                 case ResourceTypes.BranchImage:
-                    return $@"\Images\ServiceMembers\{id}\Branches\";
+                    return $"/Images/ServiceMembers/{id}/Branches/";
 
                 default:
                     return string.Empty;

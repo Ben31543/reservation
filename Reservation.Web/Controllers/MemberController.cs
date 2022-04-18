@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -15,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Reservation.Resources.Constants;
 using Reservation.Resources.Enumerations;
 
 namespace Reservation.Web.Controllers
@@ -23,18 +23,15 @@ namespace Reservation.Web.Controllers
     {
         private readonly IMemberService _memberService;
         private readonly ILogger _logger;
-        private readonly IHostingEnvironment _environment;
         private readonly IStringLocalizer<ResourcesController> _localizer;
 
         public MemberController(
             IMemberService member,
             ILogger<MemberController> logger,
-            IHostingEnvironment environment,
             IStringLocalizer<ResourcesController> localizer)
         {
             _memberService = member;
             _logger = logger;
-            _environment = environment;
             _localizer = localizer;
         }
 
@@ -97,7 +94,7 @@ namespace Reservation.Web.Controllers
             var member = await _memberService.GetMemberByIdAsync(id.Value);
             if (member != null && !string.IsNullOrEmpty(member.ProfilePictureUrl))
             {
-                member.ProfilePictureUrl = $"{_environment.WebRootPath}{member.ProfilePictureUrl}";
+                member.ProfilePictureUrl = $"{CommonConstants.ImagesHostingPath}{member.ProfilePictureUrl}";
             }
 
             result.Value = member;

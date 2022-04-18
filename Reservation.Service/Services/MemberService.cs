@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Reservation.Data;
 using Reservation.Data.Entities;
@@ -13,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Reservation.Resources.Constants;
 
 namespace Reservation.Service.Services
 {
@@ -21,18 +21,15 @@ namespace Reservation.Service.Services
         private readonly ApplicationContext _db;
         private readonly IBankCardService _bankCard;
         private readonly ILogger _logger;
-        private readonly IHostingEnvironment _environment;
 
         public MemberService(
             ApplicationContext db,
             IBankCardService bankCard,
-            ILogger<MemberService> logger,
-            IHostingEnvironment environment)
+            ILogger<MemberService> logger)
         {
             _db = db;
             _bankCard = bankCard;
             _logger = logger;
-            _environment = environment;
         }
 
         public async Task<RequestResult> AddNewMemberAsync(MemberRegistrationModel model)
@@ -237,7 +234,7 @@ namespace Reservation.Service.Services
 
             var imageUrl = await ImageService.SaveAsync(
                 model.Image,
-                _environment.WebRootPath,
+                CommonConstants.ImagesHostingPath,
                 PathConstructor.ConstructFilePathFor(model.ResourceType.Value, member.Id));
 
             member.ProfilePictureUrl = imageUrl;
