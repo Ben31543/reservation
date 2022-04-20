@@ -2,10 +2,8 @@
 using Reservation.Service.Interfaces;
 using Reservation.Service.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 
 namespace Reservation.Service.Helpers
 {
@@ -21,6 +19,16 @@ namespace Reservation.Service.Helpers
             services.AddScoped<IBankCardService, BankCardService>();
             services.AddScoped<IReservingService, ReservingService>();
             services.AddScoped<IPaymentService, PaymentService>();
+        }
+        
+        public static void AddImagesSavingService(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHttpClient<IImageSavingService, ImageSavingService>(
+                client =>
+                {
+                    client.BaseAddress = new Uri(configuration.GetSection("CSEventLoggerSettings:CsEventLoggerHost").Value);
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                });
         }
     }
 }

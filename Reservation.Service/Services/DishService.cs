@@ -20,13 +20,16 @@ namespace Reservation.Service.Services
     {
         private readonly ApplicationContext _db;
         private readonly ILogger _logger;
+        private readonly IImageSavingService _imageSavingService;
 
         public DishService(
             ApplicationContext db,
-            ILogger<DishService> logger)
+            ILogger<DishService> logger,
+            IImageSavingService imageSavingService)
         {
             _db = db;
             _logger = logger;
+            _imageSavingService = imageSavingService;
         }
 
         public async Task<Dish> GetDishById(long id)
@@ -44,7 +47,7 @@ namespace Reservation.Service.Services
                 ImageUrl = dish.ImageUrl,
                 Description = dish.Description,
                 IsAvailable = dish.IsAvailable,
-                TypeId = (byte)dish.DishType,
+                TypeId = (byte) dish.DishType,
                 Price = dish.Price,
                 ServiceMemberId = dish.ServiceMemberId
             };
@@ -90,6 +93,7 @@ namespace Reservation.Service.Services
                 result.Message = e.Message;
                 return result;
             }
+
             return result;
         }
 
@@ -110,7 +114,7 @@ namespace Reservation.Service.Services
             dish.Description = model.Description;
             dish.ImageUrl = model.ImageUrl;
             dish.IsAvailable = model.IsAvailable;
-            dish.TypeId = (byte)model.DishType;
+            dish.TypeId = (byte) model.DishType;
 
             try
             {
@@ -123,6 +127,7 @@ namespace Reservation.Service.Services
                 result.Message = e.Message;
                 return result;
             }
+
             result.Value = model;
             return result;
         }
@@ -133,14 +138,14 @@ namespace Reservation.Service.Services
                 .Where(i => i.ServiceMemberId == criteria.ServiceMemberId)
                 .ToListAsync();
 
-			if (!dishes.Any())
-			{
+            if (!dishes.Any())
+            {
                 return new List<Dish>();
-			}
+            }
 
             if (criteria.DishType.HasValue)
             {
-                dishes = dishes.Where(i => i.TypeId == (byte)criteria.DishType).ToList();
+                dishes = dishes.Where(i => i.TypeId == (byte) criteria.DishType).ToList();
             }
 
             if (criteria.PriceMin.HasValue)
@@ -160,7 +165,8 @@ namespace Reservation.Service.Services
 
             if (!string.IsNullOrWhiteSpace(criteria.SearchText))
             {
-                dishes = dishes.Where(i => i.Name.Contains(criteria.SearchText,StringComparison.OrdinalIgnoreCase)).ToList();
+                dishes = dishes.Where(i => i.Name.Contains(criteria.SearchText, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
             }
 
             return dishes;
@@ -171,23 +177,21 @@ namespace Reservation.Service.Services
             RequestResult result = new RequestResult();
 
             var dish = await GetDishById(model.Id);
-            if(dish == null)
+            if (dish == null)
             {
                 result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
                 return result;
             }
 
-            var imageUrl = await ImageService.SaveAsync(
-                model.Image,
-                CommonConstants.ImagesHostingPath,
-                PathConstructor.ConstructFilePathFor(model.ResourceType.Value, dish.ServiceMemberId));
-
-            dish.ImageUrl = imageUrl;
-
             try
             {
+                var imageUrl = await _imageSavingService.SaveImageAsync(
+                    model.Image,
+                    CommonConstants.ImagesHostingPath,
+                    PathConstructor.ConstructFilePathFor(model.ResourceType.Value, dish.ServiceMemberId));
+
+                dish.ImageUrl = imageUrl;
                 await _db.SaveChangesAsync();
-                result.Succeeded = true;
             }
             catch (Exception e)
             {
@@ -196,7 +200,7 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            result.Value = imageUrl;
+            result.Succeeded = true;
             return result;
         }
     }
