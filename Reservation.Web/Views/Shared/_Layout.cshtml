@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -14,12 +15,26 @@
             <div>Booking</div>
         </div>
         <div class="right">
-            <button class="signinbutton">sign in/ sign up</button>
-            
+            @{
+                if (!User.Identity.IsAuthenticated)
+                {
+                    <button class="signinbutton" onclick="window.location='@Url.Action("SignIn", "Member")'"> Sign in/Sign up</button>
+                }
+                else
+                {
+        <div style="color:white; align-items:center; margin-right:40px; " class="element">
+            <a class="loginelements" style="border-bottom: 2px solid #1c7430; margin-left:15px; cursor:pointer;" onclick="window.location='@Url.Action("AttachCard", "Member")'">Attach Card</a>
+            <a style="border-bottom: 2px solid #1c7430; margin-left: 15px; cursor: pointer " class="loginelements">Atteched Cards</a>
+            <a style="border-bottom: 2px solid #1c7430; margin-left: 15px; cursor: pointer " class="loginelements">Deals History</a>
+        </div>
+                    <button class="signinbutton" onclick="window.location='@Url.Action("Logout", "Member")'" >Log out</button>
+                }
+            }
+
             <div class="flags">
-                <img src="~/Images/Members/united-kingdom.png" alt="ENG"/>
-                <img src="~/Images/Members/russia.png" alt="RU"/>
-                <img src="~/Images/Members/armenia.png" alt="ARM"/>
+                <img src="~/Images/Members/united-kingdom.png" alt="ENG" />
+                <img src="~/Images/Members/russia.png" alt="RU" />
+                <img src="~/Images/Members/armenia.png" alt="ARM" />
             </div>
         </div>
     </div>

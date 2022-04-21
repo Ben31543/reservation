@@ -20,11 +20,11 @@ namespace Reservation.Models.Member
 		[Required(ErrorMessage = LocalizationKeys.Contents.Phone + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
 		public string Phone { get; set; }
 
-		[Required(ErrorMessage = LocalizationKeys.Contents.Passowrd + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
+		[Required(ErrorMessage = LocalizationKeys.Contents.Password + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
 		[MinLength(8), MaxLength(12)]
 		public string Password { get; set; }
 
-		[Required(ErrorMessage = LocalizationKeys.Contents.Passowrd + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
+		[Required(ErrorMessage = LocalizationKeys.Contents.Password + " " + LocalizationKeys.ErrorMessages.FieldIsRequired)]
 		public string ConfirmPassword { get; set; }
 	}
 }

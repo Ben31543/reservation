@@ -39,8 +39,14 @@ namespace Reservation.Web.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SignIn()
+        {
+            return View();
+        }
         [HttpPost]
-        public async Task<IActionResult> AddNewMember([FromBody] MemberRegistrationModel model)
+        public async Task<IActionResult> AddNewMember([FromForm] MemberRegistrationModel model)
         {
             _logger.LogRequest("Member/AddNewMember", model);
 
@@ -48,35 +54,42 @@ namespace Reservation.Web.Controllers
             if (!ModelState.IsValid)
             {
                 result.Message = ModelState.GetErrorMessages();
-                return Json(result);
+                ViewBag.Message = String.Format(result.Message);
             }
 
             if (!model.Phone.IsValidArmPhoneNumber())
             {
                 result.Message = _localizer[LocalizationKeys.ErrorMessages.InvalidPhoneNumber].Value;
-                return Json(result);
+                ViewBag.Message = String.Format(result.Message);
             }
 
             if (!model.Email.IsValidEmail())
             {
                 result.Message = _localizer[LocalizationKeys.ErrorMessages.InvalidEmail].Value;
-                return Json(result);
+                ViewBag.Message = String.Format(result.Message);
             }
 
             if (!model.Password.Equals(model.ConfirmPassword, StringComparison.Ordinal))
             {
                 result.Message = _localizer[LocalizationKeys.ErrorMessages.PasswordDoNotMatch].Value;
-                return Json(result);
+                ViewBag.Message = String.Format(result.Message);
             }
 
-            result = await _memberService.AddNewMemberAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
             {
+                ViewBag.Message = String.Format(result.Message);
                 result.Message = _localizer[result.Message].Value;
             }
 
-            _logger.LogResponse("Member/AddNewMember", result);
-            return Json(result);
+            if (ViewBag.Message != null)
+            {
+                return View("SignIn");
+            }
+
+            result = await _memberService.AddNewMemberAsync(model);
+            
+            _logger.LogResponse("Member/AddNewMember", result);  
+            return View("Index");
         }
 
         [HttpGet]
@@ -164,7 +177,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> VerifyMember([FromBody] SignInModel model)
+        public async Task<IActionResult> VerifyMember([FromForm] SignInModel model)
         {
             _logger.LogRequest("Member/VerifyMember", model);
             var result = new RequestResult();
@@ -182,19 +195,25 @@ namespace Reservation.Web.Controllers
 
             if (!string.IsNullOrEmpty(result.Message))
             {
+                ViewBag.Message = String.Format(result.Message);
                 result.Message = _localizer[result.Message].Value;
+                return View("SignIn");
             }
 
             _logger.LogResponse("Member/VerifyMember", result);
-            return Json(result);
+            return View("Index");
         }
-
+        [HttpGet]
+        public async Task<IActionResult> AttachCard()
+        {
+            return View();
+        }
         [HttpPost]
-        public async Task<IActionResult> AttachCardToMember([FromBody] AttachCardToMemberModel model)
+        public async Task<IActionResult> AttachCardToMember([FromForm] AttachCardToMemberModel model, long? memberId)
         {
             _logger.LogRequest("Member/AttachCardToMember", model);
             var result = new RequestResult();
-
+            
             if (!ModelState.IsValid)
             {
                 result.Message = ModelState.GetErrorMessages();
@@ -290,7 +309,7 @@ namespace Reservation.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            return View("Index");
         }
     }
 }

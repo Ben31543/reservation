@@ -42,7 +42,7 @@
 			public const string ValidThru = "ValidThru";
 			public const string Owner = "Owner";
 			public const string Login = "Login";
-			public const string Passowrd = "Passowrd";
+			public const string Password = "Passowrd";
 			public const string Price = "Price";
 			public const string Type = "Type";
 			public const string Surname = "Surname";

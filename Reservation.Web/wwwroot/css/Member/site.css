@@ -42,6 +42,9 @@
     border-radius: 5px;
     font-weight: bold;
 }
+    .signinbutton:hover {
+        background-color: #246e2b;
+    }
 .flags{
     margin-left:50px;
 }
@@ -49,32 +52,38 @@
     height: 200px;
     background-color:antiquewhite;
 }
-.select{
-    align-items:center;
-    height:50px;
-    box-sizing:border-box;
-    padding: 10px;
-    border:2px solid #1e7e34;
-    border-radius:5px;
+.select {
+    align-items: center;
+    height: 50px;
+    box-sizing: border-box;
+    padding-left: 15px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+.icon{
+    position:absolute;
+    align-content:center;
+    padding-top:16px;
 }
 .findtext {
-    padding-top:10px;
+    padding-top: 10px;
     font-weight: 700;
-    font-size: 50px; 
+    font-size: 50px;
     text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
 }
 .selectoptions{
     display:flex;
 }
-.middle2{
-    margin: 30px 0 0 510px;
+.middle2 {
+    margin: 30px 0 0 500px;
     align-items: center;
+    padding: 10px 0.1px;
 }
 .text {
-    height: 45px;
     border-radius: 5px;
-    padding: 1px;
-    border:2px solid #1e7e34;
+    padding: 16px;
+    border:2px solid black;
 }
 .middle2 button {
     margin-left:20px;
@@ -89,12 +98,18 @@
     border-radius: 5px;
     font-weight:bold;
 }
+    .middle2 button:hover {
+        background-color: #246e2b;
+    }
 /*footer*/
-footer{
+footer {
     background-color: #041725;
     color: white;
     padding: 10px 120px;
     align-content: space-between;
+    bottom: 10px;
+    position: absolute;
+    width: 100%;
 }
 footer a{
     cursor:pointer;

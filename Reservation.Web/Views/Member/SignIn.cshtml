@@ -1,0 +1,99 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Reservation.Models.Common.SignInModel
+
+@{
+    Layout = null;
+}
+@{
+    ViewData["Title"] = "Login";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/Member/signin.css">
+</head>
+<body>
+    <div class="login-wrap">
+        <div class="login-html">
+            <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
+            <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+            <div class="login-form">
+                <div class="sign-in-htm">
+                    <div class="group">
+                        <form action="/Member/VerifyMember" method="post">
+                            <h6 style="color:red">@ViewBag.Message</h6>
+                            <div class="group">
+                                <label  for="user" class="label" style="padding-top: 30px;">Username</label>
+                                <input name="Login" id="user" type="text" class="input">
+                            </div>
+                            <div class="group">
+                                <label for="pass" class="label">Password</label>
+                                <input name="Password" id="pass" type="password" class="input" data-type="password">
+                            </div>
+                            <input id="signin" type="submit" class="button" value="Sign In">
+                        </form>
+                    </div>
+                    <div class="hr"></div>
+                    <div class="foot-lnk">
+                        <a href="#forgot" class="forgotpassword" onclick="copyContent()">Forgot Password?</a>
+                    </div>
+                </div>
+
+                <form action="/Member/AddNewMember" method="post">
+                    <h6 style="color:red">@ViewBag.Message</h6>
+                    <div class="sign-up-htm">
+                        <div class="group" class="oneline">
+                            <label for="user" class="label" style="padding-top: 30px;">Name</label>
+                            <input name="Name" id="user" type="text" class="input" value=" ">
+                        </div>
+                        <div class="group" class="oneline">
+                            <label for="user" class="label">Surname</label>
+                            <input name="Surname" id="user" type="text" class="input" value=" ">
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="label">Email Address</label>
+                            <input name="Email" id="pass" type="text" class="input" value=" ">
+                        </div>
+                        <div class="group">
+                            <label for="user" class="label">Phone</label>
+                            <input name="Phone" id="user" type="text" class="input" value=" ">
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="label">Password</label>
+                            <input name="Password" id="pass" type="password" class="input" data-type="password" value="">
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="label">Repeat Password</label>
+                            <input name="ConfirmPassword" id="pass" type="password" class="input" data-type="password" value="">
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button" value="Sign Up">
+                        </div>
+
+                        <div class="hr"></div>
+                        <div class="foot-lnk">
+                            <a for="tab-1">Already Member?</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function copyContent() {
+            var user = document.getElementById("user");
+            user.disabled = true;
+            var pass = document.getElementById("pass");
+            pass.disabled = true;
+            var but = document.getElementById("signin");
+            but.disabled = true;
+            var x = document.createElement("INPUT");
+            x.setAttribute("type", "button");
+            x.setAttribute("value", "Click me");
+            x.style.color = #fff;
+
+            document.body.appendChild(x);
+        }
+    </script>
+</body>
+</html>

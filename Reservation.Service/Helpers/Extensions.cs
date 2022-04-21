@@ -35,22 +35,25 @@ namespace Reservation.Service.Helpers
 
         public static bool IsValidArmPhoneNumber(this string phoneNumber)
         {
-            if (phoneNumber.StartsWith("0"))
+            if (phoneNumber != null)
             {
-                phoneNumber = phoneNumber.Substring(1);
-            }
-            else if (phoneNumber.StartsWith("374"))
-            {
-                phoneNumber = phoneNumber.Substring(3);
-            }
-            else if (phoneNumber.StartsWith("+374"))
-            {
-                phoneNumber = phoneNumber.Substring(4);
-            }
+                if (phoneNumber.StartsWith("0"))
+                {
+                    phoneNumber = phoneNumber.Substring(1);
+                }
+                else if (phoneNumber.StartsWith("374"))
+                {
+                    phoneNumber = phoneNumber.Substring(3);
+                }
+                else if (phoneNumber.StartsWith("+374"))
+                {
+                    phoneNumber = phoneNumber.Substring(4);
+                }
 
-            if (phoneNumber.Length == 8 && CommonConstants.ArmenianPhoneOperators.Contains(phoneNumber.Substring(0, 2)))
-            {
-                return true;
+                if (phoneNumber.Length == 8 && CommonConstants.ArmenianPhoneOperators.Contains(phoneNumber.Substring(0, 2)))
+                {
+                    return true;
+                }
             }
 
             return false;

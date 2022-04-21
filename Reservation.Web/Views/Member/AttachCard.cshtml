@@ -1,0 +1,42 @@
+﻿@model Reservation.Models.BankCard.AttachCardToMemberModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/Member/attachCard.css">
+</head>
+<body>
+    <div class="login-wrap">
+        <div class="login-html">
+            <div class="login-form">
+                <h6>Attach Bank Card</h6>
+                <form action="/Member/AttachCardToMember" method="post">
+                    <div asp-></div>
+                    <div class="group" class="oneline">
+                        <label class="label" style="padding-top: 30px;">Number</label>
+                        <input name="CardNumber" id="user" type="text" class="input" maxlength="16" placeholder="XXXXXXXXXXXX">
+                    </div>
+                    <div class="group" class="oneline">
+                        <label class="label" style="padding-top: 30px;">CVV</label>
+                        <input name="CVV" id="user" type="text" class="input" maxlength="3" placeholder="XXX">
+                    </div>
+                    <div class="group" class="oneline">
+                        <label class="label" style="padding-top: 30px;">ValidThru</label>
+                        <input name="ValidThru" id="user" type="date" class="input">
+                    </div>
+                    <div class="group" class="oneline">
+                        <label for="user" class="label" style="padding-top: 30px;">Owner Name</label>
+                        <input name="Owner" id="user" type="text" class="input" value=" ">
+                    </div>
+                    <button>Attach</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
