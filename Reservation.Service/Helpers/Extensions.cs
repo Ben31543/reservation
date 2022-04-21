@@ -78,5 +78,37 @@ namespace Reservation.Service.Helpers
                 return false;
             }
         }
+        
+        public static bool IsBase64(this string base64String)
+        {
+            if (string.IsNullOrEmpty(base64String))
+            {
+                return false;
+            }
+
+            if (base64String.Contains("data:image/") && base64String.Length > 500)
+            {
+                return true;
+            }
+
+            if (base64String.Length % 4 != 0 ||
+                base64String.Contains(" ") ||
+                base64String.Contains("\t") ||
+                base64String.Contains("\r") ||
+                base64String.Contains("\n"))
+            {
+                return false;
+            }
+
+            try
+            {
+                Convert.FromBase64String(base64String);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

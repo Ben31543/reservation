@@ -24,6 +24,7 @@ namespace Reservation.ServiceMember
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.RegisterApplicationServices();
+			services.AddImagesSavingService(Configuration);
 			services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TestDbConnection")));
 			services.AddControllersWithViews();
 			services.AddLocalization(opts =>

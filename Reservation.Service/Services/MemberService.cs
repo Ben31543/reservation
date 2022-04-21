@@ -21,15 +21,18 @@ namespace Reservation.Service.Services
         private readonly ApplicationContext _db;
         private readonly IBankCardService _bankCard;
         private readonly ILogger _logger;
+        private readonly IImageSavingService _imageSavingService;
 
         public MemberService(
             ApplicationContext db,
             IBankCardService bankCard,
-            ILogger<MemberService> logger)
+            ILogger<MemberService> logger,
+            IImageSavingService imageSavingService)
         {
             _db = db;
             _bankCard = bankCard;
             _logger = logger;
+            _imageSavingService = imageSavingService;
         }
 
         public async Task<RequestResult> AddNewMemberAsync(MemberRegistrationModel model)
@@ -232,17 +235,27 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            var imageUrl = await ImageService.SaveAsync(
-                model.Image,
-                CommonConstants.ImagesHostingPath,
-                PathConstructor.ConstructFilePathFor(model.ResourceType.Value, member.Id));
-
-            member.ProfilePictureUrl = imageUrl;
+            var image = await ImageConstructorService.ConstructImageForSaveAsync(model.Image, ImageConstructorService.ConstructFilePathFor(model.ResourceType.Value, member.Id));
+            if (image == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.ErrorWhileParsingImage;
+                return result;
+            }
+            
+            var imageSavingResult = await _imageSavingService.SaveImageAsync(image);
+            if (imageSavingResult.Key == true && !string.IsNullOrEmpty(imageSavingResult.Value))
+            {
+                member.ProfilePictureUrl = imageSavingResult.Value;    
+            }
+            else
+            {
+                result.Message = imageSavingResult.Value;
+                return result;
+            }
 
             try
             {
                 await _db.SaveChangesAsync();
-                result.Succeeded = true;
             }
             catch (Exception e)
             {
@@ -251,7 +264,7 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            result.Value = imageUrl;
+            result.Succeeded = true;
             return result;
         }
     }
