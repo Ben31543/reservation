@@ -278,15 +278,28 @@ namespace Reservation.Service.Services
                 result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
+            
+            var image = await ImageConstructorService.ConstructImageForSaveAsync(model.Image, ImageConstructorService.ConstructFilePathFor(model.ResourceType.Value, serviceMember.Id));
+            if (image == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.ErrorWhileParsingImage;
+                return result;
+            }
+            
+            var imageSavingResult = await _imageSavingService.SaveImageAsync(image);
 
+            if (imageSavingResult.Key == true && !string.IsNullOrEmpty(imageSavingResult.Value))
+            {
+                serviceMember.LogoUrl = imageSavingResult.Value;    
+            }
+            else
+            {
+                result.Message = imageSavingResult.Value;
+                return result;
+            }
+            
             try
             {
-                var imageUrl = await _imageSavingService.SaveImageAsync(
-                    model.Image,
-                    CommonConstants.ImagesHostingPath,
-                    PathConstructor.ConstructFilePathFor(model.ResourceType.Value, serviceMember.Id));
-
-                serviceMember.LogoUrl = imageUrl;
                 await _db.SaveChangesAsync();
             }
             catch (Exception e)
@@ -295,7 +308,7 @@ namespace Reservation.Service.Services
                 result.Message = e.Message;
                 return result;
             }
-            
+
             result.Succeeded = true;
             return result;
         }

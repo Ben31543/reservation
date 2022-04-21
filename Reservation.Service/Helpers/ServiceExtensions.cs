@@ -26,7 +26,7 @@ namespace Reservation.Service.Helpers
             services.AddHttpClient<IImageSavingService, ImageSavingService>(
                 client =>
                 {
-                    client.BaseAddress = new Uri(configuration.GetSection("CSEventLoggerSettings:CsEventLoggerHost").Value);
+                    client.BaseAddress = new Uri(configuration.GetSection("ImageSavingSettings:ImageSavingHost").Value);
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 });
         }

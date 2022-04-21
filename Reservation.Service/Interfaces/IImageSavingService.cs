@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Reservation.Models.Common;
 
 namespace Reservation.Service.Interfaces
 {
     public interface IImageSavingService
     {
-        Task<string> SaveImageAsync(IFormFile file, string resourceHost, string imagePath);
+        Task<KeyValuePair<bool, string>> SaveImageAsync(SaveImageClientModel model);
     }
 }
