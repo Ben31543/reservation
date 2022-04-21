@@ -4,36 +4,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Reservation.Web</title>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <link rel="stylesheet" href="~/css/Member/site.css" />
+    <link rel="stylesheet" href="~/css/Member/site.css"/>
 </head>
 <body>
-    <div>
-        <div class="middle">
-            <div class="findtext">Find your table for any occasion</div>
-            <div class="middle2">
-                <input class="select"  type="date" id="start" name="trip-start" value='@DateTime.Today.ToString("yyyy-MM-dd")'>
-            
-                <span class="icon"> <ion-icon name="person-outline"></ion-icon></span>
-                <select class="select">
-                   
-                    <option value="1">1-2 people </option>
-                    <option value="2">3-5 people</option>
-                    <option value="3">6-10 people</option>
-                    <option value="4">10-15 people</option>
-                    <option value="5">16 and more people</option>
-                </select>
-                <input class="text" type="text" placeholder="Restaurant">
-                <button>Search</button>
-            </div>
-            <div class="serviceMember">
+<div>
+    <div class="middle">
+        <div class="findtext">Find your table for any occasion</div>
+        <div class="middle2">
+            <input class="select" type="date" id="start" name="trip-start" value='@DateTime.Today.ToString("yyyy-MM-dd")'>
 
-            </div>
+            <span class="icon">
+                <ion-icon name="person-outline"></ion-icon>
+            </span>
+            <select class="select">
+
+                <option value="1">1-2 people </option>
+                <option value="2">3-5 people</option>
+                <option value="3">6-10 people</option>
+                <option value="4">10-15 people</option>
+                <option value="5">16 and more people</option>
+            </select>
+            <input class="text" type="text" placeholder="Restaurant">
+            <button>Search</button>
         </div>
+        <div class="serviceMember">
 
+        </div>
     </div>
-</body>
 
+</div>
+</body>
