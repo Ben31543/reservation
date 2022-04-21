@@ -240,4 +240,7 @@
   <data name="WrongIncomingParameters" xml:space="preserve">
     <value>Неправильные параметры</value>
   </data>
+  <data name="ErrorWhileParsingImage" xml:space="preserve">
+    <value>Ошибка во время сохранения картинки</value>
+  </data>
 </root>

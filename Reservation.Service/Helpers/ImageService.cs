@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Reservation.Service.Helpers
 {
@@ -9,21 +11,7 @@ namespace Reservation.Service.Helpers
 	{
 		public async static Task<string> SaveAsync(IFormFile file, string resourcePath, string path)
 		{
-			string filePath = $"{resourcePath}{path}";
-			if (!Directory.Exists(filePath))
-			{
-				Directory.CreateDirectory(filePath);
-			}
-
-			var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-			string imagePath = $"{path}{uniqueFileName}";
-			string fullFilefilePath = $@"{filePath}{uniqueFileName}";
-
-			using (var fileStream = new FileStream(fullFilefilePath, FileMode.Create))
-			{
-				await file.CopyToAsync(fileStream);
-				return imagePath;
-			}
+			
 		}
 	}
 }

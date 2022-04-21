@@ -22,15 +22,18 @@ namespace Reservation.Service.Services
         private readonly ILogger _logger;
         private readonly ApplicationContext _db;
         private readonly IBankAccountService _bankAccService;
+        private readonly IImageSavingService _imageSavingService;
 
         public ServiceMemberService(
             ApplicationContext db,
             IBankAccountService bankAccService,
-            ILogger<ServiceMemberService> logger)
+            ILogger<ServiceMemberService> logger,
+            IImageSavingService imageSavingService)
         {
             _db = db;
             _bankAccService = bankAccService;
             _logger = logger;
+            _imageSavingService = imageSavingService;
         }
 
         public async Task<ServiceMember> GetServiceMemberByIdAsync(long id, bool isMember = false)
@@ -96,6 +99,7 @@ namespace Reservation.Service.Services
                 result.Message = e.Message;
                 return result;
             }
+
             return result;
         }
 
@@ -138,7 +142,8 @@ namespace Reservation.Service.Services
             RequestResult result = new RequestResult();
 
             var serviceMember = await _db.ServiceMembers
-                .FirstOrDefaultAsync(i => i.Email == model.Login && i.PasswordHash == model.Password.ToHashedPassword());
+                .FirstOrDefaultAsync(i =>
+                    i.Email == model.Login && i.PasswordHash == model.Password.ToHashedPassword());
             if (serviceMember == null)
             {
                 result.Message = LocalizationKeys.ErrorMessages.WrongCredientials;
@@ -168,7 +173,7 @@ namespace Reservation.Service.Services
 
             try
             {
-                serviceMember.BankAccountId = (long)attachResult.Value;
+                serviceMember.BankAccountId = (long) attachResult.Value;
                 await _db.SaveChangesAsync();
                 result.Succeeded = true;
             }
@@ -178,6 +183,7 @@ namespace Reservation.Service.Services
                 result.Message = e.Message;
                 return result;
             }
+
             return result;
         }
 
@@ -219,7 +225,8 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<List<ServiceMemberDealHistoryItemModel>> GetServiceMemberDealsHistoryAsync(long serviceMemberId)
+        public async Task<List<ServiceMemberDealHistoryItemModel>> GetServiceMemberDealsHistoryAsync(
+            long serviceMemberId)
         {
             var deals = new List<ServiceMemberDealHistoryItemModel>();
 
@@ -230,16 +237,16 @@ namespace Reservation.Service.Services
             }
 
             deals = await _db.Reservings.Include(i => i.ServiceMemberBranch)
-                                        .Where(i => i.Id == serviceMemberId)
-                                        .Select(i => new ServiceMemberDealHistoryItemModel
-                                        {
-                                            Amount = i.Amount,
-                                            OrdersDate = i.ReservationDate,
-                                            BranchName = i.ServiceMemberBranch.Name,
-                                            Address = i.ServiceMemberBranch.Address,
-                                            OnlinePayment = i.IsOnlinePayment,
-                                            IsActive = i.IsActive
-                                        }).ToListAsync();
+                .Where(i => i.Id == serviceMemberId)
+                .Select(i => new ServiceMemberDealHistoryItemModel
+                {
+                    Amount = i.Amount,
+                    OrdersDate = i.ReservationDate,
+                    BranchName = i.ServiceMemberBranch.Name,
+                    Address = i.ServiceMemberBranch.Address,
+                    OnlinePayment = i.IsOnlinePayment,
+                    IsActive = i.IsActive
+                }).ToListAsync();
             return deals;
         }
 
@@ -254,7 +261,8 @@ namespace Reservation.Service.Services
 
             if (criteria.AcceptsOnlinePayment.HasValue)
             {
-                serviceMembers = serviceMembers.Where(i => i.AcceptsOnlinePayment == criteria.AcceptsOnlinePayment.Value);
+                serviceMembers =
+                    serviceMembers.Where(i => i.AcceptsOnlinePayment == criteria.AcceptsOnlinePayment.Value);
             }
 
             return await serviceMembers.ToListAsync();
@@ -270,18 +278,29 @@ namespace Reservation.Service.Services
                 result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
+            
+            var image = await ImageConstructorService.ConstructImageForSaveAsync(model.Image, ImageConstructorService.ConstructFilePathFor(model.ResourceType.Value, serviceMember.Id));
+            if (image == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.ErrorWhileParsingImage;
+                return result;
+            }
+            
+            var imageSavingResult = await _imageSavingService.SaveImageAsync(image);
 
-            var imageUrl = await ImageService.SaveAsync(
-                model.Image,
-                CommonConstants.ImagesHostingPath,
-                PathConstructor.ConstructFilePathFor(model.ResourceType.Value, serviceMember.Id));
-
-            serviceMember.LogoUrl = imageUrl;
-
+            if (imageSavingResult.Key == true && !string.IsNullOrEmpty(imageSavingResult.Value))
+            {
+                serviceMember.LogoUrl = imageSavingResult.Value;    
+            }
+            else
+            {
+                result.Message = imageSavingResult.Value;
+                return result;
+            }
+            
             try
             {
                 await _db.SaveChangesAsync();
-                result.Succeeded = true;
             }
             catch (Exception e)
             {
@@ -290,7 +309,7 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            result.Value = imageUrl;
+            result.Succeeded = true;
             return result;
         }
     }
