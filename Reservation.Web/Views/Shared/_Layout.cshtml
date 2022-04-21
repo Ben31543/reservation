@@ -1,44 +1,51 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Reservation.Web</title>
-    <link rel="stylesheet" href="~/css/Member/site.css" />
+    <link rel="stylesheet" href="~/css/Member/site.css"/>
 </head>
 <body>
-    <header>
-        <div class="header">
-            <div class="left">
-                <img class="logo" src="~/Images/Members/reservation.png" alt="BookingsLogo" />
-                <div>Booking</div>
-            </div>
-            <div class="right">
-                <div>
-                    <button class="signinbutton">SignIn/ SignUp</button>
-                </div>
-                <div class="flags">
-                    <img src="~/Images/Members/united-kingdom.png" alt="ENG" />
-                    <img src="~/Images/Members/russia.png" alt="RU" />
-                    <img src="~/Images/Members/armenia.png" alt="ARM" />
-                </div>
+<header>
+    <div class="header">
+        <div class="left">
+            <img class="logo" src="~/Images/Members/reservation.png" alt="BookingsLogo"/>
+            <div>Booking</div>
+        </div>
+        <div class="right">
+            <button class="signinbutton">sign in/ sign up</button>
+            
+            <div class="flags">
+                <img src="~/Images/Members/united-kingdom.png" alt="ENG"/>
+                <img src="~/Images/Members/russia.png" alt="RU"/>
+                <img src="~/Images/Members/armenia.png" alt="ARM"/>
             </div>
         </div>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
     </div>
+</header>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Reservation.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+<footer class="border-top footer text-muted">
+    <div class="paymenttypes">
+        <img class="arca" src="~/Images/App/arca.png" alt="Arca"/>
+        <img class="visamaster" src="~/Images/App/visamaster.png" alt="Visa Master"/>
+    </div>
+    <div class="footertext">
+        <div class="links">
+            <a>Terms and Conditions</a>
+            <a class="contact">Contact Us</a>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+        <div class="address">Address: Armenia, Yerevan, Tigran Mets 54, Phone number: 010 120 120 Email address: onlinereservationservice@gmail.com</div>
+    </div>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

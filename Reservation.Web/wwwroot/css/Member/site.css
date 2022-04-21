@@ -1,11 +1,9 @@
-﻿@media (max-device-width: 768px){
-    .menu {
-        display: none;
-    }
-}
-.header{
-    background-color: #145b8e;
-    display:flex;
+﻿.header{
+    background-color: #041725;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 120px;
+    font-size: 18px;
 }
 .header div{
     display:flex;
@@ -22,28 +20,27 @@
     width: 25px;
     margin-left: 4px;
 }
-.right {
-    margin-left: 70%;
-    margin-top: 5px;
+.left{
+    align-items: center;
 }
 .left div {
     cursor: pointer;
-    margin-left: 20px;
     color: white;
-    font-family: monospace;
+    font-family: 'Lato', sans-serif;
     font-size: 25px;
     font-weight: bold;
+    margin-left: 10px;
 }
 .signinbutton {
     cursor: pointer;
     margin-right: 25px;
-    background-color: #1f8ad7;
+    background-color: #2faa3a;
     outline: none;
     border: none;
     color: white;
-    width: 130px;
-    height: 25px;
+    padding: 15px;
     border-radius: 5px;
+    font-weight: bold;
 }
 .flags{
     margin-left:50px;
@@ -56,16 +53,15 @@
     align-items:center;
     height:50px;
     box-sizing:border-box;
-    padding: 0.3125rem;
-    border-color:#145b8e;
+    padding: 10px;
+    border:2px solid #1e7e34;
     border-radius:5px;
 }
 .findtext {
     padding-top:10px;
     font-weight: 700;
-    font-size: 50px;
+    font-size: 50px; 
     text-align: center;
-    font-family: BrandonText;
 }
 .selectoptions{
     display:flex;
@@ -76,19 +72,49 @@
 }
 .text {
     height: 45px;
-    border-color:#145b8e;
     border-radius: 5px;
+    padding: 1px;
+    border:2px solid #1e7e34;
 }
 .middle2 button {
     margin-left:20px;
     cursor: pointer;
     margin-right: 25px;
-    background-color: #1f8ad7;
+    background-color: #1f851c;
     outline: none;
-    border: none;
+    border: 2px solid #1c7430;
     color: white;
     width: 90px;
     height: 40px;
     border-radius: 5px;
     font-weight:bold;
 }
+/*footer*/
+footer{
+    background-color: #041725;
+    color: white;
+    padding: 10px 120px;
+    align-content: space-between;
+}
+footer a{
+    cursor:pointer;
+}
+.footertext{
+    margin-top: 10px;
+}
+.address{
+    margin-top: 10px;
+}
+.arca{
+    width: 75px;
+    height: 50px;
+}
+.visamaster {
+    margin-left: 5px;
+    width: 175px;
+    height: 50px;
+}
+.contact{
+    margin-left: 20px;
+}
+
