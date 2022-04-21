@@ -240,4 +240,7 @@
   <data name="WrongIncomingParameters" xml:space="preserve">
     <value>Սխալ պարամետրեր</value>
   </data>
+  <data name="ErrorWhileParsingImage" xml:space="preserve">
+    <value>Նկարի պահպանման սխալ</value>
+  </data>
 </root>
