@@ -117,7 +117,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateMemberInfo([FromBody] MemberEditModel model)
+        public async Task<IActionResult> UpdateMemberInfo([FromForm] MemberEditModel model)
         {
             _logger.LogRequest("Member/UpdateMemberInfo", model);
             var result = new RequestResult();
@@ -150,7 +150,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+        public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordModel model)
         {
             _logger.LogRequest("Member/ResetPassword", model);
             var result = new RequestResult();
@@ -201,7 +201,7 @@ namespace Reservation.Web.Controllers
             }
 
             _logger.LogResponse("Member/VerifyMember", result);
-            return View("Index");
+            return RedirectToAction("Index");
         }
         [HttpGet]
         public async Task<IActionResult> AttachCard()
@@ -309,7 +309,7 @@ namespace Reservation.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return View("Index");
+            return RedirectToAction("Index");
         }
     }
 }
