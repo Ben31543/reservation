@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Reservation.Models.Criterias;
+using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System.Threading.Tasks;
 
@@ -21,8 +22,7 @@ namespace Reservation.AdminPanel
             IBankCardService bankCardService,
             IBankAccountService bankAccountService,
             IServiceMemberService serviceMemberService,
-            IServiceMemberBranchService serviceMemberBranchService
-            )
+            IServiceMemberBranchService serviceMemberBranchService)
         {
             _logger = logger;
             _memberService = memberService;
@@ -35,19 +35,23 @@ namespace Reservation.AdminPanel
         [HttpGet]
         public async Task<IActionResult> ServiceMembers([FromQuery]ServiceMemberSearchCriteria criteria)
         {
+            _logger.LogRequest("Admin/ServiceMembers", criteria);
             var data = await _serviceMemberService.GetServiceMembersForAdminAsync(criteria ?? new ServiceMemberSearchCriteria());
+            _logger.LogResponse("Admin/ServiceMembers", data);
             return View(data);
         }
 
         [HttpGet]
         public async Task<IActionResult> ServiceMemberBranches(long? smId)
         {
+            _logger.LogRequest("Admin/ServiceMemberBranches", new { ServiceMemberId = smId});
             if (!smId.HasValue)
             {
                 return BadRequest();
             }
 
             var data = await _serviceMemberBranchService.GetServiceMemberBranchesForAdminAsync(smId.Value);
+            _logger.LogResponse("Admin/ServiceMemberBranches", data);
             return View(data);
         }
     }
