@@ -130,5 +130,17 @@ namespace Reservation.Service.Services
                 .Where(i => i.ServiceMemberId == serviceMemberId)
                 .ToListAsync();
         }
+
+        public async Task<List<ServiceMemberBranchForAdminModel>> GetServiceMemberBranchesForAdminAsync(long smId)
+        {
+            return await _db.ServiceMemberBranches.Where(i => i.ServiceMemberId == smId).Select(i => new ServiceMemberBranchForAdminModel
+            {
+                ServiceMemberName = i.ServiceMember.Name,
+                Address = i.Address,
+                IsActive = i.IsActive,
+                Phone = i.Phone,
+                WorkingHours = Time.ToDisplayFormat(JsonConvert.DeserializeObject<Time>(i.OpenTime), JsonConvert.DeserializeObject<Time>(i.CloseTime))
+            }).ToListAsync();
+        }
     }
 }

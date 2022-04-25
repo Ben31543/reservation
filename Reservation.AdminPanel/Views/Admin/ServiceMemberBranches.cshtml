@@ -1,0 +1,46 @@
+﻿@using Reservation.Models.ServiceMemberBranch
+@using Reservation.Resources.Controllers
+@model List<ServiceMemberBranchForAdminModel>
+
+<link rel="stylesheet" href="~/css/serviceMemberBranches.css" />
+
+@{
+    if (Model.Any())
+    {
+        <h1>@Model.First().ServiceMemberName branches</h1>
+        <table>
+            <tr>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>WorkingHours</th>
+                <th>IsActive</th>
+            </tr>
+            @{
+                foreach (var branch in Model)
+                {
+                    <tr>
+                        <td>@branch.Address</td>
+                        <td>@branch.Phone</td>
+                        <td>@branch.WorkingHours</td>
+                        <td>
+                            @{
+                                if (branch.IsActive)
+                                {
+                                    <img class="branchStatusIcon" src="~/Images/App/active-icon.png" />
+                                }
+                                else
+                                {
+                                    <img class="branchStatusIcon" src="~/Images/App/inactive-icon.png" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    }
+    else
+    {
+        <h1>Seems like this service member does not have branches</h1>
+    }
+}

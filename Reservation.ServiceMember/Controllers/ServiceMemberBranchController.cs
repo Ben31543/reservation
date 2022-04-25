@@ -56,7 +56,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            if (model.OpenTime.Hour >= model.CloseTime.Hour)
+            if (!Time.IsValidWorkingSchedule(model.OpenTime, model.CloseTime))
             {
                 result.Message = _localizer[LocalizationKeys.ErrorMessages.OpenTimeMustBeEarlierThanCloseTime].Value;
                 return Json(result);

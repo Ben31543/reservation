@@ -17,5 +17,7 @@ namespace Reservation.Service.Interfaces
         Task<List<ServiceMemberBranch>> GetBranchesAsync(long serviceMemberId);
 
         Task<ServiceMemberBranch> GetBranchByIdAsync(long branchId);
+
+        Task<List<ServiceMemberBranchForAdminModel>> GetServiceMemberBranchesForAdminAsync(long smId);
     }
 }
