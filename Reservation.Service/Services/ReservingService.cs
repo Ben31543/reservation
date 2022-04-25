@@ -231,8 +231,8 @@ namespace Reservation.Service.Services
                                     && i.ReservationDate.Date == date.Date)
                                     .Select(i => i.ReservationDate.Hour).ToList();
 
-            var openTime = JsonConvert.DeserializeObject<Time>(branch.OpenTime) as Time;
-            var closeTime = JsonConvert.DeserializeObject<Time>(branch.CloseTime) as Time;
+            var openTime = JsonConvert.DeserializeObject<Time>(branch.OpenTime);
+            var closeTime = JsonConvert.DeserializeObject<Time>(branch.CloseTime);
 
             List<Time> allTimes = new List<Time>();
             if (openTime == null || closeTime == null)
@@ -240,15 +240,11 @@ namespace Reservation.Service.Services
                 return allTimes;
             }
 
-            for (int i = openTime.Hour; i <= closeTime.Hour - 1; i++)
+            for (int i = openTime.GetHour(); i <= closeTime.GetHour() - 1; i++)
             {
                 if (!reservings.Contains(i))
                 {
-                    allTimes.Add(new Time
-                    {
-                        Hour = i,
-                        Minute = "00"
-                    });
+                    allTimes.Add(new Time(i));
                 }
             }
 

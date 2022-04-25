@@ -173,7 +173,7 @@ namespace Reservation.Service.Services
 
             try
             {
-                serviceMember.BankAccountId = (long) attachResult.Value;
+                serviceMember.BankAccountId = (long)attachResult.Value;
                 await _db.SaveChangesAsync();
                 result.Succeeded = true;
             }
@@ -278,26 +278,26 @@ namespace Reservation.Service.Services
                 result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
                 return result;
             }
-            
+
             var image = await ImageConstructorService.ConstructImageForSaveAsync(model.Image, ImageConstructorService.ConstructFilePathFor(model.ResourceType.Value, serviceMember.Id));
             if (image == null)
             {
                 result.Message = LocalizationKeys.ErrorMessages.ErrorWhileParsingImage;
                 return result;
             }
-            
+
             var imageSavingResult = await _imageSavingService.SaveImageAsync(image);
 
             if (imageSavingResult.Key == true && !string.IsNullOrEmpty(imageSavingResult.Value))
             {
-                serviceMember.LogoUrl = imageSavingResult.Value;    
+                serviceMember.LogoUrl = imageSavingResult.Value;
             }
             else
             {
                 result.Message = imageSavingResult.Value;
                 return result;
             }
-            
+
             try
             {
                 await _db.SaveChangesAsync();
@@ -311,6 +311,34 @@ namespace Reservation.Service.Services
 
             result.Succeeded = true;
             return result;
+        }
+
+        public async Task<List<ServiceMemberForAdminModel>> GetServiceMembersForAdminAsync(ServiceMemberSearchCriteria criteria)
+        {
+            var query = _db.ServiceMembers.Include(i => i.ServiceMemberBranches).AsQueryable();
+
+            if (!string.IsNullOrEmpty(criteria.Name))
+            {
+                query = query.Where(i => i.Name.Contains(criteria.Name));
+            }
+
+            if (criteria.AcceptsOnlinePayment.HasValue)
+            {
+                query = query.Where(i => i.AcceptsOnlinePayment == criteria.AcceptsOnlinePayment);
+            }
+
+            return await query.Select(i => new ServiceMemberForAdminModel
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Email = i.Email,
+                Facebook = i.FacebookUrl,
+                ViewsCount = i.ViewsCount,
+                Instagram = i.InstagramUrl,
+                OrdersCount = i.OrdersCount,
+                BranchesCount = i.ServiceMemberBranches.Count,
+                AcceptsOnlinePayment = i.AcceptsOnlinePayment
+            }).ToListAsync();
         }
     }
 }

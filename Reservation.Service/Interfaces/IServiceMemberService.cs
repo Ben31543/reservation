@@ -29,5 +29,7 @@ namespace Reservation.Service.Interfaces
         Task<List<ServiceMember>> GetServiceMembersAsync(ServiceMemberSearchCriteria criteria);
 
         Task<RequestResult> SaveServiceMemberImageAsync(SaveImageModel model);
+
+        Task<List<ServiceMemberForAdminModel>> GetServiceMembersForAdminAsync(ServiceMemberSearchCriteria criteria);
     }
 }

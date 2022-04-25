@@ -1,0 +1,20 @@
+﻿table {
+    margin-right: 150px;
+}
+
+th, td {
+    padding: 15px;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+.onlinePaymentIcon {
+    width: 25px;
+    height: 25px;
+}
+
+a :hover{
+    cursor: pointer
+}
