@@ -223,49 +223,5 @@ namespace Reservation.Service.Services
                                              ServiceMemberName = i.ServiceMember.Name
                                          }).ToListAsync();
         }
-
-        public async Task<RequestResult> SaveMemberProfileImageAsync(SaveImageModel model)
-        {
-            var result = new RequestResult();
-
-            var member = await GetMemberByIdAsync(model.Id);
-            if (member == null)
-            {
-                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
-                return result;
-            }
-
-            var image = await ImageConstructorService.ConstructImageForSaveAsync(model.Image, ImageConstructorService.ConstructFilePathFor(model.ResourceType.Value, member.Id));
-            if (image == null)
-            {
-                result.Message = LocalizationKeys.ErrorMessages.ErrorWhileParsingImage;
-                return result;
-            }
-            
-            var imageSavingResult = await _imageSavingService.SaveImageAsync(image);
-            if (imageSavingResult.Key == true && !string.IsNullOrEmpty(imageSavingResult.Value))
-            {
-                member.ProfilePictureUrl = imageSavingResult.Value;    
-            }
-            else
-            {
-                result.Message = imageSavingResult.Value;
-                return result;
-            }
-
-            try
-            {
-                await _db.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                result.Message = e.Message;
-                return result;
-            }
-
-            result.Succeeded = true;
-            return result;
-        }
     }
 }

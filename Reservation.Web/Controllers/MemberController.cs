@@ -104,13 +104,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            var member = await _memberService.GetMemberByIdAsync(id.Value);
-            if (member != null && !string.IsNullOrEmpty(member.ProfilePictureUrl))
-            {
-                member.ProfilePictureUrl = $"{CommonConstants.ImagesHostingPath}{member.ProfilePictureUrl}";
-            }
-
-            result.Value = member;
+            result.Value = await _memberService.GetMemberByIdAsync(id.Value);
             result.Succeeded = true;
             _logger.LogResponse("Member/GetMemberById", result);
             return Json(result);
@@ -266,33 +260,6 @@ namespace Reservation.Web.Controllers
             result.Value = await _memberService.GetMemberDealsHistoryAsync(memberId.Value);
             _logger.LogResponse("Member/GetMemberDealsHistory", result);
             return (Json(result));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveMemberProfilePicture([FromForm] SaveImageModel model)
-        {
-            _logger.LogRequest("Member/SaveMemberProfilePicture", model);
-            var result = new RequestResult();
-
-            if (model == null || model.Image == null)
-            {
-                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
-                return Json(result);
-            }
-
-            if (!model.ResourceType.HasValue)
-            {
-                model.ResourceType = ResourceTypes.MemberImage;
-            }
-
-            result = await _memberService.SaveMemberProfileImageAsync(model);
-            if (!string.IsNullOrEmpty(result.Message))
-            {
-                result.Message = _localizer[result.Message].Value;
-            }
-
-            _logger.LogResponse("Member/SaveMemberProfilePicture", result);
-            return Json(result);
         }
 
         private async Task Authenticate(string userName)

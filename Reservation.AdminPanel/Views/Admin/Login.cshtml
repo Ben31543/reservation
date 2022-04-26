@@ -1,0 +1,18 @@
+﻿@{
+    Layout = null;
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<div>
+    @ViewBag.ErrorMessage
+    <form method="post" style="display: block;">
+        <div>
+            <input type="text" placeholder="Email" name="Login">
+        </div>
+        <div>
+            <input type="password" placeholder="Password" name="Password">
+        </div>
+
+        <button asp-action="VerifyAdmin" asp-controller="Admin">Sign in</button>
+    </form>
+</div>

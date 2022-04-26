@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Reservation.Data;
 using Reservation.Service.Helpers;
+using Reservation.Service.Interfaces;
+using Reservation.Service.Services;
 using System.Globalization;
 
 namespace Reservation.AdminPanel
@@ -23,6 +25,7 @@ namespace Reservation.AdminPanel
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IAdminService, AdminService>();
             services.RegisterApplicationServices();
             services.AddImagesSavingService(Configuration);
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TestDbConnection")));
@@ -70,7 +73,7 @@ namespace Reservation.AdminPanel
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Admin}/{action=Login}/{id?}");
             });
         }
     }

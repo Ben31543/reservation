@@ -10,6 +10,8 @@ namespace Reservation.Data
         {
         }
 
+        public DbSet<Admin> Admins { get; set; }
+
         public DbSet<Bank> Banks { get; set; }
 
         public DbSet<BankAccount> BankAccounts { get; set; }
