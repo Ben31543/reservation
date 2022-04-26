@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Reservation.Data.Entities;
 using Reservation.Resources.Constants;
 
 namespace Reservation.Service.Helpers
@@ -109,6 +110,16 @@ namespace Reservation.Service.Helpers
             {
                 return false;
             }
+        }
+
+        public static string ToDisplayFormat(this BankAccount bankAccount)
+        {
+            if (bankAccount == null)
+            {
+                return "-";
+            }
+
+            return $"{bankAccount.AccountNumber}\n{bankAccount.Owner}\n{bankAccount.Bank.Name}";
         }
     }
 }

@@ -24,6 +24,8 @@ namespace Reservation.Models.ServiceMember
 
         public string Instagram { get; set; }
 
+        public string BankAccount { get; set; }
+
         public int BranchesCount { get; set; }
     }
 }

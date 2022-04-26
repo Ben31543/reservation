@@ -5,7 +5,8 @@
 
 <link rel="stylesheet" href="~/css/serviceMembers.css" />
 
-<table>
+<div>
+    <table>
     <tr>
         <th>Name</th>
         <th>Email</th>
@@ -14,6 +15,7 @@
         <th>AcceptsOnlinePayment</th>
         <th>Facebook</th>
         <th>Instagram</th>
+        <th>BankAccount</th>
         <th>BranchesCount</th>
     </tr>
     @{
@@ -38,6 +40,7 @@
                 </td>
                 <td><a href="@serviceMember.Facebook">@serviceMember.Facebook</a></td>
                 <td><a href="@serviceMember.Instagram">@serviceMember.Instagram</a></td>
+                <td>@serviceMember.BankAccount</td>
                 <td>
                     @{
                         if(serviceMember.BranchesCount >= 1)
@@ -54,3 +57,4 @@
         }
     }
 </table>
+</div>

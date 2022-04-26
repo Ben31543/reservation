@@ -315,7 +315,11 @@ namespace Reservation.Service.Services
 
         public async Task<List<ServiceMemberForAdminModel>> GetServiceMembersForAdminAsync(ServiceMemberSearchCriteria criteria)
         {
-            var query = _db.ServiceMembers.Include(i => i.ServiceMemberBranches).AsQueryable();
+            var query = _db.ServiceMembers
+                .Include(i => i.ServiceMemberBranches)
+                .Include(i => i.BankAccount)
+                   .ThenInclude(i => i.Bank)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(criteria.Name))
             {
@@ -337,7 +341,8 @@ namespace Reservation.Service.Services
                 Instagram = i.InstagramUrl,
                 OrdersCount = i.OrdersCount,
                 BranchesCount = i.ServiceMemberBranches.Count,
-                AcceptsOnlinePayment = i.AcceptsOnlinePayment
+                AcceptsOnlinePayment = i.AcceptsOnlinePayment,
+                BankAccount = i.BankAccount.ToDisplayFormat()
             }).ToListAsync();
         }
     }

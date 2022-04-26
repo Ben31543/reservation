@@ -9,42 +9,44 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Admin Panel</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Admin" asp-action="ServiceMembers">Service Members</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        <div class="header">
+
+            <div class="left">
+                <div>
+                    <img class="logo" src="~/Images/App/reservation.png" alt="BookingsLogo" />
                 </div>
             </div>
-        </nav>
+
+            <div class="right">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="ServiceMembers">Service Members</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="flags">
+                <img src="~/Images/App/united-kingdom.png" alt="ENG" />
+                <img src="~/Images/App/russia.png" alt="RU" />
+                <img src="~/Images/App/armenia.png" alt="ARM" />
+            </div>
+        </div>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Reservation.AdminPanel - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+<footer>
+    <div class="footertext">
+        Admin Panel, Online Reservation Services App, @DateTime.Now.Year
+    </div>
+</footer>
 </html>
