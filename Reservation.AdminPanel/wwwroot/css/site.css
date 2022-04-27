@@ -1,139 +1,29 @@
-﻿html, body {
-    min-height: 100%;
-}
-.header {
-    background-color: #041725;
+﻿
+.head {
+    width:100%;
+    background-color: #092b3e;
     display: flex;
     justify-content: space-between;
     font-size: 18px;
+    padding:10px 20px;
 }
-
-    .header div {
-        display: flex;
-    }
-
-.logo {
-    cursor: pointer;
-    padding-left: 10px;
-    height: 35px;
-    width: 35px;
+.smember{
+    cursor:pointer;
+    color:white;
+    border-right:1.5px solid white;
+    padding-right:8px;
 }
-
-.flags img {
-    cursor: pointer;
-    height: 25px;
-    width: 25px;
-    margin-left: 4px;
+.smember a{
+    color:white;
+    text-decoration:none;
 }
-
-.left {
-    align-items: center;
+.logout a{
+    text-decoration:none;
+    color:white;
+    border:1px solid white;
 }
-
-    .left div {
-        cursor: pointer;
-        color: white;
-        font-family: 'Lato', sans-serif;
-        font-size: 25px;
-        font-weight: bold;
-        margin-left: 10px;
-    }
-
-.flags {
-    margin-left: 50px;
+.logout a:hover, .smember:hover, .smember a:hover{
+    color:#107b93;
 }
-
-.middle {
-    height: 200px;
-    background-color: antiquewhite;
-}
-
-.select {
-    align-items: center;
-    height: 50px;
-    box-sizing: border-box;
-    padding-left: 15px;
-    border: 2px solid black;
-    border-radius: 5px;
-}
-
-.icon {
-    position: absolute;
-    align-content: center;
-    padding-top: 16px;
-}
-
-.findtext {
-    padding-top: 10px;
-    font-weight: 700;
-    font-size: 50px;
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.selectoptions {
-    display: flex;
-}
-
-.middle2 {
-    margin: 30px 0 0 500px;
-    align-items: center;
-    padding: 10px 0.1px;
-}
-
-.text {
-    border-radius: 5px;
-    padding: 16px;
-    border: 2px solid black;
-}
-
-.middle2 button {
-    margin-left: 20px;
-    cursor: pointer;
-    margin-right: 25px;
-    background-color: #1f851c;
-    outline: none;
-    border: 2px solid #1c7430;
-    color: white;
-    width: 90px;
-    height: 40px;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-    .middle2 button:hover {
-        background-color: #246e2b;
-    }
-/*footer*/
-footer {
-    background-color: #041725;
-    color: white;
-    align-content: space-between;
-    bottom: 10px;
-    position: absolute;
-}
-
-    footer a {
-        cursor: pointer;
-    }
-
-.footertext {
-    margin-top: 10px;
-}
-
-.address {
-    margin-top: 10px;
-}
-
-.contact {
-    margin-left: 20px;
-}
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.container {
-    padding: 16px;
-    margin-top: 30px;
-}
+.container{
+float:left}

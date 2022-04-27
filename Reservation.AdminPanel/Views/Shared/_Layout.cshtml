@@ -8,37 +8,24 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <div class="header">
+    <header style="width:100%">
+        <div class="head">
 
-            <div class="left">
-                <div>
-                    <img class="logo" src="~/Images/App/reservation.png" alt="BookingsLogo" />
-                </div>
+            <div class="smember">
+                <a asp-controller="Admin" asp-action="ServiceMembers">Service Members</a>
             </div>
-
-            <div class="right">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="ServiceMembers">Service Members</a>
-                    </li>
-                </ul>
+            <div class="smember">
+                <a  asp-controller="Admin" asp-action="ServiceMembers">Members</a>
             </div>
-
-            <div class="flags">
-                <img src="~/Images/App/united-kingdom.png" alt="ENG" />
-                <img src="~/Images/App/russia.png" alt="RU" />
-                <img src="~/Images/App/armenia.png" alt="ARM" />
-            </div>
-
-            <div>
+            
+            <div class="logout">
                 <a asp-action="Logout" asp-controller="Admin">Log out</a>
             </div>
         </div>
     </header>
-
+ 
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
@@ -48,9 +35,4 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-<footer>
-    <div class="footertext">
-        Admin Panel, Online Reservation Services App, @DateTime.Now.Year
-    </div>
-</footer>
 </html>
