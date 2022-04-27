@@ -1,20 +1,18 @@
-﻿table {
-    margin-right: 150px;
+﻿.main {
+   margin-top:50px;
+   margin-right:600px;
 }
-
-th, td {
-    padding: 15px;
-}
-
 table, th, td {
     border: 1px solid black;
+    padding: 5px 5px;
 }
 
-.onlinePaymentIcon {
-    width: 25px;
-    height: 25px;
-}
 
-a :hover{
+
+a :hover {
     cursor: pointer
+}
+
+.search{
+    margin-top:50px;
 }

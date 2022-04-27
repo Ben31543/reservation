@@ -1,60 +1,83 @@
-﻿@using Reservation.Models.ServiceMember
-@using Reservation.Resources.Controllers
-@model List<ServiceMemberForAdminModel>
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿<link rel="stylesheet" href="~/css/serviceMembers.css" />
 
-<link rel="stylesheet" href="~/css/serviceMembers.css" />
-
-<div>
-    <table>
-    <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>ViewsCount</th>
-        <th>OrdersCount</th>
-        <th>AcceptsOnlinePayment</th>
-        <th>Facebook</th>
-        <th>Instagram</th>
-        <th>BankAccount</th>
-        <th>BranchesCount</th>
-    </tr>
-    @{
-        foreach (var serviceMember in Model)
-        {
-            <tr>
-                <td>@serviceMember.Name</td>
-                <td>@serviceMember.Email</td>
-                <td>@serviceMember.ViewsCount</td>
-                <td>@serviceMember.OrdersCount</td>
-                <td>
-                    @{
-                        if (serviceMember.AcceptsOnlinePayment)
-                        {
-                            <img class="onlinePaymentIcon" src="~/Images/App/active-icon.png" />
-                        }
-                        else
-                        {
-                            <img class="onlinePaymentIcon" src="~/Images/App/inactive-icon.png" />
-                        }
-                    }
-                </td>
-                <td><a href="@serviceMember.Facebook">@serviceMember.Facebook</a></td>
-                <td><a href="@serviceMember.Instagram">@serviceMember.Instagram</a></td>
-                <td>@serviceMember.BankAccount</td>
-                <td>
-                    @{
-                        if(serviceMember.BranchesCount >= 1)
-                        {
-                            <a href="/Admin/ServiceMemberBranches?smId=@serviceMember.Id">@serviceMember.BranchesCount</a>
-                        }
-                        else
-                        {
-                            @serviceMember.BranchesCount
-                        }
-                    }
-                </td>
-            </tr>
-        }
-    }
-</table>
+<div class="filters">
+    <div class="search">
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+    </div>
+    <div>
+        <input type="checkbox" name="AcceptsOnlinePayment" value="yyy" />  Accepts Online Payment
+    </div>
 </div>
+        <table class="main" id="myTable">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>ViewsCount</th>
+                <th>OrdersCount</th>
+                <th>AcceptsOnlinePayment</th>
+                <th>Facebook</th>
+                <th>Instagram</th>
+                <th>BankAccount</th>
+                <th>Branch</th>
+            </tr>
+            @{
+                foreach (var serviceMember in Model)
+                {
+                    <tr>
+                        <td>@serviceMember.Id</td>
+                        <td>@serviceMember.Name</td>
+                        <td>@serviceMember.Email</td>
+                        <td>@serviceMember.ViewsCount</td>
+                        <td>@serviceMember.OrdersCount</td>
+                        <td>
+                            @{
+                                if (serviceMember.AcceptsOnlinePayment)
+                                {
+                                    <img class="onlinePaymentIcon" src="~/Images/App/active-icon.png" />
+                                }
+                                else
+                                {
+                                    <img class="onlinePaymentIcon" src="~/Images/App/inactive-icon.png" />
+                                }
+                            }
+                        </td>
+                        <td><a href="@serviceMember.Facebook">@serviceMember.Facebook</a></td>
+                        <td><a href="@serviceMember.Instagram">@serviceMember.Instagram</a></td>
+                        <td>@serviceMember.BankAccount</td>
+                        <td>
+                            @{
+                                if (serviceMember.BranchesCount >= 1)
+                                {
+                                    <a href="/Admin/ServiceMemberBranches?smId=@serviceMember.Id">@serviceMember.BranchesCount</a>
+                                }
+                                else
+                                {
+                                    @serviceMember.BranchesCount
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+        <script>
+            function myFunction() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 1; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[1];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        </script>
