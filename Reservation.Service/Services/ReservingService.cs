@@ -52,10 +52,16 @@ namespace Reservation.Service.Services
                 return result;
             }
 
+            if (model.IsOnlinePayment && !serviceMember.AcceptsOnlinePayment)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotAcceptOnlinePayments;
+                return result;
+            }
+            
             Dish dish = null;
             decimal amount = 0;
             Dictionary<string, byte> dishes = new Dictionary<string, byte>();
-            if (model.Dishes != null)
+            if (model.Dishes != null && model.Dishes.Any())
             {
                 foreach (var dishItem in model.Dishes)
                 {
@@ -174,6 +180,28 @@ namespace Reservation.Service.Services
                 LogoUrl = i.ServiceMember.LogoUrl,
                 FreeTimes = GetFreeTimes(i, model.ReservingDate.Value)
             }).ToList();
+        }
+
+        public async Task<IList<MemberReservingForAdminModel>> GetReservingsForAdminAsync()
+        {
+            return await _db.Reservings
+                .Include(i => i.ServiceMember)
+                .Include(i => i.ServiceMemberBranch)
+                .Select(r => new MemberReservingForAdminModel
+                {
+                    ReservingDate = r.ReservationDate,
+                    ServiceMember = r.ServiceMember.Name,
+                    Branch = r.ServiceMemberBranch.Address,
+                    Status = r.IsActive && r.ReservationDate > DateTime.Now
+                        ? "Completed"
+                        : r.IsActive
+                            ? "Completed"
+                            : "Cancelled", ////if reserving date haven't come yet, the reserving is active, otherwise is completed
+                    Amount = r.Amount,
+                    Table = r.Tables,
+                    OrderedProducts = r.Dishes.ToProductsDisplayFormat(),
+                    PayMethod = r.IsOnlinePayment ? "Online" : "Cash"
+                }).ToListAsync();
         }
 
         private async Task AddPaymentRequestAsync(Reserving reserving)

@@ -243,4 +243,10 @@
   <data name="ErrorWhileParsingImage" xml:space="preserve">
     <value>Նկարի պահպանման սխալ</value>
   </data>
+  <data name="EmailAlreadyUsed" xml:space="preserve">
+    <value>Այս էլ․ հասցեյով օգտատեր արդեն գոյություն ունի</value>
+  </data>
+  <data name="ServiceMemberDoesNotAcceptOnlinePayments" xml:space="preserve">
+    <value>Գործընկերը չի ընդունում օնլայն վճարումներ</value>
+  </data>
 </root>

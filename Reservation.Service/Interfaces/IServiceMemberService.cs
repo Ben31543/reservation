@@ -30,6 +30,6 @@ namespace Reservation.Service.Interfaces
 
         Task<RequestResult> SaveServiceMemberImageAsync(SaveImageModel model);
 
-        Task<List<ServiceMemberForAdminModel>> GetServiceMembersForAdminAsync(ServiceMemberSearchCriteria criteria);
+        Task<List<ServiceMemberForAdminModel>> GetServiceMembersForAdminAsync(string searchText);
     }
 }

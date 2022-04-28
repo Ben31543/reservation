@@ -12,6 +12,8 @@ using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Reservation.Resources.Constants;
@@ -45,8 +47,9 @@ namespace Reservation.Web.Controllers
         {
             return View();
         }
+        
         [HttpPost]
-        public async Task<IActionResult> AddNewMember([FromForm] MemberRegistrationModel model)
+        public async Task<IActionResult> AddNewMember([FromBody] MemberRegistrationModel model)
         {
             _logger.LogRequest("Member/AddNewMember", model);
 
@@ -54,42 +57,41 @@ namespace Reservation.Web.Controllers
             if (!ModelState.IsValid)
             {
                 result.Message = ModelState.GetErrorMessages();
-                ViewBag.Message = String.Format(result.Message);
+                ViewBag.Message = result.Message;
             }
 
             if (!model.Phone.IsValidArmPhoneNumber())
             {
                 result.Message = _localizer[LocalizationKeys.ErrorMessages.InvalidPhoneNumber].Value;
-                ViewBag.Message = String.Format(result.Message);
+                ViewBag.Message = result.Message;
             }
 
             if (!model.Email.IsValidEmail())
             {
                 result.Message = _localizer[LocalizationKeys.ErrorMessages.InvalidEmail].Value;
-                ViewBag.Message = String.Format(result.Message);
+                ViewBag.Message = result.Message;
             }
 
             if (!model.Password.Equals(model.ConfirmPassword, StringComparison.Ordinal))
             {
                 result.Message = _localizer[LocalizationKeys.ErrorMessages.PasswordDoNotMatch].Value;
-                ViewBag.Message = String.Format(result.Message);
+                ViewBag.Message = result.Message;
             }
 
             if (!string.IsNullOrEmpty(result.Message))
             {
-                ViewBag.Message = String.Format(result.Message);
                 result.Message = _localizer[result.Message].Value;
-            }
-
-            if (ViewBag.Message != null)
-            {
-                return View("SignIn");
+                ViewBag.Message = result.Message;
             }
 
             result = await _memberService.AddNewMemberAsync(model);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                result.Message = _localizer[result.Message].Value;
+            }
             
             _logger.LogResponse("Member/AddNewMember", result);  
-            return View("Index");
+            return Json(result);
         }
 
         [HttpGet]
@@ -111,7 +113,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateMemberInfo([FromForm] MemberEditModel model)
+        public async Task<IActionResult> UpdateMemberInfo([FromBody] MemberEditModel model)
         {
             _logger.LogRequest("Member/UpdateMemberInfo", model);
             var result = new RequestResult();
@@ -144,7 +146,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordModel model)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
             _logger.LogRequest("Member/ResetPassword", model);
             var result = new RequestResult();
@@ -171,7 +173,7 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> VerifyMember([FromForm] SignInModel model)
+        public async Task<IActionResult> VerifyMember([FromBody] SignInModel model)
         {
             _logger.LogRequest("Member/VerifyMember", model);
             var result = new RequestResult();
@@ -189,21 +191,22 @@ namespace Reservation.Web.Controllers
 
             if (!string.IsNullOrEmpty(result.Message))
             {
-                ViewBag.Message = String.Format(result.Message);
                 result.Message = _localizer[result.Message].Value;
-                return View("SignIn");
+                return Json(result);
             }
 
             _logger.LogResponse("Member/VerifyMember", result);
-            return RedirectToAction("Index");
+            return Json(result);
         }
+        
         [HttpGet]
         public async Task<IActionResult> AttachCard()
         {
             return View();
         }
+        
         [HttpPost]
-        public async Task<IActionResult> AttachCardToMember([FromForm] AttachCardToMemberModel model, long? memberId)
+        public async Task<IActionResult> AttachCardToMember([FromBody] AttachCardToMemberModel model, long? memberId)
         {
             _logger.LogRequest("Member/AttachCardToMember", model);
             var result = new RequestResult();
@@ -259,9 +262,15 @@ namespace Reservation.Web.Controllers
 
             result.Value = await _memberService.GetMemberDealsHistoryAsync(memberId.Value);
             _logger.LogResponse("Member/GetMemberDealsHistory", result);
-            return (Json(result));
+            return Json(result);
         }
 
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index");
+        }
+        
         private async Task Authenticate(string userName)
         {
             var claims = new List<Claim>
@@ -271,12 +280,6 @@ namespace Reservation.Web.Controllers
 
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
-        }
-
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index");
         }
     }
 }

@@ -13,8 +13,6 @@ namespace Reservation.Service.Interfaces
     {
         Task<RequestResult> AddPaymentDataAsync(PaymentDataModel model);
 
-        Task<RequestResult> RequestPaymentAsync(long fromId, long toId, Payment paymentData);
-
         Task<RequestResult> RequestRefundAsync(long fromId, long toId, decimal amount);
     }
 }

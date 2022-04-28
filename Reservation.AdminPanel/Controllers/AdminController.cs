@@ -5,6 +5,8 @@ using Reservation.Models.Criterias;
 using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Operations;
+using Reservation.Resources.Contents;
 
 namespace Reservation.AdminPanel
 {
@@ -17,6 +19,7 @@ namespace Reservation.AdminPanel
         private readonly IMemberService _memberService;
         private readonly ILogger<AdminController> _logger;
         private readonly IBankCardService _bankCardService;
+        private readonly IReservingService _reservingService;
         private readonly IBankAccountService _bankAccountService;
         private readonly IServiceMemberService _serviceMemberService;
         private readonly IServiceMemberBranchService _serviceMemberBranchService;
@@ -26,6 +29,7 @@ namespace Reservation.AdminPanel
             IMemberService memberService,
             ILogger<AdminController> logger,
             IBankCardService bankCardService,
+            IReservingService reservingService,
             IBankAccountService bankAccountService,
             IServiceMemberService serviceMemberService,
             IServiceMemberBranchService serviceMemberBranchService)
@@ -34,6 +38,7 @@ namespace Reservation.AdminPanel
             _adminService = adminService;
             _memberService = memberService;
             _bankCardService = bankCardService;
+            _reservingService = reservingService;
             _bankAccountService = bankAccountService;
             _serviceMemberService = serviceMemberService;
             _serviceMemberBranchService = serviceMemberBranchService;
@@ -87,18 +92,18 @@ namespace Reservation.AdminPanel
             _logger.LogResponse("Admin/VerifyAdmin", verifyResult);
             return RedirectToAction("ServiceMembers");
         }
-
+        
         [HttpGet]
-        public async Task<IActionResult> ServiceMembers([FromQuery]ServiceMemberSearchCriteria criteria)
+        public async Task<IActionResult> ServiceMembers(string searchText = null)
         {
-            _logger.LogRequest("Admin/ServiceMembers", criteria);
+            _logger.LogRequest("Admin/ServiceMembers", new {SearchingValue = searchText});
 
             if (!IsAuthorized)
             {
                 return RedirectToAction("Login");
             }
 
-            var data = await _serviceMemberService.GetServiceMembersForAdminAsync(criteria ?? new ServiceMemberSearchCriteria());
+            var data = await _serviceMemberService.GetServiceMembersForAdminAsync(searchText);
             _logger.LogResponse("Admin/ServiceMembers", data);
             return View(data);
         }
@@ -107,7 +112,7 @@ namespace Reservation.AdminPanel
         public async Task<IActionResult> ServiceMemberBranches(long? smId)
         {
             _logger.LogRequest("Admin/ServiceMemberBranches", new { ServiceMemberId = smId});
-            
+
             if (!IsAuthorized)
             {
                 return RedirectToAction("Login");
@@ -121,6 +126,58 @@ namespace Reservation.AdminPanel
             var data = await _serviceMemberBranchService.GetServiceMemberBranchesForAdminAsync(smId.Value);
             _logger.LogResponse("Admin/ServiceMemberBranches", data);
             return View(data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Members()
+        {
+            _logger.LogRequest("Admin/Members", null);
+
+            if (!IsAuthorized)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var members = await _memberService.GetMembersForAdminAsync();
+            _logger.LogResponse("Admin/Members", members);
+            return View(members);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MemberDeals(long? memberId)
+        {
+            _logger.LogRequest("Admin/MemberDeals", new{MemberId = memberId});
+
+            if (!IsAuthorized)
+            {
+                return RedirectToAction("Login");
+            }
+
+            if (!memberId.HasValue)
+            {
+                _logger.LogError(LocalizationKeys.ErrorMessages.WrongIncomingParameters);
+                return View("Members");
+            }
+
+            var memberDeals = await _memberService.GetMemberReservingsForAdminAsync(memberId.Value);
+            _logger.LogResponse("Admin/MemberDeals", memberDeals);
+            return View(memberDeals);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Reservations()
+        {
+            _logger.LogRequest("Admin/Reservations", null);
+
+            if (!IsAuthorized)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var reservations = await _reservingService.GetReservingsForAdminAsync();
+            ViewBag.CurrencyTurnover = await _adminService.GetReservationServiceCurrencyTurnoverAsync();
+            _logger.LogResponse("Admin/MemberDeals", reservations);
+            return View(reservations);
         }
     }
 }

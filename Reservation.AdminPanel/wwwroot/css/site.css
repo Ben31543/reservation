@@ -17,6 +17,16 @@
     color:white;
     text-decoration:none;
 }
+.reservation{
+    cursor:pointer;
+    color:white;
+    border-right:1.5px solid white;
+    padding-right:8px;
+}
+.reservation a{
+    color:white;
+    text-decoration:none;
+}
 .logout a{
     text-decoration:none;
     color:white;

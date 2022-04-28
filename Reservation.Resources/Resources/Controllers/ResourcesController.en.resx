@@ -243,4 +243,10 @@
   <data name="ErrorWhileParsingImage" xml:space="preserve">
     <value>Error while trying to save image</value>
   </data>
+  <data name="EmailAlreadyUsed" xml:space="preserve">
+    <value>User with this email already exists</value>
+  </data>
+  <data name="ServiceMemberDoesNotAcceptOnlinePayments" xml:space="preserve">
+    <value>Service member does not accept online payments</value>
+  </data>
 </root>

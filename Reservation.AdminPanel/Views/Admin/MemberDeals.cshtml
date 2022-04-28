@@ -1,0 +1,31 @@
+@model List<Reservation.Models.Reserving.MemberReservingForAdminModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<link rel="stylesheet" href="~/css/memberDeals.css"/>
+
+<table class="main" id="myTable">
+    <tr>
+        <th>Reserving Date</th>
+        <th>Partner</th>
+        <th>Branch</th>
+        <th>Amount</th>
+        <th>Table</th>
+        <th>Ordered Products</th>
+        <th>Pay Method</th>
+        <th>Status</th>
+    </tr>
+    @{
+        foreach (var member in Model)
+        {
+            <tr>
+                <td>@member.ReservingDate</td>
+                <td>@member.ServiceMember</td>
+                <td>@member.Branch</td>
+                <td>@member.Amount</td>
+                <td>@member.Table</td>
+                <td>@member.OrderedProducts</td>
+                <td>@member.PayMethod</td>
+                <td>@member.Status</td>
+            </tr>
+        }
+    }
+</table>

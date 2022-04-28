@@ -1,6 +1,6 @@
-﻿.main {
-   margin-top:50px;
-   margin-right:600px;
+.main {
+    margin-top:50px;
+    margin-right:600px;
 }
 table, th, td {
     border: 1px solid black;
@@ -9,8 +9,4 @@ table, th, td {
 
 a :hover {
     cursor: pointer
-}
-
-.search{
-    margin-top:50px;
 }

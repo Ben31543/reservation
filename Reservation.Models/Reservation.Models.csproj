@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Reservation.Resources\Reservation.Resources.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Reserving\ReservingForAdminModel.cs" />
+  </ItemGroup>
+
 </Project>

@@ -6,5 +6,7 @@ namespace Reservation.Service.Interfaces
     public interface IAdminService
     {
         Task<RequestResult> VerifyAdminAsync(string username, string password);
+
+        Task<decimal> GetReservationServiceCurrencyTurnoverAsync();
     }
 }

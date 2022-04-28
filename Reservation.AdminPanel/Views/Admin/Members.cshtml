@@ -1,0 +1,36 @@
+@model List<Reservation.Models.Member.MemberForAdminModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<link rel="stylesheet" href="~/css/serviceMembers.css"/>
+
+<table class="main" id="myTable">
+    <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Deals Count</th>
+        <th>Bank Card Info</th>
+    </tr>
+    @{
+        foreach (var member in Model)
+        {
+            <tr>
+                <td>@member.FullName</td>
+                <td>@member.Phone</td>
+                <td>@member.Email</td>
+                <td>
+                    @{
+                        if (member.DealsCount > 0)
+                        {
+                            <a href="/Admin/MemberDeals?memberId=@member.Id">@member.DealsCount</a>
+                        }
+                        else
+                        {
+                            @member.DealsCount
+                        }
+                    }
+                </td>
+                <td>@member.BankCardInfo</td>
+            </tr>
+        }
+    }
+</table>

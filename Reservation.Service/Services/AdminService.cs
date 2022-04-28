@@ -34,5 +34,10 @@ namespace Reservation.Service.Services
             result.Succeeded = true;
             return result;
         }
+
+        public async Task<decimal> GetReservationServiceCurrencyTurnoverAsync()
+        {
+            return await _db.Reservings.SumAsync(i => i.Amount);
+        }
     }
 }

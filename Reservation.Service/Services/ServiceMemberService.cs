@@ -313,7 +313,7 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<List<ServiceMemberForAdminModel>> GetServiceMembersForAdminAsync(ServiceMemberSearchCriteria criteria)
+        public async Task<List<ServiceMemberForAdminModel>> GetServiceMembersForAdminAsync(string searchText)
         {
             var query = _db.ServiceMembers
                 .Include(i => i.ServiceMemberBranches)
@@ -321,14 +321,9 @@ namespace Reservation.Service.Services
                    .ThenInclude(i => i.Bank)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(criteria.Name))
+            if (!string.IsNullOrEmpty(searchText))
             {
-                query = query.Where(i => i.Name.Contains(criteria.Name));
-            }
-
-            if (criteria.AcceptsOnlinePayment.HasValue)
-            {
-                query = query.Where(i => i.AcceptsOnlinePayment == criteria.AcceptsOnlinePayment);
+                query = query.Where(i => i.Name.Contains(searchText));
             }
 
             return await query.Select(i => new ServiceMemberForAdminModel

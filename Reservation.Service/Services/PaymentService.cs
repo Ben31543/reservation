@@ -58,48 +58,6 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> RequestPaymentAsync(long fromId, long toId, Payment paymentData)
-        {
-            RequestResult result = new RequestResult();
-
-            var bankCard = await _bankCard.GetBankCardByIdAsync(fromId);
-            if (bankCard == null)
-            {
-                result.Message = LocalizationKeys.ErrorMessages.BankCardDoesNotExist;
-                return result;
-            }
-
-            var bankAccount = await _bankAccount.GetBankAccountInfoAsync(toId);
-            if (bankAccount == null)
-            {
-                result.Message = LocalizationKeys.ErrorMessages.BankAccountDoesNotExist;
-                return result;
-            }
-
-            if (bankCard.CurrentBalance < paymentData.Amount)
-            {
-                result.Message = LocalizationKeys.ErrorMessages.InsufficientBalance;
-                return result;
-            }
-
-            try
-            {
-                bankCard.CurrentBalance -= paymentData.Amount;
-                bankAccount.Balance += paymentData.Amount;
-                paymentData.Approved = true;
-                await _db.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                result.Message = e.Message;
-                return result;
-            }
-
-            result.Succeeded = true;
-            return result;
-        }
-
         public async Task<RequestResult> RequestRefundAsync(long fromId, long toId, decimal amount)
         {
             RequestResult result = new RequestResult();
@@ -128,6 +86,48 @@ namespace Reservation.Service.Services
             {
                 bankAccount.Balance -= amount;
                 bankCard.CurrentBalance += amount;
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                result.Message = e.Message;
+                return result;
+            }
+
+            result.Succeeded = true;
+            return result;
+        }
+        
+        private async Task<RequestResult> RequestPaymentAsync(long fromId, long toId, Payment paymentData)
+        {
+            RequestResult result = new RequestResult();
+
+            var bankCard = await _bankCard.GetBankCardByIdAsync(fromId);
+            if (bankCard == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.BankCardDoesNotExist;
+                return result;
+            }
+
+            var bankAccount = await _bankAccount.GetBankAccountInfoAsync(toId);
+            if (bankAccount == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.BankAccountDoesNotExist;
+                return result;
+            }
+
+            if (bankCard.CurrentBalance < paymentData.Amount)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.InsufficientBalance;
+                return result;
+            }
+
+            try
+            {
+                bankCard.CurrentBalance -= paymentData.Amount;
+                bankAccount.Balance += paymentData.Amount;
+                paymentData.Approved = true;
                 await _db.SaveChangesAsync();
             }
             catch (Exception e)

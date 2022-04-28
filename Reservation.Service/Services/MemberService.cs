@@ -11,7 +11,10 @@ using Reservation.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Reservation.Models.Reserving;
 using Reservation.Resources.Constants;
 
 namespace Reservation.Service.Services
@@ -38,6 +41,14 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> AddNewMemberAsync(MemberRegistrationModel model)
         {
             var result = new RequestResult();
+
+            var isEmailAlreadyUsed = await _db.Members.AnyAsync(i => i.Email.Equals(model.Email, StringComparison.OrdinalIgnoreCase));
+            if (isEmailAlreadyUsed)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.EmailAlreadyUsed;
+                return result;
+            }
+            
             var member = new Member
             {
                 Name = model.Name,
@@ -222,6 +233,48 @@ namespace Reservation.Service.Services
                                              ReservingDate = i.ReservationDate,
                                              ServiceMemberName = i.ServiceMember.Name
                                          }).ToListAsync();
+        }
+
+        public async Task<List<MemberForAdminModel>> GetMembersForAdminAsync()
+        {
+            return await _db.Members
+                .Include(i => i.BankCard)
+                .ThenInclude(i => i.Bank)
+                .Select(member => new MemberForAdminModel
+                {
+                    Id = member.Id,
+                    FullName = $"{member.Name} {member.Surname}",
+                    Email = member.Email,
+                    Phone = member.Phone,
+                    BankCardInfo = member.BankCard.ToDisplayFormat(),
+                    DealsCount = _db.Reservings
+                        .Where(i => i.IsActive && i.MemberId == member.Id)
+                        .Select(i => i.Id)
+                        .Count()
+                }).ToListAsync();
+        }
+
+        public async Task<List<MemberReservingForAdminModel>> GetMemberReservingsForAdminAsync(long memberId)
+        {
+            return await _db.Reservings
+                .Include(i => i.ServiceMember)
+                .Include(i => i.ServiceMemberBranch)
+                .Where(i => i.MemberId == memberId)
+                .Select(r => new MemberReservingForAdminModel
+                {
+                    ReservingDate = r.ReservationDate,
+                    ServiceMember = r.ServiceMember.Name,
+                    Branch = r.ServiceMemberBranch.Address,
+                    Status = r.IsActive && r.ReservationDate > DateTime.Now
+                        ? "Completed"
+                        : r.IsActive
+                            ? "Completed"
+                            : "Cancelled", ////if reserving date haven't come yet, the reserving is active, otherwise is completed
+                    Amount = r.Amount,
+                    Table = r.Tables,
+                    OrderedProducts = r.Dishes.ToProductsDisplayFormat(),
+                    PayMethod = r.IsOnlinePayment ? "Online" : "Cash"
+                }).ToListAsync();
         }
     }
 }

@@ -133,14 +133,23 @@ namespace Reservation.Service.Services
 
         public async Task<List<ServiceMemberBranchForAdminModel>> GetServiceMemberBranchesForAdminAsync(long smId)
         {
-            return await _db.ServiceMemberBranches.Where(i => i.ServiceMemberId == smId).Select(i => new ServiceMemberBranchForAdminModel
-            {
-                ServiceMemberName = i.ServiceMember.Name,
-                Address = i.Address,
-                IsActive = i.IsActive,
-                Phone = i.Phone,
-                WorkingHours = Time.ToDisplayFormat(JsonConvert.DeserializeObject<Time>(i.OpenTime), JsonConvert.DeserializeObject<Time>(i.CloseTime))
-            }).ToListAsync();
+            return await _db.ServiceMemberBranches
+                .Where(i => i.ServiceMemberId == smId)
+                .Select(branch => new ServiceMemberBranchForAdminModel
+                {
+                    ServiceMemberName = branch.ServiceMember.Name,
+                    Address = branch.Address,
+                    IsActive = branch.IsActive,
+                    Phone = branch.Phone,
+                    WorkingHours = Time.ToDisplayFormat(JsonConvert.DeserializeObject<Time>(branch.OpenTime),JsonConvert.DeserializeObject<Time>(branch.CloseTime)),
+                    OrdersCount = _db.Reservings
+                                     .Where(reserving =>
+                                            reserving.IsActive
+                                         && reserving.ServiceMemberId == branch.ServiceMemberId
+                                         && reserving.ServiceMemberBranchId == branch.Id)
+                                     .Select(r => r.Id)
+                                     .Count()
+                }).ToListAsync();
         }
     }
 }

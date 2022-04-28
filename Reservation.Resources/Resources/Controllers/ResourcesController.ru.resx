@@ -243,4 +243,10 @@
   <data name="ErrorWhileParsingImage" xml:space="preserve">
     <value>Ошибка во время сохранения картинки</value>
   </data>
+  <data name="EmailAlreadyUsed" xml:space="preserve">
+    <value>Пользователь с этим эл. адресом уже существует</value>
+  </data>
+  <data name="ServiceMemberDoesNotAcceptOnlinePayments" xml:space="preserve">
+    <value>Партнёр не принимает онлайн оплату</value>
+  </data>
 </root>

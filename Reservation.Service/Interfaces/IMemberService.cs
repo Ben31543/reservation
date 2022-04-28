@@ -4,6 +4,7 @@ using Reservation.Models.Common;
 using Reservation.Models.Member;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Reservation.Models.Reserving;
 
 namespace Reservation.Service.Interfaces
 {
@@ -24,5 +25,9 @@ namespace Reservation.Service.Interfaces
         Task<RequestResult> DetachBankCardAsync(long memberId, long bankCardId);
 
         Task<List<MemberDealsModel>> GetMemberDealsHistoryAsync(long memberId);
+
+        Task<List<MemberForAdminModel>> GetMembersForAdminAsync();
+
+        Task<List<MemberReservingForAdminModel>> GetMemberReservingsForAdminAsync(long memberId);
     }
 }

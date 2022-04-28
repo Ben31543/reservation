@@ -16,5 +16,7 @@ namespace Reservation.Service.Interfaces
         Task<RequestResult> CancelReservingAsync(long id);
 
         Task<IList<ReservableBranchModel>> GetReservableBranchesAsync(SearchForReservingModel model);
+
+        Task<IList<MemberReservingForAdminModel>> GetReservingsForAdminAsync();
     }
 }

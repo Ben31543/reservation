@@ -23,6 +23,8 @@
 			public const string InsufficientBalance = "InsufficientBalance";
 			public const string ReservationNotFound = "ReservationNotFound";
 			public const string ErrorWhileParsingImage = "ErrorWhileParsingImage";
+			public const string EmailAlreadyUsed = "EmailAlreadyUsed";
+			public const string ServiceMemberDoesNotAcceptOnlinePayments = "ServiceMemberDoesNotAcceptOnlinePayments";
 		}
 
 		public static class Contents

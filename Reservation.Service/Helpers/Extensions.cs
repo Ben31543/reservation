@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 using Reservation.Data.Entities;
 using Reservation.Resources.Constants;
 
@@ -120,6 +121,36 @@ namespace Reservation.Service.Helpers
             }
 
             return $"{bankAccount.AccountNumber}\n{bankAccount.Owner}\n{bankAccount.Bank.Name}";
+        }
+        
+        public static string ToDisplayFormat(this BankCard bankCard)
+        {
+            if (bankCard == null)
+            {
+                return "-";
+            }
+
+            return $"{bankCard.Number}\n{bankCard.Owner}\n{bankCard.Bank.Name}";
+        }
+
+        public static string ToProductsDisplayFormat(this string productsJson)
+        {
+            try
+            {
+                StringBuilder result = new StringBuilder();
+                var products = JsonConvert.DeserializeObject<Dictionary<string, byte>>(productsJson);
+                
+                foreach (var product in products)
+                {
+                    result.Append($"{product.Key}, {product.Value} pcs.\n");
+                }
+
+                return result.ToString();
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
     }
 }

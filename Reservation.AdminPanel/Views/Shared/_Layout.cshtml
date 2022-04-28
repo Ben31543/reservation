@@ -1,38 +1,42 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Reservation.AdminPanel</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
 </head>
 <body>
-    <header style="width:100%">
-        <div class="head">
+<header style="width:100%">
+    <div class="head">
 
-            <div class="smember">
-                <a asp-controller="Admin" asp-action="ServiceMembers">Service Members</a>
-            </div>
-            <div class="smember">
-                <a  asp-controller="Admin" asp-action="ServiceMembers">Members</a>
-            </div>
-            
-            <div class="logout">
-                <a asp-action="Logout" asp-controller="Admin">Log out</a>
-            </div>
+        <div class="smember">
+            <a asp-controller="Admin" asp-action="ServiceMembers">Service Members</a>
         </div>
-    </header>
- 
-    <div class="container">
-        <main role="main">
-            @RenderBody()
-        </main>
-    </div>
+        <div class="smember">
+            <a asp-controller="Admin" asp-action="Members">Members</a>
+        </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+        <div class="reservation">
+            <a asp-controller="Admin" asp-action="Reservations">Reservations</a>
+        </div>
+
+        <div class="logout">
+            <a asp-action="Logout" asp-controller="Admin">Log out</a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <main role="main">
+        @RenderBody()
+    </main>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

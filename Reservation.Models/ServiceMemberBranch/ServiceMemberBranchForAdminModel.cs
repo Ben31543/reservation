@@ -17,5 +17,7 @@ namespace Reservation.Models.ServiceMemberBranch
         public string WorkingHours { get; set; }
 
         public bool IsActive { get; set; }
+
+        public int OrdersCount { get; set; }
     }
 }
