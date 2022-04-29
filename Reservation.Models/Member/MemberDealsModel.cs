@@ -19,5 +19,7 @@ namespace Reservation.Models.Member
         public string ServiceMemberName { get; set; }
 
         public DateTime ReservingDate { get; set; }
+
+        public string OrderedProducts { get; set; }
     }
 }

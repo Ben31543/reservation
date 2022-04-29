@@ -206,7 +206,7 @@ namespace Reservation.Web.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> AttachCardToMember([FromBody] AttachCardToMemberModel model, long? memberId)
+        public async Task<IActionResult> AttachCardToMember([FromBody] AttachCardToMemberModel model)
         {
             _logger.LogRequest("Member/AttachCardToMember", model);
             var result = new RequestResult();
@@ -267,8 +267,10 @@ namespace Reservation.Web.Controllers
 
         public async Task<IActionResult> Logout()
         {
+            RequestResult result = new RequestResult();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index");
+            result.Succeeded = true;
+            return Json(result);
         }
         
         private async Task Authenticate(string userName)

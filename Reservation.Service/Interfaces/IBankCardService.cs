@@ -9,7 +9,7 @@ namespace Reservation.Service.Interfaces
     {
         Task<RequestResult> AttachCardToMemberAsync(AttachCardToMemberModel model);
 
-        Task<RequestResult> DetachCardFromMemberAsync(long bankCardId);
+        Task<RequestResult> DetachCardFromMemberAsync(long memberId,long bankCardId);
 
         Task<BankCard> GetBankCardByIdAsync(long id);
     }

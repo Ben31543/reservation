@@ -29,12 +29,23 @@ namespace Reservation.Service.Services
 
             var bankCard = await _db.BankCards.FirstOrDefaultAsync(
                 i => i.Number == model.CardNumber
-                  && IsValidDate(model.ValidThru, i.ValidThru, false)
+                  && i.ValidThru.Year == model.ValidThru.Year
+                  && i.ValidThru.Month == i.ValidThru.Month
+                  && i.ValidThru>=DateTime.Now
                   && i.CVV == model.CVV
                   && i.Owner == model.Owner);
+
+            var member = await _db.Members.FirstOrDefaultAsync(i => i.Id == model.MemberId);
+
             if (bankCard == null)
             {
                 result.Message = LocalizationKeys.ErrorMessages.BankCardDoesNotExist;
+                return result;
+            }
+
+            if (member == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
                 return result;
             }
 
@@ -44,7 +55,7 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            bankCard.IsAttached = true;
+            member.BankCardId = bankCard.Id;
 
             try
             {
@@ -62,11 +73,13 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> DetachCardFromMemberAsync(long bankCardId)
+        public async Task<RequestResult> DetachCardFromMemberAsync(long memberId,long bankCardId)
         {
             var result = new RequestResult();
 
             var card = await _db.BankCards.FirstOrDefaultAsync(i => i.Id == bankCardId);
+
+            var member = await _db.Members.FirstOrDefaultAsync(i => i.Id == memberId);
 
             if (card == null)
             {
@@ -74,7 +87,13 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            card.IsAttached = false;
+            if (member == null)
+            {
+                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
+                return result;
+            }
+
+            member.BankCardId = null;
 
             try
             {
@@ -103,7 +122,7 @@ namespace Reservation.Service.Services
                 return incoming.Date <= existing.Date;
             }
 
-            return incoming.Year == existing.Year && incoming.Month == existing.Month;
+            return incoming.Year == existing.Year && incoming.Month == existing.Month && incoming>DateTime.Now;
         }
     }
 }

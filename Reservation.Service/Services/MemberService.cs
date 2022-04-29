@@ -105,8 +105,6 @@ namespace Reservation.Service.Services
                 result.Message = e.Message;
                 return result;
             }
-
-            result.Value = existingMember;
             return result;
         }
 
@@ -156,7 +154,6 @@ namespace Reservation.Service.Services
             }
 
             result.Succeeded = true;
-            result.Value = existingMember;
             return result;
         }
 
@@ -202,7 +199,7 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            var detachResult = await _bankCard.DetachCardFromMemberAsync(bankCardId);
+            var detachResult = await _bankCard.DetachCardFromMemberAsync(memberId,bankCardId);
             if (detachResult.Succeeded)
             {
                 member.BankCardId = null;
@@ -231,7 +228,8 @@ namespace Reservation.Service.Services
                                              BranchAddress = i.ServiceMemberBranch.Address,
                                              OnlinePayment = i.IsOnlinePayment,
                                              ReservingDate = i.ReservationDate,
-                                             ServiceMemberName = i.ServiceMember.Name
+                                             ServiceMemberName = i.ServiceMember.Name,
+                                             OrderedProducts = i.Dishes.ToProductsDisplayFormat(),
                                          }).ToListAsync();
         }
 
