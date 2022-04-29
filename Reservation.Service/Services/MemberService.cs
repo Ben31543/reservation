@@ -42,7 +42,7 @@ namespace Reservation.Service.Services
         {
             var result = new RequestResult();
 
-            var isEmailAlreadyUsed = await _db.Members.AnyAsync(i => i.Email.Equals(model.Email, StringComparison.OrdinalIgnoreCase));
+            var isEmailAlreadyUsed = await _db.Members.AnyAsync(i => i.Email == model.Email);
             if (isEmailAlreadyUsed)
             {
                 result.Message = LocalizationKeys.ErrorMessages.EmailAlreadyUsed;
