@@ -7,6 +7,7 @@ using Reservation.Models.Common;
 using Reservation.Models.Criterias;
 using Reservation.Models.Dish;
 using Reservation.Models.ServiceMember;
+using Reservation.Resources;
 using Reservation.Resources.Constants;
 using Reservation.Resources.Contents;
 using Reservation.Resources.Controllers;
@@ -59,6 +60,12 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
+            if (!model.Email.IsValidEmail())
+            {
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.InvalidEmail);
+                return Json(result);
+            }
+
             result = await _serviceMemberService.RegisterServiceMemberAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
             {
@@ -98,7 +105,7 @@ namespace Reservation.ServiceMember.Controllers
 
             if (!string.IsNullOrEmpty(serviceMember.LogoUrl))
             {
-                serviceMember.LogoUrl = $"{CommonConstants.ImagesHostingPath}{serviceMember.LogoUrl}";
+                serviceMember.LogoUrl = $"{ImageSaverConstants.ImagesHostingPath}{serviceMember.LogoUrl}";
             }
 
             result.Succeeded = true;

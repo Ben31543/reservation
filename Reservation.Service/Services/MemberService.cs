@@ -15,7 +15,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Reservation.Models.Reserving;
-using Reservation.Resources.Constants;
 
 namespace Reservation.Service.Services
 {
@@ -80,6 +79,40 @@ namespace Reservation.Service.Services
         {
             return await _db.Members.FirstOrDefaultAsync(i => i.Id == id);
         }
+        
+        public async Task<MemberViewModel> GetMemberForViewAsync(long id)
+        {
+            var member = await _db.Members.FirstOrDefaultAsync(i => i.Id == id);
+            if (member == null)
+            {
+                return null;
+            }
+            
+            return new MemberViewModel
+            {
+                Id = member.Id,
+                Name = member.Name,
+                Surname = member.Surname,
+                Email = member.Email,
+                Phone = member.Phone,
+            };
+        }
+
+        public async Task<string> GetBankCardNumberAsync(long memberId)
+        {
+            var membersBankCardId = await _db.Members
+                .Where(i=>i.Id == memberId)
+                .Select(i=>i.BankCardId)
+                .FirstOrDefaultAsync();
+            
+            if (membersBankCardId == null)
+            {
+                return null;
+            }
+
+            var bankCard = await _bankCard.GetBankCardByIdAsync(membersBankCardId.GetValueOrDefault(0));
+            return bankCard?.Number;
+        }
 
         public async Task<RequestResult> ResetPasswordAsync(ResetPasswordModel member)
         {
@@ -137,7 +170,6 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            result.Value = existingMember;
             return result;
         }
 
@@ -273,6 +305,11 @@ namespace Reservation.Service.Services
                     OrderedProducts = r.Dishes.ToProductsDisplayFormat(),
                     PayMethod = r.IsOnlinePayment ? "Online" : "Cash"
                 }).ToListAsync();
+        }
+
+        public async Task<Member> GetMemberByEmailAsync(string email)
+        {
+            return await _db.Members.FirstOrDefaultAsync(i => i.Email.Equals(email));
         }
     }
 }

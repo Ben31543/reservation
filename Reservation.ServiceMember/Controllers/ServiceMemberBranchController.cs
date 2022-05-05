@@ -71,6 +71,12 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
+            if (!model.Phone.IsValidArmPhoneNumber())
+            {
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.InvalidPhoneNumber);
+                return Json(result);
+            }
+            
             if (!Time.IsValidWorkingSchedule(model.OpenTime, model.CloseTime))
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.OpenTimeMustBeEarlierThanCloseTime);

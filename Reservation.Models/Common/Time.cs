@@ -1,19 +1,10 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Reservation.Models.Common
 {
     public class Time
     {
-        public Time()
-        {
-        }
-
-        public Time(int hour)
-        {
-            Hour = hour.ToString();
-            Minute = "00";
-        }
-
         public string Hour { get; set; }
 
         public string Minute { get; set; }

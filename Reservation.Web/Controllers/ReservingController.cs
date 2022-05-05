@@ -88,7 +88,7 @@ namespace Reservation.Web.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> GetReservablePlaces([FromBody] SearchForReservingModel model)
+        public async Task<IActionResult> GetReservablePlaces([FromBody] SearchForReservingModel model, [FromQuery] bool? needFreeTimes)
         {
             _logger.LogRequest("Reserving/GetReservablePlaces", model);
             RequestResult result = new RequestResult();

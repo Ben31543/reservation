@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Reservation.Resources.Constants;
 using Reservation.Resources.Enumerations;
 using Reservation.Service.Helpers;
 
@@ -109,10 +110,7 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            EmailSenderService.NotifyServiceMemberAsync(serviceMember.Email, $"YOU HAVE A NEW ONLINE BOOKING #{reservation.Id}\nBooking date :: {reservation.ReservationDate}\nAddress :: {serviceMember.Name}, {reservation.ServiceMemberBranch.Name}" +
-                                                         $"Number of persons :: {reservation.Tables}\nDishes :: {reservation.Dishes}\n" +
-                                                         $"IsOnlinePayment :: {reservation.IsOnlinePayment}" +
-                                                         $"\nAmount :: {reservation.Amount}\nIsTakeOut :: {reservation.IsTakeOut}");
+            await EmailSenderService.SendEmailAboutReservationAsync(serviceMember.Email, reservation, serviceMember);
             return result;
         }
 
@@ -147,7 +145,7 @@ namespace Reservation.Service.Services
 
             result.Succeeded = true;
 
-            EmailSenderService.NotifyServiceMemberAsync(reserving.ServiceMember.Email, $"The Online Booking has been canceled #{reserving.Id}");
+            await EmailSenderService.SendEmailAboutReservationCancelAsync(reserving.ServiceMember.Email, reserving.Id);
             return result;
         }
 
@@ -158,14 +156,31 @@ namespace Reservation.Service.Services
             {
                 branches = branches.Where(i => i.ServiceMember.Name.Contains(model.ServiceMemberName));
             }
+
+            if (model.HasOnlinePayment.HasValue)
+            {
+                branches = branches.Where(i => i.ServiceMember.AcceptsOnlinePayment == model.HasOnlinePayment);
+            }
+
+            if (model.IsOpenNow.HasValue)
+            {
+                branches = branches.Where(i => 
+                        i.OpenTime.ToTimeInstance().GetHour() >= CommonConstants.CurrentHour
+                     && i.CloseTime.ToTimeInstance().GetHour() <= CommonConstants.CurrentHour);
+            }
             
             IList<ServiceMemberBranch> returnableBranches = new List<ServiceMemberBranch>();
             foreach (var branch in branches)
             {
                 Dictionary<TableSchemas, byte> schemas = JsonConvert.DeserializeObject<Dictionary<TableSchemas, byte>>(branch.TablesSchema);
+                if (schemas == null)
+                {
+                    break;
+                }
+                
                 foreach (var item in schemas)
                 {
-                    if (item.Key == model.PersonsCount.Value && item.Key != 0)
+                    if (item.Key == model.PersonsCount.GetValueOrDefault() && item.Key != 0)
                     {
                         returnableBranches.Add(branch);
                     }
@@ -272,7 +287,11 @@ namespace Reservation.Service.Services
             {
                 if (!reservings.Contains(i))
                 {
-                    allTimes.Add(new Time(i));
+                    allTimes.Add(new Time
+                    {
+                        Hour = i.ToString(),
+                        Minute = "00"
+                    });
                 }
             }
 

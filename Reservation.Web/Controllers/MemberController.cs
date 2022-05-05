@@ -85,7 +85,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _memberService.GetMemberByIdAsync(id.Value);
+            result.Value = await _memberService.GetMemberForViewAsync(id.Value);
             result.Succeeded = true;
             _logger.LogResponse("Member/GetMemberById", result);
             return Json(result);
@@ -290,6 +290,23 @@ namespace Reservation.Web.Controllers
                 Text = $"{branch.Name} {branch.Address}",
                 Value = branch.Id.ToString()
             }).ToList();
+        }
+
+        public async Task<IActionResult> GetAttachedCardsNumber([FromQuery] long? memberId)
+        {
+            _logger.LogRequest("Member/GetAttachedCardsNumber", new {MemberId = memberId});
+            var result = new RequestResult();
+
+            if (memberId == null)
+            {
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
+                return Json(result);
+            }
+
+            result.Succeeded = true;
+            result.Value = new[] {await _memberService.GetBankCardNumberAsync(memberId.Value)};
+            _logger.LogResponse("Member/GetAttachedCardsNumber", result);
+            return Json(result);
         }
 
         public async Task<IActionResult> Logout()

@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Reservation.Models.Common;
+using Reservation.Resources;
 using Reservation.Resources.Constants;
 using Reservation.Resources.Enumerations;
 
@@ -10,7 +11,7 @@ namespace Reservation.Service.Helpers
 {
     public static class ImageConstructorService
     {
-        public static async Task<SaveImageClientModel> ConstructImageForSaveAsync(IFormFile image, string imagePath, string resourceHost = CommonConstants.ImagesHostingPath)
+        public static async Task<SaveImageClientModel> ConstructImageForSaveAsync(IFormFile image, string imagePath, string resourceHost = ImageSaverConstants.ImagesHostingPath)
         {
             if (image == null
                 || image.Length <= 0

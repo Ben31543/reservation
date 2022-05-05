@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Reservation.Data.Entities;
+using Reservation.Models.Common;
+using Reservation.Resources;
 using Reservation.Resources.Constants;
 
 namespace Reservation.Service.Helpers
@@ -140,6 +142,18 @@ namespace Reservation.Service.Helpers
             catch (Exception)
             {
                 return string.Empty;
+            }
+        }
+
+        public static Time ToTimeInstance(this string timeJson)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<Time>(timeJson) as Time;
+            }
+            catch
+            {
+                return null;
             }
         }
 

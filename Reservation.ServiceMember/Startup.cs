@@ -9,6 +9,9 @@ using Microsoft.Extensions.Hosting;
 using Reservation.Data;
 using Reservation.Service.Helpers;
 using System.Globalization;
+using System.Linq;
+using Reservation.Resources;
+using Reservation.Resources.Constants;
 
 namespace Reservation.ServiceMember
 {
@@ -49,15 +52,7 @@ namespace Reservation.ServiceMember
 				app.UseExceptionHandler("/Error");
 			}
 
-			var supportedCultures = new[]
-			{
-				new CultureInfo("en"),
-				new CultureInfo("ru"),
-				new CultureInfo("hy"),
-				new CultureInfo("en-US"),
-				new CultureInfo("ru-RU"),
-				new CultureInfo("hy-AM")
-			};
+			var supportedCultures = CommonConstants.SupportedLanguages.Select(culture => new CultureInfo(culture)).ToArray();
 			app.UseRequestLocalization(new RequestLocalizationOptions
 			{
 				DefaultRequestCulture = new RequestCulture("en-US"),

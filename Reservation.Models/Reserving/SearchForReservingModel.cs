@@ -10,5 +10,9 @@ namespace Reservation.Models.Reserving
         public TableSchemas? PersonsCount { get; set; }
 
         public string ServiceMemberName { get; set; }
+
+        public bool? HasOnlinePayment { get; set; }
+
+        public bool? IsOpenNow { get; set; }
     }
 }

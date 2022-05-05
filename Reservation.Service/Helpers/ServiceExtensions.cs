@@ -4,6 +4,7 @@ using Reservation.Service.Services;
 using System;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
+using Reservation.Resources.Constants;
 
 namespace Reservation.Service.Helpers
 {
@@ -26,7 +27,7 @@ namespace Reservation.Service.Helpers
             services.AddHttpClient<IImageSavingService, ImageSavingService>(
                 client =>
                 {
-                    client.BaseAddress = new Uri(configuration.GetSection("ImageSavingSettings:ImageSavingHost").Value);
+                    client.BaseAddress = new Uri(ImageSaverConstants.ImageSavingServiceHost);
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 });
         }

@@ -29,5 +29,11 @@ namespace Reservation.Service.Interfaces
         Task<List<MemberForAdminModel>> GetMembersForAdminAsync();
 
         Task<List<MemberReservingForAdminModel>> GetMemberReservingsForAdminAsync(long memberId);
+
+        Task<Member> GetMemberByEmailAsync(string email);
+
+        Task<MemberViewModel> GetMemberForViewAsync(long id);
+
+        Task<string> GetBankCardNumberAsync(long memberId);
     }
 }
