@@ -82,7 +82,7 @@ namespace Reservation.Service.Services
             var serviceMember = await _db.ServiceMembers.SingleOrDefaultAsync(i => i.Email == model.Login);
             if (serviceMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;
                 return result;
             }
 
@@ -109,7 +109,7 @@ namespace Reservation.Service.Services
             var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == model.Id);
             if (serviceMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;
                 result.Value = model.Id;
                 return result;
             }
@@ -146,7 +146,7 @@ namespace Reservation.Service.Services
                     i.Email == model.Login && i.PasswordHash == model.Password.ToHashedPassword());
             if (serviceMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongCredientials;
+                result.Message = LocalizationKeys.Errors.WrongCredientials;
                 result.Value = model;
                 return result;
             }
@@ -161,7 +161,7 @@ namespace Reservation.Service.Services
             var serviceMember = await GetServiceMemberByIdAsync(model.ServiceMemberId.Value);
             if (serviceMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;
                 return result;
             }
 
@@ -193,14 +193,14 @@ namespace Reservation.Service.Services
             var serviceMember = await GetServiceMemberByIdAsync(serviceMemberId);
             if (serviceMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;
                 return result;
             }
 
             var bankAccount = await _bankAccService.GetBankAccountInfoAsync(bankAccountId);
             if (bankAccount == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BankAccountNotAttachedToServiceMember;
+                result.Message = LocalizationKeys.Errors.BankAccountNotAttachedToServiceMember;
                 return result;
             }
 
@@ -275,14 +275,14 @@ namespace Reservation.Service.Services
             var serviceMember = await GetServiceMemberByIdAsync(model.Id);
             if (serviceMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;
                 return result;
             }
 
             var image = await ImageConstructorService.ConstructImageForSaveAsync(model.Image, ImageConstructorService.ConstructFilePathFor(model.ResourceType.Value, serviceMember.Id));
             if (image == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.ErrorWhileParsingImage;
+                result.Message = LocalizationKeys.Errors.ErrorWhileParsingImage;
                 return result;
             }
 

@@ -7,10 +7,10 @@ namespace Reservation.Models.BankAccount
     {
         public long? ServiceMemberId { get; set; }
 
-        [Required(ErrorMessage = LocalizationKeys.Contents.AccountNumber + LocalizationKeys.ErrorMessages.FieldIsRequired)]
+        [Required(ErrorMessage = LocalizationKeys.Contents.AccountNumber + LocalizationKeys.Errors.FieldIsRequired)]
         public string AccountNumber { get; set; }
 
-        [Required(ErrorMessage = LocalizationKeys.Contents.Name + LocalizationKeys.ErrorMessages.FieldIsRequired)]
+        [Required(ErrorMessage = LocalizationKeys.Contents.Name + LocalizationKeys.Errors.FieldIsRequired)]
         public string Owner { get; set; }
     }
 }

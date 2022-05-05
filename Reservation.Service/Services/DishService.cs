@@ -77,7 +77,7 @@ namespace Reservation.Service.Services
             var getDish = await _db.Dishes.FirstOrDefaultAsync(i => i.Id == id);
             if (getDish == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.DishDoesNotExist;
+                result.Message = LocalizationKeys.Errors.DishDoesNotExist;
                 return result;
             }
 
@@ -104,7 +104,7 @@ namespace Reservation.Service.Services
             var dish = await GetDishById(model.Id.Value);
             if (dish == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.DishDoesNotExist;
+                result.Message = LocalizationKeys.Errors.DishDoesNotExist;
                 result.Value = model.Id;
                 return result;
             }
@@ -179,14 +179,14 @@ namespace Reservation.Service.Services
             var dish = await GetDishById(model.Id);
             if (dish == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongIncomingParameters;
+                result.Message = LocalizationKeys.Errors.WrongIncomingParameters;
                 return result;
             }
 
             var image = await ImageConstructorService.ConstructImageForSaveAsync(model.Image, ImageConstructorService.ConstructFilePathFor(model.ResourceType.Value, dish.ServiceMemberId));
             if (image == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.ErrorWhileParsingImage;
+                result.Message = LocalizationKeys.Errors.ErrorWhileParsingImage;
                 return result;
             }
             

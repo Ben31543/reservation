@@ -48,13 +48,13 @@ namespace Reservation.Service.Services
             var serviceMember = await _serviceMemberService.GetServiceMemberByIdAsync(model.ServiceMemberId);
             if (serviceMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;
                 return result;
             }
 
             if (model.IsOnlinePayment && !serviceMember.AcceptsOnlinePayment)
             {
-                result.Message = LocalizationKeys.ErrorMessages.ServiceMemberDoesNotAcceptOnlinePayments;
+                result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotAcceptOnlinePayments;
                 return result;
             }
             
@@ -123,7 +123,7 @@ namespace Reservation.Service.Services
             var reserving = await _db.Reservings.FirstOrDefaultAsync(i => i.Id == id);
             if (reserving == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.ReservationNotFound;
+                result.Message = LocalizationKeys.Errors.ReservationNotFound;
                 return result;
             }
 

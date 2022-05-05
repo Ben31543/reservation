@@ -45,7 +45,7 @@ namespace Reservation.Service.Services
             var isEmailAlreadyUsed = await _db.Members.AnyAsync(i => i.Email == model.Email);
             if (isEmailAlreadyUsed)
             {
-                result.Message = LocalizationKeys.ErrorMessages.EmailAlreadyUsed;
+                result.Message = LocalizationKeys.Errors.EmailAlreadyUsed;
                 return result;
             }
             
@@ -88,7 +88,7 @@ namespace Reservation.Service.Services
             var existingMember = await _db.Members.FirstOrDefaultAsync(i => i.Email == member.Login);
             if (existingMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.MemberDoesNotExist;
                 return result;
             }
 
@@ -115,7 +115,7 @@ namespace Reservation.Service.Services
             var existingMember = await GetMemberByIdAsync(member.Id);
             if (existingMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.MemberDoesNotExist;
                 result.Value = member.Id;
                 return result;
             }
@@ -148,7 +148,7 @@ namespace Reservation.Service.Services
             var existingMember = await _db.Members.FirstOrDefaultAsync(i => i.Email == member.Login && i.PasswordHash == member.Password.ToHashedPassword());
             if (existingMember == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.MemberDoesNotExist;
                 result.Value = member;
                 return result;
             }
@@ -163,7 +163,7 @@ namespace Reservation.Service.Services
             var member = await GetMemberByIdAsync(model.MemberId);
             if (member == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.MemberDoesNotExist;
                 return result;
             }
 
@@ -195,7 +195,7 @@ namespace Reservation.Service.Services
             var member = await GetMemberByIdAsync(memberId);
             if (member == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.MemberDoesNotExist;
                 return result;
             }
 

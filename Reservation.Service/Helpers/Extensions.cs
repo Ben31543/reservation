@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Reservation.Data.Entities;
 using Reservation.Resources.Constants;
@@ -22,17 +23,6 @@ namespace Reservation.Service.Helpers
 
                 return hashedPassword;
             }
-        }
-
-        public static string GetErrorMessages(this ModelStateDictionary model)
-        {
-            StringBuilder result = new StringBuilder();
-            IEnumerable<string> errorMessages = model.Values
-                                           .SelectMany(v => v.Errors)
-                                           .Select(i => i.ErrorMessage);
-
-            result.AppendJoin(", ", errorMessages);
-            return result.ToString();
         }
 
         public static bool IsValidArmPhoneNumber(this string phoneNumber)
@@ -151,6 +141,22 @@ namespace Reservation.Service.Helpers
             {
                 return string.Empty;
             }
+        }
+
+        public static string GetModelsLocalizedErrors(this IStringLocalizer localizer, ModelStateDictionary model)
+        {
+            StringBuilder result = new StringBuilder();
+            IEnumerable<string> errorMessages = model.Values
+                .SelectMany(v => v.Errors)
+                .Select(i => localizer.GetLocalizationOf(i.ErrorMessage));
+
+            result.AppendJoin(", ", errorMessages);
+            return result.ToString();
+        }
+        
+        public static string GetLocalizationOf(this IStringLocalizer localizer, string content)
+        {
+            return localizer[content].Value;
         }
     }
 }

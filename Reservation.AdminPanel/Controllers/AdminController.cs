@@ -6,7 +6,9 @@ using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.Extensions.Localization;
 using Reservation.Resources.Contents;
+using Reservation.Resources.Controllers;
 
 namespace Reservation.AdminPanel
 {
@@ -22,6 +24,7 @@ namespace Reservation.AdminPanel
         private readonly IReservingService _reservingService;
         private readonly IBankAccountService _bankAccountService;
         private readonly IServiceMemberService _serviceMemberService;
+        private readonly IStringLocalizer<ResourcesController> _localizer;
         private readonly IServiceMemberBranchService _serviceMemberBranchService;
 
         public AdminController(
@@ -32,9 +35,11 @@ namespace Reservation.AdminPanel
             IReservingService reservingService,
             IBankAccountService bankAccountService,
             IServiceMemberService serviceMemberService,
+            IStringLocalizer<ResourcesController> localizer,
             IServiceMemberBranchService serviceMemberBranchService)
         {
             _logger = logger;
+            _localizer = localizer;
             _adminService = adminService;
             _memberService = memberService;
             _bankCardService = bankCardService;
@@ -68,10 +73,10 @@ namespace Reservation.AdminPanel
             _logger.LogRequest("Admin/VerifyAdmin", null);
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = ModelState.GetErrorMessages();
+                ViewBag.ErrorMessage = _localizer.GetModelsLocalizedErrors(ModelState);
                 _logger.LogResponse("Admin/VerifyAdmin", new RequestResult
                 {
-                    Message = ModelState.GetErrorMessages()
+                    Message = _localizer.GetModelsLocalizedErrors(ModelState)
                 });
                 return View("Login");
             }
@@ -79,7 +84,7 @@ namespace Reservation.AdminPanel
             var verifyResult = await _adminService.VerifyAdminAsync(model.Login, model.Password);
             if (!verifyResult.Succeeded)
             {
-                ViewBag.ErrorMessage = verifyResult.Message;
+                ViewBag.ErrorMessage = _localizer.GetLocalizationOf(verifyResult.Message);
                 _logger.LogResponse("Admin/VerifyAdmin", verifyResult);
                 return View("Login");
             }
@@ -155,7 +160,7 @@ namespace Reservation.AdminPanel
 
             if (!memberId.HasValue)
             {
-                _logger.LogError(LocalizationKeys.ErrorMessages.WrongIncomingParameters);
+                _logger.LogError(_localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters));
                 return View("Members");
             }
 

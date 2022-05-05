@@ -65,20 +65,20 @@ namespace Reservation.Service.Services
             var bankCard = await _bankCard.GetBankCardByIdAsync(fromId);
             if (bankCard == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BankCardDoesNotExist;
+                result.Message = LocalizationKeys.Errors.BankCardDoesNotExist;
                 return result;
             }
 
             var bankAccount = await _bankAccount.GetBankAccountInfoAsync(toId);
             if (bankAccount == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BankAccountDoesNotExist;
+                result.Message = LocalizationKeys.Errors.BankAccountDoesNotExist;
                 return result;
             }
 
             if (bankAccount.Balance < amount)
             {
-                result.Message = LocalizationKeys.ErrorMessages.InsufficientBalance;
+                result.Message = LocalizationKeys.Errors.InsufficientBalance;
                 return result;
             }
 
@@ -106,20 +106,20 @@ namespace Reservation.Service.Services
             var bankCard = await _bankCard.GetBankCardByIdAsync(fromId);
             if (bankCard == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BankCardDoesNotExist;
+                result.Message = LocalizationKeys.Errors.BankCardDoesNotExist;
                 return result;
             }
 
             var bankAccount = await _bankAccount.GetBankAccountInfoAsync(toId);
             if (bankAccount == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BankAccountDoesNotExist;
+                result.Message = LocalizationKeys.Errors.BankAccountDoesNotExist;
                 return result;
             }
 
             if (bankCard.CurrentBalance < paymentData.Amount)
             {
-                result.Message = LocalizationKeys.ErrorMessages.InsufficientBalance;
+                result.Message = LocalizationKeys.Errors.InsufficientBalance;
                 return result;
             }
 

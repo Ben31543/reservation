@@ -65,7 +65,7 @@ namespace Reservation.Service.Services
             var branch = await GetBranchByIdAsync(branchId);
             if (branch == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BranchNotFound;
+                result.Message = LocalizationKeys.Errors.BranchNotFound;
                 return result;
             }
 
@@ -91,7 +91,7 @@ namespace Reservation.Service.Services
             var branch = await GetBranchByIdAsync(model.Id.Value);
             if (branch == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BranchNotFound;
+                result.Message = LocalizationKeys.Errors.BranchNotFound;
                 return result;
             }
 

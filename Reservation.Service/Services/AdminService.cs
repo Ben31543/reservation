@@ -27,7 +27,7 @@ namespace Reservation.Service.Services
             var admin = await _db.Admins.FirstOrDefaultAsync(i => i.Username == username && i.PasswordHash == password.ToHashedPassword());
             if (admin == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.WrongCredientials;
+                result.Message = LocalizationKeys.Errors.WrongCredientials;
                 return result;
             }
 

@@ -24,7 +24,7 @@ namespace Reservation.Service.Services
             var bankAccount = await _db.BankAccounts.FirstOrDefaultAsync(i => i.AccountNumber == model.AccountNumber && i.Owner == model.Owner);
             if (bankAccount == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BankAccountDoesNotExist;
+                result.Message = LocalizationKeys.Errors.BankAccountDoesNotExist;
                 return result;
             }
 
@@ -40,7 +40,7 @@ namespace Reservation.Service.Services
             var bankAccount = await GetBankAccountInfoAsync(accountId);
             if (bankAccount == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BankAccountDoesNotExist;
+                result.Message = LocalizationKeys.Errors.BankAccountDoesNotExist;
                 return result;
             }
 

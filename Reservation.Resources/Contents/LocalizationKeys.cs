@@ -2,7 +2,7 @@
 {
 	public static class LocalizationKeys
 	{
-		public static class ErrorMessages
+		public static class Errors
 		{
 			public const string WrongIncomingParameters = "WrongIncomingParameters";
 			public const string BankAccountDoesNotExist = "BankAccountDoesNotExist";
@@ -25,6 +25,7 @@
 			public const string ErrorWhileParsingImage = "ErrorWhileParsingImage";
 			public const string EmailAlreadyUsed = "EmailAlreadyUsed";
 			public const string ServiceMemberDoesNotAcceptOnlinePayments = "ServiceMemberDoesNotAcceptOnlinePayments";
+			public const string MemberIsNotLoggedIn = "MemberIsNotLoggedIn";
 		}
 
 		public static class Contents

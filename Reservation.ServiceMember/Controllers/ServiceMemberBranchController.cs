@@ -9,10 +9,11 @@ using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
 using System.Threading.Tasks;
+using Reservation.ServiceMember;
 
-namespace Reservation.Web.Controllers
+namespace Reservation.ServiceMember.Controllers
 {
-    public class ServiceMemberBranchController : Controller
+    public class ServiceMemberBranchController : ApplicationUser
     {
         private readonly IServiceMemberBranchService _branchService;
         private readonly ILogger _logger;
@@ -33,9 +34,16 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("ServiceMemberBranch/GetBranchById", branchId);
 
             RequestResult result = new RequestResult();
+            if (!IsAuthorized)
+            {
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
+                _logger.LogResponse("ServiceMemberBranch/GetBranchById", result);
+                return Json(result);
+            }
+            
             if (branchId == null)
             {
-                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
                 return Json(result);
             }
 
@@ -50,15 +58,22 @@ namespace Reservation.Web.Controllers
         {
             _logger.LogRequest("ServiceMemberBranch/SaveServiceMemberBranch", model);
             RequestResult result = new RequestResult();
+            if (!IsAuthorized)
+            {
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
+                _logger.LogResponse("ServiceMemberBranch/SaveServiceMemberBranch", result);
+                return Json(result);
+            }
+            
             if (!ModelState.IsValid)
             {
-                result.Message = ModelState.GetErrorMessages();
+                result.Message = _localizer.GetModelsLocalizedErrors(ModelState);
                 return Json(result);
             }
 
             if (!Time.IsValidWorkingSchedule(model.OpenTime, model.CloseTime))
             {
-                result.Message = _localizer[LocalizationKeys.ErrorMessages.OpenTimeMustBeEarlierThanCloseTime].Value;
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.OpenTimeMustBeEarlierThanCloseTime);
                 return Json(result);
             }
 
@@ -73,7 +88,7 @@ namespace Reservation.Web.Controllers
 
             if (!string.IsNullOrEmpty(result.Message))
             {
-                result.Message = _localizer[result.Message].Value;
+                result.Message = _localizer.GetLocalizationOf(result.Message);
             }
 
             _logger.LogResponse("ServiceMemberBranch/SaveServiceMemberBranch", result);
@@ -86,16 +101,23 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("ServiceMemberBranch/DeleteBranch", branchId);
 
             RequestResult result = new RequestResult();
+            if (!IsAuthorized)
+            {
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
+                _logger.LogResponse("ServiceMemberBranch/DeleteBranch", result);
+                return Json(result);
+            }
+            
             if (branchId == null)
             {
-                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
                 return Json(result);
             }
 
             result = await _branchService.DeleteBranchAsync(branchId.Value);
             if (!string.IsNullOrEmpty(result.Message))
             {
-                result.Message = _localizer[result.Message].Value;
+                result.Message = _localizer.GetLocalizationOf(result.Message);
             }
 
             _logger.LogResponse("ServiceMemberBranch/DeleteBranch", result);

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Reservation.Models.Common;
@@ -14,8 +13,7 @@ using Reservation.Resources.Enumerations;
 
 namespace Reservation.Web.Controllers
 {
-    [Authorize]
-    public class ReservingController : Controller
+    public class ReservingController : ApplicationUser.ApplicationUser
     {
         private readonly IReservingService _reservingService;
         private readonly ILogger _logger;
@@ -37,16 +35,23 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("Reserving/AddReserving", model);
             var result = new RequestResult();
 
+            if (!IsAuthorized)
+            {
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
+                _logger.LogResponse("Reserving/AddReserving", result);
+                return Json(result);
+            }
+
             if (!ModelState.IsValid)
             {
-                result.Message = ModelState.GetErrorMessages();
+                result.Message = _localizer.GetModelsLocalizedErrors(ModelState);
                 return Json(result);
             }
 
             result = await _reservingService.AddReservingAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
             {
-                result.Message = _localizer[result.Message].Value;
+                result.Message = _localizer.GetLocalizationOf(result.Message);
             }
 
             _logger.LogResponse("Reserving/AddReserving", result);
@@ -59,23 +64,29 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("Reserving/CancelReserving", id);
             var result = new RequestResult();
 
+            if (!IsAuthorized)
+            {
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
+                _logger.LogResponse("Reserving/CancelReserving", result);
+                return Json(result);
+            }
+
             if (id == null)
             {
-                result.Message = ModelState.GetErrorMessages();
+                result.Message = _localizer.GetModelsLocalizedErrors(ModelState);
                 return Json(result);
             }
 
             result = await _reservingService.CancelReservingAsync(id.Value);
             if (!string.IsNullOrEmpty(result.Message))
             {
-                result.Message = _localizer[result.Message].Value;
+                result.Message = _localizer.GetLocalizationOf(result.Message);
             }
 
             _logger.LogResponse("Reserving/CancelReserving", result);
             return Json(result);
         }
-
-        [AllowAnonymous]
+        
         [HttpPost]
         public async Task<IActionResult> GetReservablePlaces([FromBody] SearchForReservingModel model)
         {
@@ -84,9 +95,10 @@ namespace Reservation.Web.Controllers
 
             if (model == null)
             {
-                result.Message = _localizer[LocalizationKeys.ErrorMessages.WrongIncomingParameters].Value;
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
                 return Json(result);
             }
+            
             if (!model.PersonsCount.HasValue)
             {
                 model.PersonsCount = TableSchemas.OneToTwoPersons;
@@ -99,7 +111,7 @@ namespace Reservation.Web.Controllers
 
             if (model.ReservingDate.Value.Date < DateTime.Now.Date)
             {
-                result.Message = _localizer[LocalizationKeys.ErrorMessages.InvalidDate].Value;
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.InvalidDate);
                 return Json(result);
             }
 

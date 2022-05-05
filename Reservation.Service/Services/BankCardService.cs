@@ -39,19 +39,19 @@ namespace Reservation.Service.Services
 
             if (bankCard == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BankCardDoesNotExist;
+                result.Message = LocalizationKeys.Errors.BankCardDoesNotExist;
                 return result;
             }
 
             if (member == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.MemberDoesNotExist;
                 return result;
             }
 
             if (!IsValidDate(model.ValidThru, bankCard.ValidThru, true))
             {
-                result.Message = LocalizationKeys.ErrorMessages.BankCardExpired;
+                result.Message = LocalizationKeys.Errors.BankCardExpired;
                 return result;
             }
 
@@ -83,13 +83,13 @@ namespace Reservation.Service.Services
 
             if (card == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.BankCardDoesNotExist;
+                result.Message = LocalizationKeys.Errors.BankCardDoesNotExist;
                 return result;
             }
 
             if (member == null)
             {
-                result.Message = LocalizationKeys.ErrorMessages.MemberDoesNotExist;
+                result.Message = LocalizationKeys.Errors.MemberDoesNotExist;
                 return result;
             }
 
