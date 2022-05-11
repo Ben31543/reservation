@@ -46,7 +46,7 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> AddReservingAsync(ReservingModel model)
         {
             RequestResult result = new RequestResult();
-            var serviceMember = await _serviceMemberService.GetServiceMemberByIdAsync(model.ServiceMemberId);
+            var serviceMember = await _serviceMemberService.GetServiceMemberAsync(model.ServiceMemberId);
             if (serviceMember == null)
             {
                 result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;

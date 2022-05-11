@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Reservation.Data;
 using Reservation.Data.Entities;
 using Reservation.Models.BankAccount;
@@ -51,6 +52,14 @@ namespace Reservation.Service.Services
         public async Task<BankAccount> GetBankAccountInfoAsync(long bankAccountId)
         {
             return await _db.BankAccounts.FirstOrDefaultAsync(i => i.Id == bankAccountId);
+        }
+
+        public async Task<string> GetBankAccountNumberAsync(long bankAccountId)
+        {
+            return await _db.BankAccounts
+                .Where(i => i.Id == bankAccountId)
+                .Select(i => i.AccountNumber)
+                .FirstOrDefaultAsync();
         }
     }
 }

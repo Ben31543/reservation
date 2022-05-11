@@ -12,5 +12,7 @@ namespace Reservation.Service.Interfaces
         Task<RequestResult> DetachServiceMemberFromBankAccountAsync(long accountId);
 
         Task<BankAccount> GetBankAccountInfoAsync(long bankAccountId);
+
+        Task<string> GetBankAccountNumberAsync(long bankAccountId);
     }
 }

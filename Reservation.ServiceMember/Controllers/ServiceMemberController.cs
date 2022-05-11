@@ -47,13 +47,7 @@ namespace Reservation.ServiceMember.Controllers
             _logger.LogRequest("ServiceMember/RegisterServiceMember", model);
 
             RequestResult result = new RequestResult();
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("ServiceMember/RegisterServiceMember", result);
-                return Json(result);
-            }
-            
+
             if (!ModelState.IsValid)
             {
                 result.Message = _localizer.GetModelsLocalizedErrors(ModelState);
@@ -125,12 +119,6 @@ namespace Reservation.ServiceMember.Controllers
             _logger.LogRequest("ServiceMember/VerifyServiceMember", model);
 
             RequestResult result = new RequestResult();
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("ServiceMember/VerifyServiceMember", result);
-                return Json(result);
-            }
 
             if (!ModelState.IsValid)
             {
@@ -165,12 +153,6 @@ namespace Reservation.ServiceMember.Controllers
             _logger.LogRequest("ServiceMember/ResetPassword", model);
 
             RequestResult result = new RequestResult();
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("ServiceMember/ResetPassword", result);
-                return Json(result);
-            }
 
             if (!ModelState.IsValid)
             {
@@ -543,6 +525,16 @@ namespace Reservation.ServiceMember.Controllers
             _logger.LogResponse("ServiceMember/SaveDishImage", result);
             return Json(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetNumberOfBankAccount(long? serviceMemberId)
+        {
+            return Json(new RequestResult
+            {
+                Succeeded = true,
+                Value = await _serviceMemberService.GetServiceMembersAttachedBankAccountNumberAsync(serviceMemberId.Value)
+            });
+        } 
 
         public async Task<IActionResult> Logout()
         {

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Reservation.Resources.Enumerations;
 
 namespace Reservation.Service.Services
 {
@@ -131,7 +132,7 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<List<Dish>> GetDishesAsync(DishSearchCriteria criteria)
+        public async Task<List<DishModel>> GetDishesAsync(DishSearchCriteria criteria)
         {
             var dishes = await _db.Dishes
                 .Where(i => i.ServiceMemberId == criteria.ServiceMemberId)
@@ -139,7 +140,7 @@ namespace Reservation.Service.Services
 
             if (!dishes.Any())
             {
-                return new List<Dish>();
+                return new List<DishModel>();
             }
 
             if (criteria.DishType.HasValue)
@@ -168,7 +169,17 @@ namespace Reservation.Service.Services
                     .ToList();
             }
 
-            return dishes;
+            return dishes.Select(dish => new DishModel
+            {
+                Id = dish.Id,
+                Name = dish.Name,
+                Description = dish.Description,
+                Price = dish.Price,
+                DishType = (DishTypes) dish.TypeId,
+                ImageUrl = dish.ImageUrl,
+                IsAvailable = dish.IsAvailable,
+                ServiceMemberId = dish.ServiceMemberId
+            }).ToList();
         }
 
         public async Task<RequestResult> SaveDishImageAsync(SaveImageModel model)

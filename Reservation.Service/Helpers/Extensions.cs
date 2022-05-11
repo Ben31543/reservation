@@ -10,6 +10,7 @@ using Reservation.Data.Entities;
 using Reservation.Models.Common;
 using Reservation.Resources;
 using Reservation.Resources.Constants;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Reservation.Service.Helpers
 {
@@ -171,6 +172,13 @@ namespace Reservation.Service.Helpers
         public static string GetLocalizationOf(this IStringLocalizer localizer, string content)
         {
             return localizer[content].Value;
+        }
+
+        public static string ConvertToAccountNumberPublicViewFormat(this string accNumber)
+        {
+            string hiddenDigits = "********";
+            string replacable = accNumber.Substring(4, 8);
+            return accNumber.Replace(replacable, hiddenDigits);
         }
     }
 }

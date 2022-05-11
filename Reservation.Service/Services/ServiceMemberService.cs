@@ -35,7 +35,7 @@ namespace Reservation.Service.Services
             _imageSavingService = imageSavingService;
         }
 
-        public async Task<ServiceMember> GetServiceMemberByIdAsync(long id, bool isMember = false)
+        public async Task<ServiceMember> GetServiceMemberAsync(long id, bool isMember = false)
         {
             var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == id);
             if (isMember)
@@ -45,6 +45,26 @@ namespace Reservation.Service.Services
             }
 
             return serviceMember;
+        }
+
+        public async Task<ServiceMemberViewModel> GetServiceMemberByIdAsync(long smId)
+        {
+            var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == smId);
+            return serviceMember == null
+                ? new ServiceMemberViewModel()
+                : new ServiceMemberViewModel
+                {
+                    Id = serviceMember.Id,
+                    Name = serviceMember.Name,
+                    Email = serviceMember.Email,
+                    FacebookUrl = serviceMember.FacebookUrl,
+                    InstagramUrl = serviceMember.InstagramUrl,
+                    LogoUrl = serviceMember.LogoUrl,
+                    OrdersCount = serviceMember.OrdersCount,
+                    ViewsCount = serviceMember.ViewsCount,
+                    AcceptsOnlinePayment = serviceMember.AcceptsOnlinePayment,
+                    BankAccountId = serviceMember.BankAccountId
+                };
         }
 
         public async Task<RequestResult> RegisterServiceMemberAsync(ServiceMemberRegistrationModel model)
@@ -131,8 +151,7 @@ namespace Reservation.Service.Services
                 result.Message = e.Message;
                 return result;
             }
-
-            result.Value = serviceMember;
+            
             return result;
         }
 
@@ -157,7 +176,7 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> AddBankAccountAsync(BankAccountAttachModel model)
         {
             RequestResult result = new RequestResult();
-            var serviceMember = await GetServiceMemberByIdAsync(model.ServiceMemberId.Value);
+            var serviceMember = await GetServiceMemberAsync(model.ServiceMemberId.Value);
             if (serviceMember == null)
             {
                 result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;
@@ -189,7 +208,7 @@ namespace Reservation.Service.Services
         public async Task<RequestResult> DetachBankAccountAsync(long serviceMemberId, long bankAccountId)
         {
             var result = new RequestResult();
-            var serviceMember = await GetServiceMemberByIdAsync(serviceMemberId);
+            var serviceMember = await GetServiceMemberAsync(serviceMemberId);
             if (serviceMember == null)
             {
                 result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;
@@ -229,7 +248,7 @@ namespace Reservation.Service.Services
         {
             var deals = new List<ServiceMemberDealHistoryItemModel>();
 
-            var serviceMember = await GetServiceMemberByIdAsync(serviceMemberId);
+            var serviceMember = await GetServiceMemberAsync(serviceMemberId);
             if (serviceMember == null)
             {
                 return deals;
@@ -271,7 +290,7 @@ namespace Reservation.Service.Services
         {
             var result = new RequestResult();
 
-            var serviceMember = await GetServiceMemberByIdAsync(model.Id);
+            var serviceMember = await GetServiceMemberAsync(model.Id);
             if (serviceMember == null)
             {
                 result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;
@@ -338,6 +357,11 @@ namespace Reservation.Service.Services
                 AcceptsOnlinePayment = i.AcceptsOnlinePayment,
                 BankAccount = i.BankAccount.ToDisplayFormat()
             }).ToListAsync();
+        }
+
+        public async Task<string> GetServiceMembersAttachedBankAccountNumberAsync(long smId)
+        {
+            return (await _bankAccService.GetBankAccountNumberAsync(smId)).ConvertToAccountNumberPublicViewFormat();
         }
     }
 }
