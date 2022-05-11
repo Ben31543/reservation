@@ -5,7 +5,7 @@ namespace Reservation.Models.Common
 {
 	public class SaveImageModel
 	{
-		public long Id { get; set; }
+		public long? Id { get; set; }
 
 		public ResourceTypes? ResourceType { get; set; }
 

@@ -6,50 +6,51 @@ namespace Reservation.Web.ApplicationUser
     {
         private static object _locker = new object();
 
-        private static long? memberId;
+        private static long? _memberId;
         protected static long? CurrentMemberId
         {
-            get => memberId;
+            get => _memberId;
             set
             {
                 lock (_locker)
                 {
-                    memberId = value;
+                    _memberId = value;
                 }
             }
         }
 
-        private static string username;
+        private static string _username;
         protected static string Username
         {
-            get => username;
+            get => _username;
             set
             {
                 lock (_locker)
                 {
-                    username = value;
+                    _username = value;
                 }
             }
         }
 
-        private static bool isAuthorized;
+        private static bool _isAuthorized;
         protected static bool IsAuthorized
         {
-            get => isAuthorized;
+            get => _isAuthorized;
             set
             {
                 lock (_locker)
                 {
-                    isAuthorized = value;
+                    _isAuthorized = value;
                 }
             }
         }
 
         [NonAction]
-        protected void Authenticate(string userName)
+        protected void Authenticate(string userName, long memberId)
         {
             lock (_locker)
             {
+                CurrentMemberId = memberId;
                 Username = userName;
                 IsAuthorized = true;
             }

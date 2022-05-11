@@ -14,7 +14,7 @@ namespace Reservation.Service.Interfaces
 
         Task<RequestResult> DeleteBranchAsync(long branchId);
 
-        Task<List<ServiceMemberBranch>> GetBranchesAsync(long serviceMemberId);
+        Task<List<ServiceMemberBranchViewModel>> GetBranchesAsync(long serviceMemberId);
 
         Task<ServiceMemberBranch> GetBranchByIdAsync(long branchId);
 

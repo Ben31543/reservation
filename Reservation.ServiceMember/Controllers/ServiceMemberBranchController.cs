@@ -83,6 +83,11 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
+            if (model.ServiceMemberId == default)
+            {
+                model.ServiceMemberId = CurrentServiceMemberId.Value;
+            }
+            
             if (model.Id.HasValue && model.Id.Value != default)
             {
                 result = await _branchService.EditBranchInfoAsync(model);

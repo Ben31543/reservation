@@ -149,7 +149,7 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<IList<ReservableBranchModel>> GetReservableBranchesAsync(SearchForReservingModel model)
+        public async Task<IList<ReservableBranchModel>> GetReservableBranchesAsync(SearchForReservingModel model, bool needFreeTimes)
         {
             var branches = _db.ServiceMemberBranches.Include(i => i.ServiceMember).Where(i => i.IsActive).AsQueryable();
             if (!string.IsNullOrEmpty(model.ServiceMemberName))
@@ -193,7 +193,7 @@ namespace Reservation.Service.Services
                 ServiceMemberName = i.ServiceMember.Name,
                 BranchAddress = i.Address,
                 LogoUrl = i.ServiceMember.LogoUrl,
-                FreeTimes = GetFreeTimes(i, model.ReservingDate.Value)
+                FreeTimes = needFreeTimes ? GetFreeTimes(i, model.ReservingDate.Value) : null
             }).ToList();
         }
 

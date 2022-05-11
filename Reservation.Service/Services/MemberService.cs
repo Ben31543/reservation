@@ -185,6 +185,7 @@ namespace Reservation.Service.Services
                 return result;
             }
 
+            result.Value = existingMember.Id;
             result.Succeeded = true;
             return result;
         }

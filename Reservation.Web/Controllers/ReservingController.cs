@@ -48,6 +48,11 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
+            if (model.MemberId == default)
+            {
+                model.MemberId = CurrentMemberId.Value;
+            }
+            
             result = await _reservingService.AddReservingAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
             {
@@ -115,7 +120,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _reservingService.GetReservableBranchesAsync(model);
+            result.Value = await _reservingService.GetReservableBranchesAsync(model, needFreeTimes ?? true);
             result.Succeeded = true;
             _logger.LogResponse("Reserving/GetReservablePlaces", result);
             return Json(result);

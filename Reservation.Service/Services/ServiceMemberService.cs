@@ -160,8 +160,7 @@ namespace Reservation.Service.Services
             RequestResult result = new RequestResult();
 
             var serviceMember = await _db.ServiceMembers
-                .FirstOrDefaultAsync(i =>
-                    i.Email == model.Login && i.PasswordHash == model.Password.ToHashedPassword());
+                .FirstOrDefaultAsync(i => i.Email == model.Login && i.PasswordHash == model.Password.ToHashedPassword());
             if (serviceMember == null)
             {
                 result.Message = LocalizationKeys.Errors.WrongCredientials;
@@ -169,6 +168,7 @@ namespace Reservation.Service.Services
                 return result;
             }
 
+            result.Value = serviceMember.Id;
             result.Succeeded = true;
             return result;
         }
@@ -290,7 +290,7 @@ namespace Reservation.Service.Services
         {
             var result = new RequestResult();
 
-            var serviceMember = await GetServiceMemberAsync(model.Id);
+            var serviceMember = await GetServiceMemberAsync(model.Id.Value);
             if (serviceMember == null)
             {
                 result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;

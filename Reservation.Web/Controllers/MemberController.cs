@@ -79,12 +79,7 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("Member/GetMemberById", id);
             var result = new RequestResult();
 
-            if (!id.HasValue)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
-                return Json(result);
-            }
-
+            id ??= CurrentMemberId;
             result.Value = await _memberService.GetMemberForViewAsync(id.Value);
             result.Succeeded = true;
             _logger.LogResponse("Member/GetMemberById", result);
@@ -122,6 +117,11 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
+            if (model.Id == default)
+            {
+                model.Id = CurrentMemberId.Value;
+            }
+            
             result = await _memberService.UpdateMemberInfoAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
             {
@@ -137,14 +137,7 @@ namespace Reservation.Web.Controllers
         {
             _logger.LogRequest("Member/ResetPassword", model);
             var result = new RequestResult();
-            
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("Member/ResetPassword", result);
-                return Json(result);
-            }
-            
+
             if (!ModelState.IsValid)
             {
                 result.Message = _localizer.GetModelsLocalizedErrors(ModelState);
@@ -181,7 +174,7 @@ namespace Reservation.Web.Controllers
             result = await _memberService.VerifyMemberAsync(model);
             if (result.Succeeded)
             {
-                Authenticate(model.Login);
+                Authenticate(model.Login, (long)result.Value);
             }
 
             if (!string.IsNullOrEmpty(result.Message))
@@ -213,6 +206,11 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
+            if (model.MemberId == default)
+            {
+                model.MemberId = CurrentMemberId.Value;
+            }
+            
             result = await _memberService.AddBankCardAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
             {
@@ -236,11 +234,13 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
             
-            if (!cardId.HasValue || !memberId.HasValue)
+            if (!cardId.HasValue)
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
                 return Json(result);
             }
+
+            memberId ??= CurrentMemberId;
 
             result = await _memberService.DetachBankCardAsync(memberId.Value, cardId.Value);
             if (!string.IsNullOrEmpty(result.Message))
@@ -264,13 +264,8 @@ namespace Reservation.Web.Controllers
                 _logger.LogResponse("Member/GetMemberDealsHistory", result);
                 return Json(result);
             }
-            
-            if (!memberId.HasValue)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
-                return Json(result);
-            }
 
+            memberId ??= CurrentMemberId;
             result.Value = await _memberService.GetMemberDealsHistoryAsync(memberId.Value);
             _logger.LogResponse("Member/GetMemberDealsHistory", result);
             return Json(result);
@@ -297,11 +292,7 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("Member/GetAttachedCardsNumber", new {MemberId = memberId});
             var result = new RequestResult();
 
-            if (memberId == null)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
-                return Json(result);
-            }
+            memberId ??= CurrentMemberId;
 
             result.Succeeded = true;
             result.Value = new[] {await _memberService.GetBankCardNumberAsync(memberId.Value)};

@@ -85,8 +85,7 @@ namespace Reservation.ServiceMember.Controllers
             
             if (id == null)
             {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
-                return Json(result);
+                id = CurrentServiceMemberId;
             }
 
             var serviceMember = await _serviceMemberService.GetServiceMemberByIdAsync(id.Value);
@@ -129,10 +128,9 @@ namespace Reservation.ServiceMember.Controllers
             result = await _serviceMemberService.VerifyServiceMemberAsync(model);
             if (result.Succeeded)
             {
-                Authenticate(model.Login);
+                Authenticate(model.Login, (long)result.Value);
             }
-
-            if (!result.Succeeded)
+            else
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.ServiceMemberDoesNotExist);
                 return Json(result);
@@ -189,6 +187,7 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
+            model.Id ??= CurrentServiceMemberId;
             result = await _serviceMemberService.UpdateServiceMemberInfoAsync(model);
             _logger.LogResponse("ServiceMember/UpdateServiceMember", result);
             return Json(result);
@@ -215,8 +214,7 @@ namespace Reservation.ServiceMember.Controllers
 
             if (!model.ServiceMemberId.HasValue)
             {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
-                return Json(result);
+                model.ServiceMemberId = CurrentServiceMemberId;
             }
 
             result = await _serviceMemberService.AddBankAccountAsync(model);
@@ -242,12 +240,13 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
-            if (!serviceMemberId.HasValue || !bankAccountId.HasValue)
+            if (!bankAccountId.HasValue)
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
                 return Json(result);
             }
 
+            serviceMemberId ??= CurrentServiceMemberId;
             result = await _serviceMemberService.DetachBankAccountAsync(serviceMemberId.Value, bankAccountId.Value);
             if (!string.IsNullOrEmpty(result.Message))
             {
@@ -271,12 +270,7 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
-            if (!serviceMemberId.HasValue)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
-                return Json(result);
-            }
-
+            serviceMemberId ??= CurrentServiceMemberId;
             result.Value = await _serviceMemberService.GetServiceMemberDealsHistoryAsync(serviceMemberId.Value);
             if (!string.IsNullOrEmpty(result.Message))
             {
@@ -305,11 +299,9 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
-            if (!model.ResourceType.HasValue)
-            {
-                model.ResourceType = ResourceTypes.ServiceMemberImage;
-            }
-
+            model.ResourceType ??= ResourceTypes.ServiceMemberImage;
+            model.Id ??= CurrentServiceMemberId;
+            
             result = await _serviceMemberService.SaveServiceMemberImageAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
             {
@@ -333,12 +325,7 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
-            if (serviceMemberId == null)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
-                return Json(result);
-            }
-
+            serviceMemberId ??= CurrentServiceMemberId;
             result.Value = await _branchService.GetBranchesAsync(serviceMemberId.Value);
             result.Succeeded = true;
             if (!string.IsNullOrEmpty(result.Message))
@@ -388,12 +375,7 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
-            if (criteria.ServiceMemberId == null)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
-                return Json(result);
-            }
-
+            criteria.ServiceMemberId ??= CurrentServiceMemberId;
             result.Value = await _dishService.GetDishesAsync(criteria);
             result.Succeeded = true;
             if (!string.IsNullOrEmpty(result.Message))
@@ -424,6 +406,12 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
+            if (model.ServiceMemberId == default)
+            {
+                model.ServiceMemberId = CurrentServiceMemberId.Value;
+            }
+
+            ;
             result = await _dishService.AddNewDishAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
             {
@@ -453,6 +441,11 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
+            if (model.ServiceMemberId == default)
+            {
+                model.ServiceMemberId = CurrentServiceMemberId.Value;
+            }
+            
             result = await _dishService.EditDishAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
             {
@@ -511,11 +504,8 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
-            if (!model.ResourceType.HasValue)
-            {
-                model.ResourceType = ResourceTypes.DishImage;
-            }
-
+            model.ResourceType ??= ResourceTypes.DishImage;
+            
             result = await _dishService.SaveDishImageAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
             {
@@ -532,7 +522,7 @@ namespace Reservation.ServiceMember.Controllers
             return Json(new RequestResult
             {
                 Succeeded = true,
-                Value = await _serviceMemberService.GetServiceMembersAttachedBankAccountNumberAsync(serviceMemberId.Value)
+                Value = await _serviceMemberService.GetServiceMembersAttachedBankAccountNumberAsync(serviceMemberId ?? CurrentServiceMemberId.Value)
             });
         } 
 

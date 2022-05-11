@@ -124,10 +124,21 @@ namespace Reservation.Service.Services
             return await _db.ServiceMemberBranches.FirstOrDefaultAsync(i => i.Id == branchId);
         }
 
-        public async Task<List<ServiceMemberBranch>> GetBranchesAsync(long serviceMemberId)
+        public async Task<List<ServiceMemberBranchViewModel>> GetBranchesAsync(long serviceMemberId)
         {
             return await _db.ServiceMemberBranches
                 .Where(i => i.ServiceMemberId == serviceMemberId)
+                .Select(branch => new ServiceMemberBranchViewModel
+                {
+                    Id = branch.Id,
+                    Name = branch.Name,
+                    Address = branch.Address,
+                    Phone = branch.Phone,
+                    IsActive = branch.IsActive,
+                    TablesSchema = branch.TablesSchema,
+                    WorkingHours = Time.ToDisplayFormat(branch.OpenTime, branch.CloseTime),
+                    ServiceMemberId = branch.ServiceMemberId
+                })
                 .ToListAsync();
         }
 

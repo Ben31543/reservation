@@ -24,6 +24,11 @@ namespace Reservation.Models.Common
         {
             return $"{openTime.Hour}:{openTime.Minute} - {closeTime.Hour}:{closeTime.Minute}";
         }
+        
+        public static string ToDisplayFormat(string openTime, string closeTime)
+        {
+            return $"{openTime} - {closeTime}";
+        }
 
         public static bool IsValidWorkingSchedule(Time openTime, Time closeTime)
         {

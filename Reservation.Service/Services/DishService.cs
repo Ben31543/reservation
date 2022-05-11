@@ -186,7 +186,7 @@ namespace Reservation.Service.Services
         {
             RequestResult result = new RequestResult();
 
-            var dish = await GetDishById(model.Id);
+            var dish = await GetDishById(model.Id.Value);
             if (dish == null)
             {
                 result.Message = LocalizationKeys.Errors.WrongIncomingParameters;
