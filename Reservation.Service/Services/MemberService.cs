@@ -111,7 +111,7 @@ namespace Reservation.Service.Services
             }
 
             var bankCard = await _bankCard.GetBankCardByIdAsync(membersBankCardId.GetValueOrDefault(0));
-            return bankCard?.Number;
+            return bankCard?.Number.ConvertToAccountNumberPublicViewFormat();
         }
 
         public async Task<RequestResult> ResetPasswordAsync(ResetPasswordModel member)
@@ -177,7 +177,10 @@ namespace Reservation.Service.Services
         {
             var result = new RequestResult();
 
-            var existingMember = await _db.Members.FirstOrDefaultAsync(i => i.Email == member.Login && i.PasswordHash == member.Password.ToHashedPassword());
+            var existingMember = await _db.Members.FirstOrDefaultAsync(i =>
+                i.Email == member.Login
+             && i.PasswordHash == member.Password.ToHashedPassword());
+            
             if (existingMember == null)
             {
                 result.Message = LocalizationKeys.Errors.MemberDoesNotExist;
