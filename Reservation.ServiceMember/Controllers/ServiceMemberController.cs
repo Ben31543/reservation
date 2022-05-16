@@ -187,6 +187,17 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
+            if (model.ImageModel != null)
+            {
+                if (string.IsNullOrEmpty(model.ImageModel.ImageBase64) || !model.ImageModel.ImageBase64.IsBase64())
+                {
+                    result.Message = LocalizationKeys.Errors.WrongIncomingParameters;
+                    return Json(result);
+                }
+                
+                await _serviceMemberService.SaveServiceMemberImageAsync(model.ImageModel);
+            }
+
             model.Id ??= CurrentServiceMemberId;
             result = await _serviceMemberService.UpdateServiceMemberInfoAsync(model);
             _logger.LogResponse("ServiceMember/UpdateServiceMember", result);
@@ -278,37 +289,6 @@ namespace Reservation.ServiceMember.Controllers
             }
 
             _logger.LogResponse("ServiceMember/GetServiceMemberDealsHistory", result);
-            return Json(result);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveServiceMemberImage([FromForm] SaveImageModel model)
-        {
-            _logger.LogRequest("ServiceMember/SaveServiceMemberImage", model);
-            var result = new RequestResult();
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("ServiceMember/SaveServiceMemberImage", result);
-                return Json(result);
-            }
-
-            if (model == null || model.Image == null)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
-                return Json(result);
-            }
-
-            model.ResourceType ??= ResourceTypes.ServiceMemberImage;
-            model.Id ??= CurrentServiceMemberId;
-            
-            result = await _serviceMemberService.SaveServiceMemberImageAsync(model);
-            if (!string.IsNullOrEmpty(result.Message))
-            {
-                result.Message = _localizer.GetLocalizationOf(result.Message);
-            }
-
-            _logger.LogResponse("ServiceMember/SaveServiceMemberImage", result);
             return Json(result);
         }
 
@@ -445,6 +425,17 @@ namespace Reservation.ServiceMember.Controllers
             {
                 model.ServiceMemberId = CurrentServiceMemberId.Value;
             }
+
+            if (model.ImageModel != null)
+            {
+                if (string.IsNullOrEmpty(model.ImageModel.ImageBase64) || !model.ImageModel.ImageBase64.IsBase64())
+                {
+                    result.Message = LocalizationKeys.Errors.WrongIncomingParameters;
+                    return Json(result);
+                }
+                
+                await _dishService.SaveDishImageAsync(model.ImageModel);
+            }
             
             result = await _dishService.EditDishAsync(model);
             if (!string.IsNullOrEmpty(result.Message))
@@ -498,7 +489,7 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
-            if (model == null || model.Image == null)
+            if (model == null || model.ImageBase64 == null)
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
                 return Json(result);

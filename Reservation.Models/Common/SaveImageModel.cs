@@ -9,6 +9,6 @@ namespace Reservation.Models.Common
 
 		public ResourceTypes? ResourceType { get; set; }
 
-		public IFormFile Image { get; set; }
+		public string ImageBase64 { get; set; }
 	}
 }

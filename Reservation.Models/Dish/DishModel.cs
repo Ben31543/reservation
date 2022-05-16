@@ -1,5 +1,6 @@
 ﻿using Reservation.Resources.Contents;
 using System.ComponentModel.DataAnnotations;
+using Reservation.Models.Common;
 using Reservation.Resources.Enumerations;
 
 namespace Reservation.Models.Dish
@@ -30,5 +31,7 @@ namespace Reservation.Models.Dish
 
         [Required(ErrorMessage = LocalizationKeys.Contents.ServiceMemberId + LocalizationKeys.Errors.FieldIsRequired)]
         public long ServiceMemberId { get; set; }
+
+        public SaveImageModel ImageModel { get; set; }
     }
 }

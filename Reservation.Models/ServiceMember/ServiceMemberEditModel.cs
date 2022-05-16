@@ -1,5 +1,6 @@
 ﻿using Reservation.Resources.Contents;
 using System.ComponentModel.DataAnnotations;
+using Reservation.Models.Common;
 
 namespace Reservation.Models.ServiceMember
 {
@@ -27,5 +28,7 @@ namespace Reservation.Models.ServiceMember
 
         [Required(ErrorMessage = LocalizationKeys.Contents.AcceptsOnlinePayment + LocalizationKeys.Errors.FieldIsRequired)]
         public bool AcceptsOnlinePayment { get; set; }
+
+        public SaveImageModel ImageModel { get; set; }
     }
 }

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Reservation.Resources.Constants;
 using Reservation.Resources.Enumerations;
 
 namespace Reservation.Service.Services
@@ -193,13 +194,14 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            var image = await ImageConstructorService.ConstructImageForSaveAsync(model.Image, ImageConstructorService.ConstructFilePathFor(model.ResourceType.Value, dish.ServiceMemberId));
-            if (image == null)
+            var image = new SaveImageClientModel
             {
-                result.Message = LocalizationKeys.Errors.ErrorWhileParsingImage;
-                return result;
-            }
-            
+                ImageBase64 = model.ImageBase64,
+                ImagePath = ImageHelper.ConstructFilePathFor(model.ResourceType.Value, dish.ServiceMemberId),
+                ResourceHost = ImageSaverConstants.ImagesHostingPath,
+                FileName = $"{model.ResourceType}{dish.ServiceMemberId}"
+            };
+
             var imageSavingResult = await _imageSavingService.SaveImageAsync(image);
             if (imageSavingResult.Key == true && !string.IsNullOrEmpty(imageSavingResult.Value))
             {

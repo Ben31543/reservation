@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Reservation.Resources.Constants;
 
 namespace Reservation.Service.Services
 {
@@ -279,8 +280,7 @@ namespace Reservation.Service.Services
 
             if (criteria.AcceptsOnlinePayment.HasValue)
             {
-                serviceMembers =
-                    serviceMembers.Where(i => i.AcceptsOnlinePayment == criteria.AcceptsOnlinePayment.Value);
+                serviceMembers = serviceMembers.Where(i => i.AcceptsOnlinePayment == criteria.AcceptsOnlinePayment.Value);
             }
 
             return await serviceMembers.ToListAsync();
@@ -297,15 +297,15 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            var image = await ImageConstructorService.ConstructImageForSaveAsync(model.Image, ImageConstructorService.ConstructFilePathFor(model.ResourceType.Value, serviceMember.Id));
-            if (image == null)
+            var image = new SaveImageClientModel
             {
-                result.Message = LocalizationKeys.Errors.ErrorWhileParsingImage;
-                return result;
-            }
+                FileName = $"{model.ResourceType}{serviceMember.Id}",
+                ImageBase64 = model.ImageBase64,
+                ImagePath = ImageHelper.ConstructFilePathFor(model.ResourceType.Value, serviceMember.Id),
+                ResourceHost = ImageSaverConstants.ImagesHostingPath
+            };
 
             var imageSavingResult = await _imageSavingService.SaveImageAsync(image);
-
             if (imageSavingResult.Key == true && !string.IsNullOrEmpty(imageSavingResult.Value))
             {
                 serviceMember.LogoUrl = imageSavingResult.Value;
