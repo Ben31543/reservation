@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using Reservation.Models.Reserving;
 
@@ -225,7 +226,7 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> DetachBankCardAsync(long memberId, long bankCardId)
+        public async Task<RequestResult> DetachBankCardAsync(long memberId, string bankCardNumber)
         {
             var result = new RequestResult();
             var member = await GetMemberByIdAsync(memberId);
@@ -235,14 +236,26 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            var detachResult = await _bankCard.DetachCardFromMemberAsync(memberId,bankCardId);
-            if (detachResult.Succeeded)
+            var bankCardExists = await _bankCard.CheckBankCardExistsByCardNumberAsync(bankCardNumber);
+            if (!bankCardExists)
+            {
+                result.Message = LocalizationKeys.Errors.BankCardDoesNotExist;
+                return result;
+            }
+
+            try
             {
                 member.BankCardId = null;
                 await _db.SaveChangesAsync();
             }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message, e);
+                result.Message = e.Message;
+            }
 
-            return detachResult;
+            result.Succeeded = true;
+            return result;
         }
 
         public async Task<List<MemberDealsModel>> GetMemberDealsHistoryAsync(long memberId)

@@ -22,7 +22,7 @@ namespace Reservation.Service.Interfaces
 
         Task<RequestResult> AddBankCardAsync(AttachCardToMemberModel model);
 
-        Task<RequestResult> DetachBankCardAsync(long memberId, long bankCardId);
+        Task<RequestResult> DetachBankCardAsync(long memberId, string bankCardNumber);
 
         Task<List<MemberDealsModel>> GetMemberDealsHistoryAsync(long memberId);
 

@@ -35,18 +35,9 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> DetachServiceMemberFromBankAccountAsync(long accountId)
+        public async Task<bool> CheckIfBankAccountExistsByAccountNumberAsync(string accountNumber)
         {
-            RequestResult result = new RequestResult();
-            var bankAccount = await GetBankAccountInfoAsync(accountId);
-            if (bankAccount == null)
-            {
-                result.Message = LocalizationKeys.Errors.BankAccountDoesNotExist;
-                return result;
-            }
-
-            result.Succeeded = true;
-            return result;
+            return await _db.BankAccounts.AnyAsync(i => i.AccountNumber == accountNumber);
         }
 
         public async Task<BankAccount> GetBankAccountInfoAsync(long bankAccountId)

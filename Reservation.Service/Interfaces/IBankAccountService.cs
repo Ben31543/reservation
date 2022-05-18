@@ -9,7 +9,7 @@ namespace Reservation.Service.Interfaces
     {
         Task<RequestResult> AttachBankAccountToServiceMemberAsync(BankAccountAttachModel model);
 
-        Task<RequestResult> DetachServiceMemberFromBankAccountAsync(long accountId);
+        Task<bool> CheckIfBankAccountExistsByAccountNumberAsync(string accountNumber);
 
         Task<BankAccount> GetBankAccountInfoAsync(long bankAccountId);
 

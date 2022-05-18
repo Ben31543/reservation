@@ -222,9 +222,9 @@ namespace Reservation.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DetachCardFromMember([FromQuery] long? memberId, [FromQuery] long? cardId)
+        public async Task<IActionResult> DetachCardFromMember([FromQuery] long? memberId, [FromQuery] string cardNumber)
         {
-            _logger.LogRequest("Member/DetachCardFromMember", new {MemberId = memberId, CardId = cardId});
+            _logger.LogRequest("Member/DetachCardFromMember", new {MemberId = memberId, CardId = cardNumber});
             var result = new RequestResult();
 
             if (!IsAuthorized)
@@ -234,7 +234,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
             
-            if (!cardId.HasValue)
+            if (string.IsNullOrWhiteSpace(cardNumber))
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
                 return Json(result);
@@ -242,7 +242,7 @@ namespace Reservation.Web.Controllers
 
             memberId ??= CurrentMemberId;
 
-            result = await _memberService.DetachBankCardAsync(memberId.Value, cardId.Value);
+            result = await _memberService.DetachBankCardAsync(memberId.Value, cardNumber);
             if (!string.IsNullOrEmpty(result.Message))
             {
                 result.Message = _localizer.GetLocalizationOf(result.Message);
@@ -300,12 +300,19 @@ namespace Reservation.Web.Controllers
             return Json(result);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             RequestResult result = new RequestResult();
             LogoutUser();
             result.Succeeded = true;
             return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<long> GetCurrentMemberId()
+        {
+            return CurrentMemberId ?? 0;
         }
     }
 }

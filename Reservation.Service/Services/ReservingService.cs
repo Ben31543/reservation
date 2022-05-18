@@ -93,15 +93,9 @@ namespace Reservation.Service.Services
             ++serviceMember.OrdersCount;
             await _db.Reservings.AddAsync(reservation);
 
-            if (reservation.IsOnlinePayment && serviceMember.AcceptsOnlinePayment)
-            {
-                await AddPaymentRequestAsync(reservation);
-            }
-
             try
             {
                 await _db.SaveChangesAsync();
-                result.Succeeded = true;
             }
             catch (Exception e)
             {
@@ -109,8 +103,15 @@ namespace Reservation.Service.Services
                 result.Message = e.Message;
                 return result;
             }
+            
+            if (reservation.IsOnlinePayment && serviceMember.AcceptsOnlinePayment)
+            {
+                await AddPaymentRequestAsync(reservation.Id);
+            }
 
-            await EmailSenderService.SendEmailAboutReservationAsync(serviceMember.Email, reservation, serviceMember);
+            await EmailSender.SendEmailAboutReservationAsync(serviceMember.Email, reservation, serviceMember);
+            
+            result.Succeeded = true;
             return result;
         }
 
@@ -145,7 +146,7 @@ namespace Reservation.Service.Services
 
             result.Succeeded = true;
 
-            await EmailSenderService.SendEmailAboutReservationCancelAsync(reserving.ServiceMember.Email, reserving.Id);
+            await EmailSender.SendEmailAboutReservationCancelAsync(reserving);
             return result;
         }
 
@@ -219,7 +220,7 @@ namespace Reservation.Service.Services
                 }).ToListAsync();
         }
 
-        private async Task AddPaymentRequestAsync(Reserving reserving)
+        private async Task AddPaymentRequestAsync(long reservingId)
         {
             var reserveData = await _db.Reservings
                                        .Include(i => i.Member)
@@ -227,7 +228,7 @@ namespace Reservation.Service.Services
                                        .Include(i => i.ServiceMember)
                                          .ThenInclude(i => i.BankAccount)
                                        .Include(i => i.ServiceMemberBranch)
-                                       .FirstOrDefaultAsync(i => i.Id == reserving.Id);
+                                       .FirstOrDefaultAsync(i => i.Id == reservingId);
 
             if (reserveData == null)
             {
@@ -236,12 +237,12 @@ namespace Reservation.Service.Services
 
             var paymentData = new PaymentDataModel
             {
-                Amount = reserving.Amount,
+                Amount = reserveData.Amount,
                 PaymentDate = DateTime.Now,
-                BankCardAccountFrom = reserving.Member.BankCard.Number,
-                BankAcountTo = reserving.ServiceMember.BankAccount.AccountNumber,
-                BankAccountId = reserving.ServiceMember.BankAccountId.Value,
-                BankCardId = reserving.Member.BankCardId.Value
+                BankCardAccountFrom = reserveData.Member.BankCard.Number,
+                BankAcountTo = reserveData.ServiceMember.BankAccount.AccountNumber,
+                BankAccountId = reserveData.ServiceMember.BankAccountId.Value,
+                BankCardId = reserveData.Member.BankCardId.Value
             };
 
             await _paymentService.AddPaymentDataAsync(paymentData);

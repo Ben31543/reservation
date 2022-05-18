@@ -22,8 +22,6 @@ namespace Reservation.Models.Reserving
 		[Required]
 		public long ServiceMemberId { get; set; }
 
-		public decimal Amount { get; set; }
-
 		[Required]
 		public bool IsOnlinePayment { get; set; }
 

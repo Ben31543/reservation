@@ -73,41 +73,9 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> DetachCardFromMemberAsync(long memberId,long bankCardId)
+        public async Task<bool> CheckBankCardExistsByCardNumberAsync(string bankCardNumber)
         {
-            var result = new RequestResult();
-
-            var card = await _db.BankCards.FirstOrDefaultAsync(i => i.Id == bankCardId);
-
-            var member = await _db.Members.FirstOrDefaultAsync(i => i.Id == memberId);
-
-            if (card == null)
-            {
-                result.Message = LocalizationKeys.Errors.BankCardDoesNotExist;
-                return result;
-            }
-
-            if (member == null)
-            {
-                result.Message = LocalizationKeys.Errors.MemberDoesNotExist;
-                return result;
-            }
-
-            member.BankCardId = null;
-
-            try
-            {
-                await _db.SaveChangesAsync();
-                result.Succeeded = true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                result.Message = e.Message;
-                return result;
-            }
-
-            return result;
+            return await _db.BankCards.AnyAsync(i => i.Number == bankCardNumber);
         }
 
         public async Task<Data.Entities.BankCard> GetBankCardByIdAsync(long id)

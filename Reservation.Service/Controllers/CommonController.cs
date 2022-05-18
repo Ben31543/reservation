@@ -89,7 +89,7 @@ namespace Reservation.Service.Controllers
                 return Json(result);
             }
             
-            await EmailSenderService.SendEmailFromUserAsync(model.EmailFrom, member.Id.ToString(), model.Message);
+            await EmailSender.SendEmailFromUserAsync(model.EmailFrom, member.Id.ToString(), model.Message);
             result.Succeeded = true;
             return Json(result);
         }

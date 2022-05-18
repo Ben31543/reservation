@@ -10,27 +10,28 @@ using Reservation.Resources.Constants;
 
 namespace Reservation.Service.Helpers
 {
-    public class EmailSenderService
+    public static class EmailSender
     {
         public static async Task SendEmailAboutReservationAsync(string emailTo, Reserving reservation, ServiceMember serviceMember)
         {
             string message =
                 $"YOU HAVE A NEW ONLINE BOOKING #{reservation.Id}\n" +
                 $"Booking date: {reservation.ReservationDate}\n" +
-                $"Address: {serviceMember.Name}, {reservation.ServiceMemberBranch.Name}\n" +
+                $"Address: {reservation.ServiceMemberBranch.Name}, {reservation.ServiceMemberBranch.Address}\n" +
                 $"Number of persons: {reservation.Tables}\n" +
                 $"Dishes: {reservation.Dishes.ToProductsDisplayFormat()}\n" +
                 $"Payment Type: {(reservation.IsOnlinePayment ? "Online" : "Cash")}" +
                 $"\nAmount: {reservation.Amount}\n" +
-                $"Take Out: {reservation.IsTakeOut}";
+                $"Take Out: {reservation.IsTakeOut}" +
+                $"Notes: {reservation.Notes}";
             
             SendEmail(message, new (){emailTo});
         }
 
-        public static async Task SendEmailAboutReservationCancelAsync(string emailTo, long reservationId)
+        public static async Task SendEmailAboutReservationCancelAsync(Reserving reserving)
         {
-            string message = $"The Online Booking has been canceled #{reservationId}";
-            SendEmail(message, new (){emailTo});
+            string message = $"Reservation #{reserving.Id} for {reserving.ReservationDate.ToLongDateString()} has been cancelled.";
+            SendEmail(message, new() {reserving.ServiceMember.Email});
         }
 
         public static async Task SendEmailFromUserAsync(string email, string memberId, string content)

@@ -206,7 +206,7 @@ namespace Reservation.Service.Services
             return result;
         }
 
-        public async Task<RequestResult> DetachBankAccountAsync(long serviceMemberId, long bankAccountId)
+        public async Task<RequestResult> DetachBankAccountAsync(long serviceMemberId, string accountNumber)
         {
             var result = new RequestResult();
             var serviceMember = await GetServiceMemberAsync(serviceMemberId);
@@ -216,21 +216,16 @@ namespace Reservation.Service.Services
                 return result;
             }
 
-            var bankAccount = await _bankAccService.GetBankAccountInfoAsync(bankAccountId);
-            if (bankAccount == null)
+            var bankAccountExists = await _bankAccService.CheckIfBankAccountExistsByAccountNumberAsync(accountNumber);
+            if (!bankAccountExists)
             {
-                result.Message = LocalizationKeys.Errors.BankAccountNotAttachedToServiceMember;
+                result.Message = LocalizationKeys.Errors.BankAccountDoesNotExist;
                 return result;
-            }
-
-            var detachResult = await _bankAccService.DetachServiceMemberFromBankAccountAsync(bankAccountId);
-            if (detachResult.Succeeded)
-            {
-                serviceMember.BankAccountId = null;
             }
 
             try
             {
+                serviceMember.BankAccountId = null;
                 await _db.SaveChangesAsync();
                 result.Succeeded = true;
             }

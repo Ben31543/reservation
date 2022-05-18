@@ -239,9 +239,9 @@ namespace Reservation.ServiceMember.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DetachFromBankAccount([FromQuery] long? serviceMemberId, [FromQuery] long? bankAccountId)
+        public async Task<IActionResult> DetachFromBankAccount([FromQuery] long? serviceMemberId, [FromQuery] string accountNumber)
         {
-            _logger.LogRequest("ServiceMember/DetachFromBankAccount", new { ServiceMemberId = serviceMemberId, BankAccountId = bankAccountId });
+            _logger.LogRequest("ServiceMember/DetachFromBankAccount", new { ServiceMemberId = serviceMemberId, BankAccountNumber = accountNumber });
 
             var result = new RequestResult();
             if (!IsAuthorized)
@@ -251,14 +251,14 @@ namespace Reservation.ServiceMember.Controllers
                 return Json(result);
             }
 
-            if (!bankAccountId.HasValue)
+            if (string.IsNullOrWhiteSpace(accountNumber))
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
                 return Json(result);
             }
 
             serviceMemberId ??= CurrentServiceMemberId;
-            result = await _serviceMemberService.DetachBankAccountAsync(serviceMemberId.Value, bankAccountId.Value);
+            result = await _serviceMemberService.DetachBankAccountAsync(serviceMemberId.Value, accountNumber);
             if (!string.IsNullOrEmpty(result.Message))
             {
                 result.Message = _localizer.GetLocalizationOf(result.Message);
