@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Reservation.Service.Helpers;
 
 namespace Reservation.Service.Services
 {
@@ -98,8 +99,8 @@ namespace Reservation.Service.Services
             branch.Name = model.Name;
             branch.Address = model.Address;
             branch.IsActive = model.IsActive.Value;
-            branch.OpenTime = JsonConvert.SerializeObject(model.OpenTime);
-            branch.CloseTime = JsonConvert.SerializeObject(model.CloseTime);
+            branch.OpenTime = model.OpenTime.ToString();
+            branch.CloseTime = model.CloseTime.ToString();
             branch.Phone = model.Phone;
             branch.TablesSchema = JsonConvert.SerializeObject(model.TablesSchema);
 
@@ -152,7 +153,7 @@ namespace Reservation.Service.Services
                     Address = branch.Address,
                     IsActive = branch.IsActive,
                     Phone = branch.Phone,
-                    WorkingHours = Time.ToDisplayFormat(JsonConvert.DeserializeObject<Time>(branch.OpenTime),JsonConvert.DeserializeObject<Time>(branch.CloseTime)),
+                    WorkingHours = Time.ToDisplayFormat(branch.OpenTime.ToTimeInstance(), branch.CloseTime.ToTimeInstance()),
                     OrdersCount = _db.Reservings
                                      .Where(reserving =>
                                             reserving.IsActive

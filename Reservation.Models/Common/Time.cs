@@ -52,5 +52,10 @@ namespace Reservation.Models.Common
 
             return false;
         }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }
