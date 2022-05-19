@@ -10,8 +10,7 @@ namespace Reservation.Models.Reserving
 	{
 		public long Id { get; set; }
 
-		[Required(ErrorMessage =LocalizationKeys.Contents.ReservingDate + LocalizationKeys.Errors.FieldIsRequired)]
-		public DateTime ReservationDate { get; set; }
+		public DateTime? ReservationDate { get; set; }
 
 		[Required]
 		public long MemberId { get; set; }

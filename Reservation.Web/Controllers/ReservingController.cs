@@ -42,6 +42,12 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
+            if (!model.ReservationDate.HasValue)
+            {
+                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.InvalidDate);
+                return Json(result);
+            }
+
             if (model.MemberId == default)
             {
                 model.MemberId = CurrentMemberId.Value;

@@ -80,7 +80,7 @@ namespace Reservation.Service.Services
                 IsOnlinePayment = model.IsOnlinePayment,
                 IsTakeOut = model.IsTakeOut,
                 MemberId = model.MemberId,
-                ReservationDate = model.ReservationDate,
+                ReservationDate = model.ReservationDate.Value,
                 ServiceMemberId = serviceMember.Id,
                 ServiceMemberBranchId = model.ServiceMemberBranchId,
                 Tables = JsonConvert.SerializeObject(((TableSchemas)model.TablesSchemaId).ToString()),
@@ -109,7 +109,8 @@ namespace Reservation.Service.Services
                 await AddPaymentRequestAsync(reservation.Id);
             }
 
-            await EmailSender.SendEmailAboutReservationAsync(serviceMember.Email, reservation, serviceMember);
+            var reservingForEmail = await _db.Reservings.Include(i => i.ServiceMemberBranch).FirstAsync(i => i.Id == reservation.Id);
+            await EmailSender.SendEmailAboutReservationAsync(serviceMember.Email, reservingForEmail, serviceMember);
             
             result.Succeeded = true;
             return result;
