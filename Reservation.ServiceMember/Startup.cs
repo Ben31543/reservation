@@ -52,11 +52,8 @@ namespace Reservation.ServiceMember
 			{
 				opts.ResourcesPath = "Resources";
 			});
-			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-					.AddCookie(options =>
-					{
-						options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Member/VerifyMember");
-					});
+
+			services.AddHttpContextAccessor();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -78,6 +75,7 @@ namespace Reservation.ServiceMember
 				SupportedUICultures = supportedCultures
 			});
 
+			app.UseCors(_allowAngularPolicy);
 			app.UseStaticFiles();
 			app.UseRouting();
 			app.UseAuthentication();
