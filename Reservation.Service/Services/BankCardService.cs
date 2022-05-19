@@ -76,7 +76,7 @@ namespace Reservation.Service.Services
 
         public async Task<bool> CheckBankCardExistsByCardNumberAsync(string bankCardNumber)
         {
-            return await _db.BankCards.AnyAsync(i => i.Number.ConvertToAccountNumberPublicViewFormat() == bankCardNumber);
+            return await _db.BankCards.AnyAsync(i => i.Number == bankCardNumber);
         }
 
         public async Task<Data.Entities.BankCard> GetBankCardByIdAsync(long id)

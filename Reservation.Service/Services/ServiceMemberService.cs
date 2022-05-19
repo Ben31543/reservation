@@ -358,7 +358,7 @@ namespace Reservation.Service.Services
 
         public async Task<string> GetServiceMembersAttachedBankAccountNumberAsync(long smId)
         {
-            return (await _bankAccService.GetBankAccountNumberAsync(smId)).ConvertToAccountNumberPublicViewFormat();
+            return await _bankAccService.GetBankAccountNumberAsync(smId);
         }
     }
 }
