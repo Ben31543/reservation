@@ -102,8 +102,8 @@ namespace Reservation.Service.Services
         public async Task<string> GetBankCardNumberAsync(long memberId)
         {
             var membersBankCardId = await _db.Members
-                .Where(i=>i.Id == memberId)
-                .Select(i=>i.BankCardId)
+                .Where(i => i.Id == memberId)
+                .Select(i => i.BankCardId)
                 .FirstOrDefaultAsync();
             
             if (membersBankCardId == null)
@@ -111,8 +111,10 @@ namespace Reservation.Service.Services
                 return null;
             }
 
-            var bankCard = await _bankCard.GetBankCardByIdAsync(membersBankCardId.GetValueOrDefault(0));
-            return bankCard?.Number.ConvertToAccountNumberPublicViewFormat();
+            var bankCard = await _bankCard.GetBankCardByIdAsync(membersBankCardId.Value);
+            return bankCard == null
+                ? null
+                : bankCard.Number.ConvertToAccountNumberPublicViewFormat();
         }
 
         public async Task<RequestResult> ResetPasswordAsync(ResetPasswordModel member)
