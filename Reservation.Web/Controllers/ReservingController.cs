@@ -79,7 +79,7 @@ namespace Reservation.Web.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> GetReservablePlaces([FromBody] SearchForReservingModel model, [FromQuery] bool? needFreeTimes)
+        public async Task<IActionResult> GetReservablePlaces([FromBody] SearchForReservingModel model)
         {
             _logger.LogRequest("Reserving/GetReservablePlaces", model);
             RequestResult result = new RequestResult();
@@ -101,7 +101,7 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _reservingService.GetReservableBranchesAsync(model, needFreeTimes ?? true);
+            result.Value = await _reservingService.GetReservableBranchesAsync(model, true);
             result.Succeeded = true;
             _logger.LogResponse("Reserving/GetReservablePlaces", result);
             return Json(result);
