@@ -158,12 +158,12 @@ namespace Reservation.Service.Services
                 branches = branches.Where(i => i.ServiceMember.Name.Contains(model.ServiceMemberName)).ToList();
             }
 
-            if (model.HasOnlinePayment.HasValue)
+            if (model.HasOnlinePayment)
             {
                 branches = branches.Where(i => i.ServiceMember.AcceptsOnlinePayment == model.HasOnlinePayment).ToList();
             }
 
-            if (model.IsOpenNow.HasValue)
+            if (model.IsOpenNow)
             {
                 branches = branches.Where(i => 
                         i.OpenTime.ToTimeInstance().GetHour() >= CommonConstants.CurrentHour
