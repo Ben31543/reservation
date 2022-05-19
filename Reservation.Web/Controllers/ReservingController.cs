@@ -9,6 +9,7 @@ using Reservation.Service.Helpers;
 using Reservation.Service.Interfaces;
 using System;
 using System.Threading.Tasks;
+using Reservation.Resources.Constants;
 using Reservation.Resources.Enumerations;
 
 namespace Reservation.Web.Controllers
@@ -101,8 +102,18 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
-            result.Value = await _reservingService.GetReservableBranchesAsync(model, true);
+            var places = await _reservingService.GetReservableBranchesAsync(model, true);
+
+            foreach (var place in places)
+            {
+                if (!string.IsNullOrEmpty(place.LogoUrl))
+                {
+                    place.LogoUrl = $"{ImageSaverConstants.ImagesHostingPath}{place.LogoUrl}";
+                }
+            }
+            
             result.Succeeded = true;
+            result.Value = places;
             _logger.LogResponse("Reserving/GetReservablePlaces", result);
             return Json(result);
         }
