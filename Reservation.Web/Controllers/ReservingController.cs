@@ -95,12 +95,7 @@ namespace Reservation.Web.Controllers
                 model.PersonsCount = TableSchemas.OneToTwoPersons;
             }
 
-            if (!model.ReservingDate.HasValue)
-            {
-                model.ReservingDate = DateTime.Now.AddDays(1);
-            }
-
-            if (model.ReservingDate.Value.Date < DateTime.Now.Date)
+            if (model.ReservingDate.HasValue && model.ReservingDate.Value.Date < DateTime.Now.Date)
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.InvalidDate);
                 return Json(result);
