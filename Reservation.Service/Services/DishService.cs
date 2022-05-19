@@ -144,7 +144,7 @@ namespace Reservation.Service.Services
                 return new List<DishModel>();
             }
 
-            if (criteria.DishType is > 0)
+            if (criteria.DishType.HasValue && criteria.DishType > 0)
             {
                 dishes = dishes.Where(i => i.TypeId == (byte) criteria.DishType).ToList();
             }
