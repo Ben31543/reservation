@@ -7,6 +7,7 @@ using Reservation.Resources.Contents;
 using Reservation.Service.Interfaces;
 using System;
 using System.Threading.Tasks;
+using Reservation.Service.Helpers;
 
 namespace Reservation.Service.Services
 {
@@ -75,7 +76,7 @@ namespace Reservation.Service.Services
 
         public async Task<bool> CheckBankCardExistsByCardNumberAsync(string bankCardNumber)
         {
-            return await _db.BankCards.AnyAsync(i => i.Number == bankCardNumber);
+            return await _db.BankCards.AnyAsync(i => i.Number.ConvertToAccountNumberPublicViewFormat() == bankCardNumber);
         }
 
         public async Task<Data.Entities.BankCard> GetBankCardByIdAsync(long id)
