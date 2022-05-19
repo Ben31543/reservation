@@ -114,7 +114,7 @@ namespace Reservation.Service.Services
             var bankCard = await _bankCard.GetBankCardByIdAsync(membersBankCardId.Value);
             return bankCard == null
                 ? null
-                : bankCard.Number.ConvertToAccountNumberPublicViewFormat();
+                : bankCard.Number;
         }
 
         public async Task<RequestResult> ResetPasswordAsync(ResetPasswordModel member)
