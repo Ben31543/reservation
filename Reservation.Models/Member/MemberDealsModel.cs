@@ -8,7 +8,7 @@ namespace Reservation.Models.Member
 {
     public class MemberDealsModel
     {
-        public int ReservationId { get; set; }
+        public long ReservationId { get; set; }
 
         public string BranchAddress { get; set; }
 

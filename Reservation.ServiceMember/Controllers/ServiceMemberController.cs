@@ -174,13 +174,6 @@ namespace Reservation.ServiceMember.Controllers
             _logger.LogRequest("ServiceMember/UpdateServiceMember", model);
 
             RequestResult result = new RequestResult();
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("ServiceMember/UpdateServiceMember", result);
-                return Json(result);
-            }
-
             if (!ModelState.IsValid)
             {
                 result.Message = _localizer.GetModelsLocalizedErrors(ModelState);

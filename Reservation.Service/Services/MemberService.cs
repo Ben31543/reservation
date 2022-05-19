@@ -275,6 +275,7 @@ namespace Reservation.Service.Services
                                          .Where(i => i.MemberId == memberId)
                                          .Select(i => new MemberDealsModel
                                          {
+                                             ReservationId = i.Id,
                                              Amount = i.Amount,
                                              BranchAddress = i.ServiceMemberBranch.Address,
                                              OnlinePayment = i.IsOnlinePayment,
