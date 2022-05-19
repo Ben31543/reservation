@@ -249,7 +249,9 @@ namespace Reservation.Web.Controllers
             RequestResult result = new RequestResult();
 
             memberId ??= CurrentMemberId;
+            
             result.Value = await _memberService.GetMemberDealsHistoryAsync(memberId.Value);
+            result.Succeeded = true;
             _logger.LogResponse("Member/GetMemberDealsHistory", result);
             return Json(result);
         }

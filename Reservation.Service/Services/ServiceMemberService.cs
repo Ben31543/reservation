@@ -140,7 +140,6 @@ namespace Reservation.Service.Services
             serviceMember.AcceptsOnlinePayment = model.AcceptsOnlinePayment;
             serviceMember.InstagramUrl = model.InstagramUrl;
             serviceMember.FacebookUrl = model.FacebookUrl;
-            serviceMember.LogoUrl = model.LogoUrl;
             serviceMember.Email = model.Email;
 
             try
