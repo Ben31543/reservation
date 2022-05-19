@@ -49,21 +49,29 @@ namespace Reservation.Web.Controllers
             if (!ModelState.IsValid)
             {
                 result.Message = _localizer.GetModelsLocalizedErrors(ModelState);
+                _logger.LogResponse("Member/AddNewMember", result);
+                return Json(result);
             }
 
             if (!model.Phone.IsValidArmPhoneNumber())
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.InvalidPhoneNumber);
+                _logger.LogResponse("Member/AddNewMember", result);
+                return Json(result);
             }
 
             if (!model.Email.IsValidEmail())
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.InvalidEmail);
+                _logger.LogResponse("Member/AddNewMember", result);
+                return Json(result);
             }
 
             if (!model.Password.Equals(model.ConfirmPassword, StringComparison.Ordinal))
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.PasswordDoNotMatch);
+                _logger.LogResponse("Member/AddNewMember", result);
+                return Json(result);
             }
 
             result = await _memberService.AddNewMemberAsync(model);
