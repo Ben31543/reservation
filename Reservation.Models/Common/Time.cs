@@ -27,7 +27,10 @@ namespace Reservation.Models.Common
         
         public static string ToDisplayFormat(string openTime, string closeTime)
         {
-            return $"{openTime} - {closeTime}";
+            var openTimeInstance = JsonConvert.DeserializeObject<Time>(openTime);
+            var closeTimeInstance = JsonConvert.DeserializeObject<Time>(closeTime);
+            
+            return ToDisplayFormat(openTimeInstance, closeTimeInstance);
         }
 
         public static bool IsValidWorkingSchedule(Time openTime, Time closeTime)
