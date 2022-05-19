@@ -152,22 +152,22 @@ namespace Reservation.Service.Services
 
         public async Task<IList<ReservableBranchModel>> GetReservableBranchesAsync(SearchForReservingModel model, bool needFreeTimes)
         {
-            var branches = _db.ServiceMemberBranches.Include(i => i.ServiceMember).Where(i => i.IsActive).AsQueryable();
+            var branches = await _db.ServiceMemberBranches.Include(i => i.ServiceMember).Where(i => i.IsActive).ToListAsync();
             if (!string.IsNullOrEmpty(model.ServiceMemberName))
             {
-                branches = branches.Where(i => i.ServiceMember.Name.Contains(model.ServiceMemberName));
+                branches = branches.Where(i => i.ServiceMember.Name.Contains(model.ServiceMemberName)).ToList();
             }
 
             if (model.HasOnlinePayment.HasValue)
             {
-                branches = branches.Where(i => i.ServiceMember.AcceptsOnlinePayment == model.HasOnlinePayment);
+                branches = branches.Where(i => i.ServiceMember.AcceptsOnlinePayment == model.HasOnlinePayment).ToList();
             }
 
             if (model.IsOpenNow.HasValue)
             {
                 branches = branches.Where(i => 
                         i.OpenTime.ToTimeInstance().GetHour() >= CommonConstants.CurrentHour
-                     && i.CloseTime.ToTimeInstance().GetHour() <= CommonConstants.CurrentHour);
+                     && i.CloseTime.ToTimeInstance().GetHour() <= CommonConstants.CurrentHour).ToList();
             }
             
             IList<ServiceMemberBranch> returnableBranches = new List<ServiceMemberBranch>();
