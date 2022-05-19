@@ -32,19 +32,6 @@ namespace Reservation.Web.ApplicationUser
             }
         }
 
-        private static bool _isAuthorized;
-        protected static bool IsAuthorized
-        {
-            get => _isAuthorized;
-            set
-            {
-                lock (_locker)
-                {
-                    _isAuthorized = value;
-                }
-            }
-        }
-
         [NonAction]
         protected void Authenticate(string userName, long memberId)
         {
@@ -52,7 +39,6 @@ namespace Reservation.Web.ApplicationUser
             {
                 CurrentMemberId = memberId;
                 Username = userName;
-                IsAuthorized = true;
             }
         }
 
@@ -63,7 +49,6 @@ namespace Reservation.Web.ApplicationUser
             {
                 Username = null;
                 CurrentMemberId = null;
-                IsAuthorized = false;
             }
         }
     }
