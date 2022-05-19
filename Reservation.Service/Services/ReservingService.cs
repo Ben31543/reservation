@@ -195,6 +195,7 @@ namespace Reservation.Service.Services
                 ServiceMemberId = i.ServiceMemberId,
                 BranchAddress = i.Address,
                 LogoUrl = i.ServiceMember.LogoUrl,
+                WorkingHours = Time.ToDisplayFormat(i.OpenTime, i.CloseTime),
                 FreeTimes = needFreeTimes && model.ReservingDate.HasValue ? GetFreeTimes(i, model.ReservingDate.Value) : null
             }).ToList();
         }
