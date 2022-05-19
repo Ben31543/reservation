@@ -272,7 +272,7 @@ namespace Reservation.Service.Services
 
             return await _db.Reservings.Include(i => i.ServiceMember)
                                          .Include(i => i.ServiceMemberBranch)
-                                         .Where(i => i.MemberId == memberId)
+                                         .Where(i => i.MemberId == memberId && i.IsActive)
                                          .Select(i => new MemberDealsModel
                                          {
                                              ReservationId = i.Id,
