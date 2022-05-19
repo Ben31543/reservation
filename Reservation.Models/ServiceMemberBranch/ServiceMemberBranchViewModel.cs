@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Reservation.Models.ServiceMemberBranch
 {
     public class ServiceMemberBranchViewModel
@@ -17,5 +19,11 @@ namespace Reservation.Models.ServiceMemberBranch
         public string TablesSchema { get; set; }
 
         public bool IsActive { get; set; }
+
+        [JsonIgnore]
+        public string OpenTime { get; set; }
+
+        [JsonIgnore]
+        public string CloseTime { get; set; }
     }
 }

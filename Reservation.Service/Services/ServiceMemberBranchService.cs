@@ -127,7 +127,7 @@ namespace Reservation.Service.Services
 
         public async Task<List<ServiceMemberBranchViewModel>> GetBranchesAsync(long serviceMemberId)
         {
-            return await _db.ServiceMemberBranches
+            var branches =  await _db.ServiceMemberBranches
                 .Where(i => i.ServiceMemberId == serviceMemberId)
                 .Select(branch => new ServiceMemberBranchViewModel
                 {
@@ -137,10 +137,18 @@ namespace Reservation.Service.Services
                     Phone = branch.Phone,
                     IsActive = branch.IsActive,
                     TablesSchema = branch.TablesSchema,
-                    WorkingHours = Time.ToDisplayFormat(branch.OpenTime, branch.CloseTime),
-                    ServiceMemberId = branch.ServiceMemberId
+                    ServiceMemberId = branch.ServiceMemberId,
+                    OpenTime = branch.OpenTime,
+                    CloseTime = branch.CloseTime
                 })
                 .ToListAsync();
+
+            foreach (var branch in branches)
+            {
+                branch.WorkingHours = Time.ToDisplayFormat(branch.OpenTime, branch.CloseTime);
+            }
+
+            return branches;
         }
 
         public async Task<List<ServiceMemberBranchForAdminModel>> GetServiceMemberBranchesForAdminAsync(long smId)
