@@ -17,6 +17,7 @@ namespace Reservation.Web
 {
     public class Startup
     {
+        private readonly string _allowAngularPolicy = "allowAngular";
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -27,6 +28,22 @@ namespace Reservation.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.RegisterApplicationServices();
+            
+            services.AddCors(options =>
+            {
+                var allowedCorsOrigins = Configuration.GetValue<string>("AppSettings:AllowedCorsOrigins").Split(new char[] { ',' });
+                options.AddPolicy(
+                    _allowAngularPolicy,
+                    builder =>
+                    {
+                        builder
+                            .WithOrigins(allowedCorsOrigins)
+                            .AllowAnyHeader()
+                            .WithMethods("GET", "POST", "OPTIONS", "DELETE", "PUT")
+                            .AllowCredentials();
+                    });
+            });
+            
             services.AddImagesSavingService(Configuration);
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TestDbConnection")));
             services.AddControllersWithViews();
