@@ -22,16 +22,14 @@ namespace Reservation.Models.Reserving
 		[Required]
 		public long ServiceMemberId { get; set; }
 
-		[Required]
-		public bool IsOnlinePayment { get; set; }
+		public bool IsOnlinePayment { get; set; } = false;
 
 		[Required]
 		public byte TablesSchemaId { get; set; }
 
 		public Dictionary<long, byte> Dishes { get; set; }
 
-		[Required]
-		public bool IsTakeOut { get; set; }
+		public bool IsTakeOut { get; set; } = false;
 
 		public string Notes { get; set; }
 	}

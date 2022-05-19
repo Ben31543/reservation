@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Reservation.Models.Criterias;
+using Reservation.Resources.Constants;
 
 namespace Reservation.Web.Controllers
 {
@@ -348,8 +349,18 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
+            var dishes = await _dishService.GetDishesAsync(criteria);
+
+            foreach (var dish in dishes)
+            {
+                if (!string.IsNullOrEmpty(dish.ImageUrl))
+                {
+                    dish.ImageUrl = $"{ImageSaverConstants.ImagesHostingPath}{dish.ImageUrl}";
+                }
+            }
+            
             result.Succeeded = true;
-            result.Value = await _dishService.GetDishesAsync(criteria);
+            result.Value = dishes;
             _logger.LogResponse("Member/GetServiceMemberDishes", result);
             return Json(result);
         }
