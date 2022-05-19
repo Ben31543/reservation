@@ -11,8 +11,8 @@ namespace Reservation.Models.Reserving
 
         public string ServiceMemberName { get; set; }
 
-        public bool? HasOnlinePayment { get; set; }
+        public bool HasOnlinePayment { get; set; } = false;
 
-        public bool? IsOpenNow { get; set; }
+        public bool IsOpenNow { get; set; } = false;
     }
 }
