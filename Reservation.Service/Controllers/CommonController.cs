@@ -33,12 +33,14 @@ namespace Reservation.Service.Controllers
         [HttpGet]
         public async Task<List<SelectListItem>> GetPersonsEnumValues()
         {
-            var statuses = Enum.GetValues(typeof(TableSchemas)).Cast<TableSchemas>();
-            return statuses.Select(x => new SelectListItem
+            return new List<SelectListItem>
             {
-                Text = _localizer[x.ToString()].Value,
-                Value = ((int) x).ToString()
-            }).ToList();
+                new SelectListItem("1-2", ((int) TableSchemas.OneToTwoPersons).ToString()),
+                new SelectListItem("3-5", ((int) TableSchemas.ThreeToFivePersons).ToString()),
+                new SelectListItem("6-10", ((int) TableSchemas.SixToTenPersons).ToString()),
+                new SelectListItem("10-15", ((int) TableSchemas.TenToFifteenPersons).ToString()),
+                new SelectListItem("15+", ((int) TableSchemas.FifteenAndMorePersons).ToString())
+            };
         }
 
         [HttpGet]

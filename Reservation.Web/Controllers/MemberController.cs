@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Reservation.Models.Criterias;
 
 namespace Reservation.Web.Controllers
 {
@@ -21,6 +22,7 @@ namespace Reservation.Web.Controllers
         private static object locker = new object();
         
         private readonly ILogger _logger;
+        private readonly IDishService _dishService;
         private readonly IMemberService _memberService;
         private readonly IServiceMemberService _serviceMemberService;
         private readonly IStringLocalizer<ResourcesController> _localizer;
@@ -28,12 +30,14 @@ namespace Reservation.Web.Controllers
 
         public MemberController(
             IMemberService member,
+            IDishService dishService,
             ILogger<MemberController> logger,
             IServiceMemberService serviceMemberService,
             IStringLocalizer<ResourcesController> localizer,
             IServiceMemberBranchService serviceMemberBranchService)
         {
             _logger = logger;
+            _dishService = dishService;
             _localizer = localizer;
             _memberService = member;
             _serviceMemberService = serviceMemberService;
@@ -309,6 +313,44 @@ namespace Reservation.Web.Controllers
             result.Succeeded = true;
             result.Value = serviceMember;
             _logger.LogResponse("Member/GetServiceMember", result);
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetServiceMemberBranches([FromQuery] long? smId)
+        {
+            _logger.LogRequest("Member/GetServiceMemberBranches", new {ServiceMemberId = smId});
+            var result = new RequestResult();
+
+            if (!smId.HasValue)
+            {
+                result.Message = LocalizationKeys.Errors.WrongIncomingParameters;
+                _logger.LogResponse("Member/GetServiceMemberBranches", result);
+                return Json(result);
+            }
+
+            result.Succeeded = true;
+            result.Value = await _serviceMemberBranchService.GetBranchesAsync(smId.Value);
+            _logger.LogResponse("Member/GetServiceMemberBranches", result);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetServiceMemberDishes([FromBody] DishSearchCriteria criteria)
+        {
+            _logger.LogRequest("Member/GetServiceMemberDishes", criteria);
+            var result = new RequestResult();
+
+            if (criteria == null)
+            {
+                result.Message = LocalizationKeys.Errors.WrongIncomingParameters;
+                _logger.LogResponse("Member/GetServiceMemberDishes", result);
+                return Json(result);
+            }
+
+            result.Succeeded = true;
+            result.Value = await _dishService.GetDishesAsync(criteria);
+            _logger.LogResponse("Member/GetServiceMemberDishes", result);
             return Json(result);
         }
         

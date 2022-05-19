@@ -14,6 +14,6 @@ namespace Reservation.Models.Criterias
 
         public DishTypes? DishType { get; set; }
 
-        public bool? IsAvailable { get; set; }
+        public bool IsAvailable { get; set; }
     }
 }
