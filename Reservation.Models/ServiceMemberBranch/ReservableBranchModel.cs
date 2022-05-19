@@ -17,6 +17,8 @@ namespace Reservation.Models.ServiceMemberBranch
 
         public string LogoUrl { get; set; }
 
+        public long ServiceMemberId { get; set; }
+
         public IList<Time> FreeTimes { get; set; }
     }
 }

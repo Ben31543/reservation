@@ -22,18 +22,21 @@ namespace Reservation.Web.Controllers
         
         private readonly ILogger _logger;
         private readonly IMemberService _memberService;
+        private readonly IServiceMemberService _serviceMemberService;
         private readonly IStringLocalizer<ResourcesController> _localizer;
         private readonly IServiceMemberBranchService _serviceMemberBranchService;
 
         public MemberController(
             IMemberService member,
             ILogger<MemberController> logger,
+            IServiceMemberService serviceMemberService,
             IStringLocalizer<ResourcesController> localizer,
             IServiceMemberBranchService serviceMemberBranchService)
         {
             _logger = logger;
             _localizer = localizer;
             _memberService = member;
+            _serviceMemberService = serviceMemberService;
             _serviceMemberBranchService = serviceMemberBranchService;
         }
 
@@ -300,6 +303,33 @@ namespace Reservation.Web.Controllers
             return Json(result);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetServiceMember([FromQuery] long? smId)
+        {
+            _logger.LogRequest("Member/GetServiceMember", new {ServiceMemberId = smId});
+            var result = new RequestResult();
+
+            if (!smId.HasValue)
+            {
+                result.Message = LocalizationKeys.Errors.WrongIncomingParameters;
+                _logger.LogResponse("Member/GetServiceMember", result);
+                return Json(result);
+            }
+
+            var serviceMember = await _serviceMemberService.GetServiceMemberByIdAsync(smId.Value, isMember: true);
+            if (serviceMember == null)
+            {
+                result.Message = LocalizationKeys.Errors.ServiceMemberDoesNotExist;
+                _logger.LogResponse("Member/GetServiceMember", result);
+                return Json(result);
+            }
+
+            result.Succeeded = true;
+            result.Value = serviceMember;
+            _logger.LogResponse("Member/GetServiceMember", result);
+            return Json(result);
+        }
+        
         [HttpGet]
         public async Task<IActionResult> Logout()
         {

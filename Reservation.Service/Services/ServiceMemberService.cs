@@ -36,36 +36,38 @@ namespace Reservation.Service.Services
             _imageSavingService = imageSavingService;
         }
 
-        public async Task<ServiceMember> GetServiceMemberAsync(long id, bool isMember = false)
+        public async Task<ServiceMember> GetServiceMemberAsync(long id)
         {
-            var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == id);
+            return await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<ServiceMemberViewModel> GetServiceMemberByIdAsync(long smId, bool isMember = false)
+        {
+            var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == smId);
+            if (serviceMember == null)
+            {
+                return null;
+            }
+
             if (isMember)
             {
                 ++serviceMember.ViewsCount;
                 await _db.SaveChangesAsync();
             }
 
-            return serviceMember;
-        }
-
-        public async Task<ServiceMemberViewModel> GetServiceMemberByIdAsync(long smId)
-        {
-            var serviceMember = await _db.ServiceMembers.FirstOrDefaultAsync(i => i.Id == smId);
-            return serviceMember == null
-                ? new ServiceMemberViewModel()
-                : new ServiceMemberViewModel
-                {
-                    Id = serviceMember.Id,
-                    Name = serviceMember.Name,
-                    Email = serviceMember.Email,
-                    FacebookUrl = serviceMember.FacebookUrl,
-                    InstagramUrl = serviceMember.InstagramUrl,
-                    LogoUrl = serviceMember.LogoUrl,
-                    OrdersCount = serviceMember.OrdersCount,
-                    ViewsCount = serviceMember.ViewsCount,
-                    AcceptsOnlinePayment = serviceMember.AcceptsOnlinePayment,
-                    BankAccountId = serviceMember.BankAccountId
-                };
+            return new ServiceMemberViewModel
+            {
+                Id = serviceMember.Id,
+                Name = serviceMember.Name,
+                Email = serviceMember.Email,
+                FacebookUrl = serviceMember.FacebookUrl,
+                InstagramUrl = serviceMember.InstagramUrl,
+                LogoUrl = serviceMember.LogoUrl,
+                OrdersCount = serviceMember.OrdersCount,
+                ViewsCount = serviceMember.ViewsCount,
+                AcceptsOnlinePayment = serviceMember.AcceptsOnlinePayment,
+                BankAccountId = serviceMember.BankAccountId
+            };
         }
 
         public async Task<RequestResult> RegisterServiceMemberAsync(ServiceMemberRegistrationModel model)

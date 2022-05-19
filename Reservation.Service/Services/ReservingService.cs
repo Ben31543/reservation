@@ -192,6 +192,7 @@ namespace Reservation.Service.Services
             {
                 Id = i.Id,
                 ServiceMemberName = i.ServiceMember.Name,
+                ServiceMemberId = i.ServiceMemberId,
                 BranchAddress = i.Address,
                 LogoUrl = i.ServiceMember.LogoUrl,
                 FreeTimes = needFreeTimes ? GetFreeTimes(i, model.ReservingDate.Value) : null
