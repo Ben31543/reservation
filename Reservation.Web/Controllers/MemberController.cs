@@ -95,13 +95,6 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("Member/UpdateMemberInfo", model);
             var result = new RequestResult();
 
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("Member/UpdateMemberInfo", result);
-                return Json(result);
-            }
-            
             if (!ModelState.IsValid)
             {
                 result.Message = _localizer.GetModelsLocalizedErrors(ModelState);
@@ -196,13 +189,6 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("Member/AttachCardToMember", model);
             var result = new RequestResult();
 
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("Member/AttachCardToMember", result);
-                return Json(result);
-            }
-            
             if (!ModelState.IsValid)
             {
                 result.Message = _localizer.GetModelsLocalizedErrors(ModelState);
@@ -230,13 +216,6 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("Member/DetachCardFromMember", new {MemberId = memberId, CardId = cardNumber});
             var result = new RequestResult();
 
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("Member/DetachCardFromMember", result);
-                return Json(result);
-            }
-            
             if (string.IsNullOrWhiteSpace(cardNumber))
             {
                 result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.WrongIncomingParameters);
@@ -260,13 +239,6 @@ namespace Reservation.Web.Controllers
         {
             _logger.LogRequest("Member/GetMemberDealsHistory", memberId);
             RequestResult result = new RequestResult();
-            
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("Member/GetMemberDealsHistory", result);
-                return Json(result);
-            }
 
             memberId ??= CurrentMemberId;
             result.Value = await _memberService.GetMemberDealsHistoryAsync(memberId.Value);

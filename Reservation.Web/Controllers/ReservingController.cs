@@ -35,13 +35,6 @@ namespace Reservation.Web.Controllers
             _logger.LogRequest("Reserving/AddReserving", model);
             var result = new RequestResult();
 
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("Reserving/AddReserving", result);
-                return Json(result);
-            }
-
             if (!ModelState.IsValid)
             {
                 result.Message = _localizer.GetModelsLocalizedErrors(ModelState);
@@ -68,13 +61,6 @@ namespace Reservation.Web.Controllers
         {
             _logger.LogRequest("Reserving/CancelReserving", id);
             var result = new RequestResult();
-
-            if (!IsAuthorized)
-            {
-                result.Message = _localizer.GetLocalizationOf(LocalizationKeys.Errors.MemberIsNotLoggedIn);
-                _logger.LogResponse("Reserving/CancelReserving", result);
-                return Json(result);
-            }
 
             if (id == null)
             {
