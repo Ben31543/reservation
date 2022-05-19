@@ -26,7 +26,7 @@ namespace Reservation.Models.Reserving
 		public bool IsOnlinePayment { get; set; }
 
 		[Required]
-		public TableSchemas Tables { get; set; }
+		public byte TablesSchemaId { get; set; }
 
 		public Dictionary<long, byte> Dishes { get; set; }
 

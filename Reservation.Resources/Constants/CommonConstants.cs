@@ -5,7 +5,12 @@ namespace Reservation.Resources.Constants
     public static class CommonConstants
     {
         public static int CurrentHour = DateTime.Now.Hour;
-        public static readonly string[] SupportedLanguages = {"hy", "ru", "en", "hy-AM", "ru-RU", "en-US"};
+        public static readonly string[] SupportedLanguages =
+        {
+            "hy", "arm", "hy-AM",
+            "ru", "rus", "ru-RU",
+            "en", "eng", "en-US"
+        };
         public static readonly string[] ArmenianPhoneOperators = {"10", "11", "12", "33", "41", "43", "44", "55", "77", "91", "93", "94", "95", "96", "97", "98", "99"};
         
         public const int BankCardNumberLength = 16;

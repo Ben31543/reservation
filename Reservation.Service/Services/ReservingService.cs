@@ -83,7 +83,7 @@ namespace Reservation.Service.Services
                 ReservationDate = model.ReservationDate,
                 ServiceMemberId = serviceMember.Id,
                 ServiceMemberBranchId = model.ServiceMemberBranchId,
-                Tables = JsonConvert.SerializeObject(model.Tables.ToString()),
+                Tables = JsonConvert.SerializeObject(((TableSchemas)model.TablesSchemaId).ToString()),
                 Dishes = JsonConvert.SerializeObject(dishes),
                 Notes = model.Notes,
                 Amount = amount,
