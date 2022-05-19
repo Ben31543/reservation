@@ -298,7 +298,7 @@ namespace Reservation.Web.Controllers
             memberId ??= CurrentMemberId;
 
             result.Succeeded = true;
-            result.Value = new[] {await _memberService.GetBankCardNumberAsync(memberId.Value)};
+            result.Value = await _memberService.GetBankCardNumberAsync(memberId.Value);
             _logger.LogResponse("Member/GetAttachedCardsNumber", result);
             return Json(result);
         }
