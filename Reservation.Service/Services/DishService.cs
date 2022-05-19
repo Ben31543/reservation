@@ -159,7 +159,7 @@ namespace Reservation.Service.Services
                 dishes = dishes.Where(i => i.Price <= criteria.PriceMax).ToList();
             }
 
-            if (criteria.IsAvailable.HasValue)
+            if (criteria.IsAvailable)
             {
                 dishes = dishes.Where(i => i.IsAvailable == criteria.IsAvailable).ToList();
             }
