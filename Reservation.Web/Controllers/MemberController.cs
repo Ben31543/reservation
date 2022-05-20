@@ -311,6 +311,11 @@ namespace Reservation.Web.Controllers
                 return Json(result);
             }
 
+            if (!string.IsNullOrEmpty(serviceMember.LogoUrl))
+            {
+                serviceMember.LogoUrl = $"{ImageSaverConstants.ImagesHostingPath}{serviceMember.LogoUrl}";
+            }
+            
             result.Succeeded = true;
             result.Value = serviceMember;
             _logger.LogResponse("Member/GetServiceMember", result);

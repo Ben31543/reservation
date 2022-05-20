@@ -171,8 +171,8 @@ namespace Reservation.Service.Services
 
             if (model.IsOpenNow)
             {
-                partners = partners.Where(i => i.ServiceMemberBranches.FirstOrDefault()?.OpenTime.ToTimeInstance().GetHour() >= CommonConstants.CurrentHour
-                                                        && i.ServiceMemberBranches.FirstOrDefault()?.CloseTime.ToTimeInstance().GetHour() <= CommonConstants.CurrentHour).ToList();
+                partners = partners.Where(i => i.ServiceMemberBranches.First()?.OpenTime.ToTimeInstance().GetHour() >= CommonConstants.CurrentHour
+                                                        && i.ServiceMemberBranches.First()?.CloseTime.ToTimeInstance().GetHour() <= CommonConstants.CurrentHour).ToList();
             }
             
             // IList<ServiceMemberBranch> returnableBranches = new List<ServiceMemberBranch>();
