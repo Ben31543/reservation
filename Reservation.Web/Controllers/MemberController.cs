@@ -247,7 +247,7 @@ namespace Reservation.Web.Controllers
             return Json(result);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetMemberDealsHistory(long? memberId)
         {
             _logger.LogRequest("Member/GetMemberDealsHistory", memberId);

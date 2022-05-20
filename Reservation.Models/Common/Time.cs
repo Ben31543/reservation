@@ -27,6 +27,11 @@ namespace Reservation.Models.Common
         
         public static string ToDisplayFormat(string openTime, string closeTime)
         {
+            if (string.IsNullOrEmpty(openTime) || string.IsNullOrEmpty(closeTime))
+            {
+                return string.Empty;
+            }
+            
             var openTimeInstance = JsonConvert.DeserializeObject<Time>(openTime);
             var closeTimeInstance = JsonConvert.DeserializeObject<Time>(closeTime);
             

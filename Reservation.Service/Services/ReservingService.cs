@@ -66,6 +66,11 @@ namespace Reservation.Service.Services
             {
                 foreach (var dishItem in model.Dishes)
                 {
+                    if (dishItem.Value == 0)
+                    {
+                        continue;
+                    }
+                    
                     dish = await _dishService.GetDishById(dishItem.Key);
                     if (dish != null)
                     {
@@ -153,51 +158,50 @@ namespace Reservation.Service.Services
 
         public async Task<IList<ReservableBranchModel>> GetReservableBranchesAsync(SearchForReservingModel model, bool needFreeTimes)
         {
-            var branches = await _db.ServiceMemberBranches.Include(i => i.ServiceMember).Where(i => i.IsActive).ToListAsync();
+            var partners = await _db.ServiceMembers.Include(i => i.ServiceMemberBranches).ToListAsync();
             if (!string.IsNullOrEmpty(model.ServiceMemberName))
             {
-                branches = branches.Where(i => i.ServiceMember.Name.Contains(model.ServiceMemberName)).ToList();
+                partners = partners.Where(i => i.Name.Contains(model.ServiceMemberName)).ToList();
             }
 
             if (model.HasOnlinePayment)
             {
-                branches = branches.Where(i => i.ServiceMember.AcceptsOnlinePayment == model.HasOnlinePayment).ToList();
+                partners = partners.Where(i => i.AcceptsOnlinePayment == model.HasOnlinePayment).ToList();
             }
 
             if (model.IsOpenNow)
             {
-                branches = branches.Where(i => 
-                        i.OpenTime.ToTimeInstance().GetHour() >= CommonConstants.CurrentHour
-                     && i.CloseTime.ToTimeInstance().GetHour() <= CommonConstants.CurrentHour).ToList();
+                partners = partners.Where(i => i.ServiceMemberBranches.FirstOrDefault()?.OpenTime.ToTimeInstance().GetHour() >= CommonConstants.CurrentHour
+                                                        && i.ServiceMemberBranches.FirstOrDefault()?.CloseTime.ToTimeInstance().GetHour() <= CommonConstants.CurrentHour).ToList();
             }
             
-            IList<ServiceMemberBranch> returnableBranches = new List<ServiceMemberBranch>();
-            foreach (var branch in branches)
-            {
-                Dictionary<TableSchemas, byte> schemas = JsonConvert.DeserializeObject<Dictionary<TableSchemas, byte>>(branch.TablesSchema);
-                if (schemas == null)
-                {
-                    break;
-                }
-                
-                foreach (var item in schemas)
-                {
-                    if (item.Key == model.PersonsCount.GetValueOrDefault() && item.Key != 0)
-                    {
-                        returnableBranches.Add(branch);
-                    }
-                }
-            }
+            // IList<ServiceMemberBranch> returnableBranches = new List<ServiceMemberBranch>();
+            // foreach (var branch in partners.)
+            // {
+            //     Dictionary<TableSchemas, byte> schemas = JsonConvert.DeserializeObject<Dictionary<TableSchemas, byte>>(branch.TablesSchema);
+            //     if (schemas == null)
+            //     {
+            //         break;
+            //     }
+            //     
+            //     foreach (var item in schemas)
+            //     {
+            //         if (item.Key == model.PersonsCount.GetValueOrDefault() && item.Key != 0)
+            //         {
+            //             returnableBranches.Add(branch);
+            //         }
+            //     }
+            // }
 
-            return returnableBranches.Select(i => new ReservableBranchModel
+            return partners.Select(i => new ReservableBranchModel
             {
                 Id = i.Id,
-                ServiceMemberName = i.ServiceMember.Name,
-                ServiceMemberId = i.ServiceMemberId,
-                BranchAddress = i.Address,
-                LogoUrl = i.ServiceMember.LogoUrl,
-                WorkingHours = Time.ToDisplayFormat(i.OpenTime, i.CloseTime),
-                FreeTimes = needFreeTimes && model.ReservingDate.HasValue ? GetFreeTimes(i, model.ReservingDate.Value) : null
+                ServiceMemberName = i.Name,
+                ServiceMemberId = i.Id,
+                BranchAddress = i.ServiceMemberBranches.FirstOrDefault()?.Address,
+                LogoUrl = i.LogoUrl,
+                WorkingHours = Time.ToDisplayFormat(i.ServiceMemberBranches.FirstOrDefault()?.OpenTime ?? string.Empty, i.ServiceMemberBranches.FirstOrDefault()?.CloseTime ?? string.Empty),
+                FreeTimes = needFreeTimes && model.ReservingDate.HasValue ? GetFreeTimes(i.ServiceMemberBranches.FirstOrDefault(), model.ReservingDate.Value) : null
             }).ToList();
         }
 
